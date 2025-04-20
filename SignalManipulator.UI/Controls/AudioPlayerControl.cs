@@ -1,37 +1,23 @@
 ﻿using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using SoundTouch;
-using SoundTouch.Net.NAudioSupport;
+using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Effects;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Modules
+namespace SignalManipulator.UI.Controls
 {
-    public partial class AudioPlayer : UserControl
+    public partial class AudioPlayerControl : UserControl
     {
-        public static AudioPlayer Instance { get; private set; }
-
-        // Consts
-        public const int CHUNK_SIZE = 512;
-        public const int SAMPLE_RATE = 44100; // 44.1 kHz
-        public const int CHANNELS = 2; // Stereo Audio
-        public const int TARGET_FPS = 30;
-        public static readonly WaveFormat WAVE_FORMAT = new WaveFormat(SAMPLE_RATE, CHANNELS);
-
-        // Outputs
-        private Dictionary<int, WaveOutEvent> outputDevices = new Dictionary<int, WaveOutEvent>();
-        //private Dictionary<int, BufferedWaveProvider> providers = new Dictionary<int, BufferedWaveProvider>();
-        private int currentDevice = -1;
-
+        //public static AudioPlayer Instance { get; private set; }
 
         // Sample providers
         private AudioFileReader audioFile;
-        private BufferedWaveProvider bufferedWaveProvider = new BufferedWaveProvider(WAVE_FORMAT);
-        private SoundTouchWaveProvider soundTouchWaveProvider;
-        private SoundTouchProcessor soundTouchProcessor = new SoundTouchProcessor();
+        //private BufferedWaveProvider bufferedWaveProvider = new BufferedWaveProvider(AudioEngine.WAVE_FORMAT);
+        //private SoundTouchWaveProvider soundTouchWaveProvider;
+        //private SoundTouchProcessor soundTouchProcessor = new SoundTouchProcessor();
+        private TimeStretchEffect timeStrechEffect;
 
         // Threading
         private Thread playbackThread;
@@ -41,20 +27,20 @@ namespace SignalManipulator.UI.Modules
         private WaveFormat waveFormat;
         private float playbackSpeed = 1.0f;
 
-
+        /*
         // Playback state
         public bool IsPlaying => outputDevices[currentDevice]?.PlaybackState == PlaybackState.Playing;
         public bool IsPaused => outputDevices[currentDevice]?.PlaybackState == PlaybackState.Paused;
         public bool IsStopped => outputDevices[currentDevice]?.PlaybackState == PlaybackState.Stopped;
+        */
 
-        public AudioPlayer()
+        public AudioPlayerControl()
         {
-            Instance = this;
+            //Instance = this;
 
             InitializeComponent();
             InitializePlayback();
-            InitOutputs();
-            ChangeDevice(0);
+            //InitOutputs();
         }
 
         private void InitializePlayback()
@@ -70,27 +56,6 @@ namespace SignalManipulator.UI.Modules
             };
         }
 
-        public void InitOutputs()
-        {
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                var wo = new WaveOutEvent { DeviceNumber = i };
-                wo.Init(bufferedWaveProvider);
-
-                outputDevices[i] = wo;
-                //providers[i] = bufferedWaveProvider;
-            }
-        }
-
-        public void ChangeDevice(int newDevice)
-        {
-            if (currentDevice >= 0)
-                outputDevices[currentDevice].Pause();
-
-            outputDevices[newDevice].Play();
-            currentDevice = newDevice;
-        }
-
 
         public void LoadAudio(string path)
         {
@@ -103,13 +68,15 @@ namespace SignalManipulator.UI.Modules
 
             // Processing providers
             bufferedWaveProvider = new BufferedWaveProvider(waveFormat);
-            soundTouchWaveProvider = new SoundTouchWaveProvider(bufferedWaveProvider, soundTouchProcessor);
+            //soundTouchWaveProvider = new SoundTouchWaveProvider(bufferedWaveProvider, soundTouchProcessor);
+            timeStrechEffect = new TimeStretchEffect(audioFile);
 
             // Output
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 outputDevices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
-                outputDevices[i].Init(soundTouchWaveProvider);
+                //outputDevices[i].Init(soundTouchWaveProvider);
+                outputDevices[i].Init(bufferedWaveProvider);
             }
 
             // Update UI
@@ -174,15 +141,19 @@ namespace SignalManipulator.UI.Modules
             playbackSpeed = ((float)trackBar1.Value + 25) / 100;
             speedLbl.Text = playbackSpeed + "x";
 
+            timeStrechEffect.Speed = playbackSpeed;
+            /*
             if (pitchCheckBox.Checked)
-                soundTouchProcessor.Tempo = playbackSpeed;
+                //soundTouchProcessor.Tempo = playbackSpeed;
             else
-                soundTouchProcessor.Rate = playbackSpeed;
+                //soundTouchProcessor.Rate = playbackSpeed;
+            */
         }
 
         private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (pitchCheckBox.Checked)
+            timeStrechEffect.PreservePitch = pitchCheckBox.Checked;
+            /*if (pitchCheckBox.Checked)
             {
                 soundTouchProcessor.Tempo = soundTouchProcessor.Rate;
                 soundTouchProcessor.Rate = 1.0f;
@@ -191,14 +162,18 @@ namespace SignalManipulator.UI.Modules
             {
                 soundTouchProcessor.Rate = soundTouchProcessor.Tempo;
                 soundTouchProcessor.Tempo = 1.0f;
-            }
+            }*/
         }
 
         private void ThreadRoutine()
         {
-            byte[] buffer = new byte[CHUNK_SIZE];
-            while (audioFile.Read(buffer, 0, buffer.Length) > 0 && !IsStopped)
+            byte[] buffer = new byte[AudioEngine.CHUNK_SIZE];
+            //while (audioFile.Read(buffer, 0, buffer.Length) > 0 && !IsStopped)
+            while (!IsStopped)
             {
+                // Effects
+                timeStrechEffect.Process(buffer);
+
                 // Add samples
                 bufferedWaveProvider.AddSamples(buffer, 0, buffer.Length);
 

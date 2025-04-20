@@ -35,7 +35,7 @@ namespace SignalManipulator
             this.leftSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.importGroupBox = new System.Windows.Forms.GroupBox();
             this.effectsGroupBox = new System.Windows.Forms.GroupBox();
-            this.effectsList = new SignalManipulator.UI.Modules.EffectsList();
+            this.effectsList = new SignalManipulator.UI.Modules.EffectsChainControl();
             this.rightSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.bottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.playbackGroupBox = new System.Windows.Forms.GroupBox();
@@ -45,8 +45,8 @@ namespace SignalManipulator
             this.openAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioOFD = new System.Windows.Forms.OpenFileDialog();
-            this.audioPlayer = new SignalManipulator.UI.Modules.AudioPlayer();
-            this.audioRouter = new SignalManipulator.UI.Modules.AudioRouter();
+            this.audioPlayer = new SignalManipulator.UI.Modules.AudioPlayerControl();
+            this.audioRouter = new SignalManipulator.UI.Modules.AudioRouterControl();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -337,10 +337,10 @@ namespace SignalManipulator
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAudioToolStripMenuItem;
-        private EffectsList effectsList;
+        private EffectsChainControl effectsList;
         private System.Windows.Forms.OpenFileDialog audioOFD;
-        private AudioPlayer audioPlayer;
-        private AudioRouter audioRouter;
+        private AudioPlayerControl audioPlayer;
+        private AudioRouterControl audioRouter;
     }
 }
 

@@ -1,6 +1,6 @@
-﻿namespace SignalManipulator.UI.Modules
+﻿namespace SignalManipulator.UI.Controls
 {
-    partial class EffectsList
+    partial class EffectChainControl
     {
         /// <summary>
         /// Variabile di progettazione necessaria.

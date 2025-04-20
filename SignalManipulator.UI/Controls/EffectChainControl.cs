@@ -1,10 +1,10 @@
 ﻿using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Modules
+namespace SignalManipulator.UI.Controls
 {
-    public partial class EffectsList: UserControl
+    public partial class EffectChainControl: UserControl
     {
-        public EffectsList()
+        public EffectChainControl()
         {
             InitializeComponent();
         }

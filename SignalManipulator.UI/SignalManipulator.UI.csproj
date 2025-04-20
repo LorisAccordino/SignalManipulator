@@ -94,36 +94,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\AudioRouter.cs">
+    <Compile Include="Controls\AudioRouterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Modules\AudioRouter.Designer.cs">
-      <DependentUpon>AudioRouter.cs</DependentUpon>
+    <Compile Include="Controls\AudioRouterControl.Designer.cs">
+      <DependentUpon>AudioRouterControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modules\EffectsList.cs">
+    <Compile Include="Controls\EffectChainControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Modules\EffectsList.Designer.cs">
-      <DependentUpon>EffectsList.cs</DependentUpon>
+    <Compile Include="Controls\EffectChainControl.Designer.cs">
+      <DependentUpon>EffectChainControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modules\AudioPlayer.cs">
+    <Compile Include="Controls\AudioPlayerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Modules\AudioPlayer.Designer.cs">
-      <DependentUpon>AudioPlayer.cs</DependentUpon>
+    <Compile Include="Controls\AudioPlayerControl.Designer.cs">
+      <DependentUpon>AudioPlayerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Modules\AudioRouter.resx">
-      <DependentUpon>AudioRouter.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AudioRouterControl.resx">
+      <DependentUpon>AudioRouterControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Modules\EffectsList.resx">
-      <DependentUpon>EffectsList.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\EffectChainControl.resx">
+      <DependentUpon>EffectChainControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Modules\AudioPlayer.resx">
-      <DependentUpon>AudioPlayer.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\AudioPlayerControl.resx">
+      <DependentUpon>AudioPlayerControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +132,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SignalManipulator.Logic\SignalManipulator.Logic.csproj">
+      <Project>{27d82dd1-06e7-419f-a4e1-27ee2099120f}</Project>
+      <Name>SignalManipulator.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -111,6 +111,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SignalManipulator.Logic\SignalManipulator.Logic.csproj">
+      <Project>{27d82dd1-06e7-419f-a4e1-27ee2099120f}</Project>
+      <Name>SignalManipulator.Logic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SignalManipulator.UI\SignalManipulator.UI.csproj">
       <Project>{f0e49018-4b76-4220-9a11-dfc889770e92}</Project>
       <Name>SignalManipulator.UI</Name>

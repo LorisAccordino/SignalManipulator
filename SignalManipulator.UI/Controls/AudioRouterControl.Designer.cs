@@ -1,6 +1,6 @@
-﻿namespace SignalManipulator.UI.Modules
+﻿namespace SignalManipulator.UI.Controls
 {
-    partial class AudioRouter
+    partial class AudioRouterControl
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.
