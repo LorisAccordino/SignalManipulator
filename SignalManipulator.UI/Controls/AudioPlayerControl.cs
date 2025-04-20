@@ -13,18 +13,18 @@ namespace SignalManipulator.UI.Controls
         //public static AudioPlayer Instance { get; private set; }
 
         // Sample providers
-        private AudioFileReader audioFile;
+        //private AudioFileReader audioFile;
         //private BufferedWaveProvider bufferedWaveProvider = new BufferedWaveProvider(AudioEngine.WAVE_FORMAT);
         //private SoundTouchWaveProvider soundTouchWaveProvider;
         //private SoundTouchProcessor soundTouchProcessor = new SoundTouchProcessor();
         private TimeStretchEffect timeStrechEffect;
 
         // Threading
-        private Thread playbackThread;
+        //private Thread playbackThread;
 
         // Playback generic
         private System.Windows.Forms.Timer playbackTimer;
-        private WaveFormat waveFormat;
+        //private WaveFormat waveFormat;
         private float playbackSpeed = 1.0f;
 
         /*
@@ -33,6 +33,8 @@ namespace SignalManipulator.UI.Controls
         public bool IsPaused => outputDevices[currentDevice]?.PlaybackState == PlaybackState.Paused;
         public bool IsStopped => outputDevices[currentDevice]?.PlaybackState == PlaybackState.Stopped;
         */
+
+        private AudioPlayer audioPlayer = AudioEngine.Instance.AudioPlayer;
 
         public AudioPlayerControl()
         {
@@ -49,16 +51,16 @@ namespace SignalManipulator.UI.Controls
 
             playbackTimer = new System.Windows.Forms.Timer();
             playbackTimer.Interval = 50;
-            playbackTimer.Tick += (s, e) =>
-            {
-                if (audioFile != null)
-                    timeLbl.Text = audioFile.CurrentTime.ToString(@"mm\:ss\.fff");
-            };
+            playbackTimer.Tick += (s, e) => timeLbl.Text = audioPlayer.GetCurrentTime();
         }
 
 
         public void LoadAudio(string path)
         {
+            // Load audio logic
+            audioPlayer.LoadAudio(path);
+
+            /*
             // Stop previous if any
             StopAudio();
 
@@ -78,6 +80,7 @@ namespace SignalManipulator.UI.Controls
                 //outputDevices[i].Init(soundTouchWaveProvider);
                 outputDevices[i].Init(bufferedWaveProvider);
             }
+            */
 
             // Update UI
             playingAudioLbl.Text = Path.GetFileName(path);
@@ -85,7 +88,7 @@ namespace SignalManipulator.UI.Controls
             stopBtn.Enabled = true;
 
             // Recreate the thread
-            playbackThread = new Thread(ThreadRoutine);
+            //playbackThread = new Thread(ThreadRoutine);
         }
 
         private void playPauseBtn_Click(object sender, EventArgs e)
@@ -163,32 +166,6 @@ namespace SignalManipulator.UI.Controls
                 soundTouchProcessor.Rate = soundTouchProcessor.Tempo;
                 soundTouchProcessor.Tempo = 1.0f;
             }*/
-        }
-
-        private void ThreadRoutine()
-        {
-            byte[] buffer = new byte[AudioEngine.CHUNK_SIZE];
-            //while (audioFile.Read(buffer, 0, buffer.Length) > 0 && !IsStopped)
-            while (!IsStopped)
-            {
-                // Effects
-                timeStrechEffect.Process(buffer);
-
-                // Add samples
-                bufferedWaveProvider.AddSamples(buffer, 0, buffer.Length);
-
-                // Wait for the buffer to empty enough
-                while (IsBufferFull() && IsAlive()) Thread.Sleep(10);
-            }
-        }
-        public bool IsBufferFull(int samples = 44100)
-        {
-            return bufferedWaveProvider.BufferedBytes > samples * playbackSpeed;
-        }
-
-        public bool IsAlive()
-        {
-            return outputDevices[currentDevice].PlaybackState != PlaybackState.Stopped;
         }
     }
 }

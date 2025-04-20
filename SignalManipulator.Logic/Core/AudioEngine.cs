@@ -15,9 +15,6 @@ namespace SignalManipulator.Logic.Core
         public static readonly WaveFormat WAVE_FORMAT = new WaveFormat(SAMPLE_RATE, CHANNELS);
 
 
-        // Audio providers
-        public BufferedWaveProvider BufferedWaveProvider { get; private set; } = new BufferedWaveProvider(WAVE_FORMAT);
-
         // Modules references
         public AudioPlayer AudioPlayer => new AudioPlayer(Instance);
         public AudioRouter AudioRouter => new AudioRouter(Instance);
