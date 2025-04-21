@@ -28,18 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.formsPlot = new ScottPlot.WinForms.FormsPlot();
             this.SuspendLayout();
             // 
-            // WaveformView
+            // formsPlot
+            // 
+            this.formsPlot.DisplayScale = 0F;
+            this.formsPlot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.formsPlot.Location = new System.Drawing.Point(0, 0);
+            this.formsPlot.Name = "formsPlot";
+            this.formsPlot.Size = new System.Drawing.Size(746, 399);
+            this.formsPlot.TabIndex = 0;
+            // 
+            // WaveformViewerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "WaveformView";
+            this.Controls.Add(this.formsPlot);
+            this.Name = "WaveformViewerControl";
             this.Size = new System.Drawing.Size(746, 399);
+            this.Load += new System.EventHandler(this.WaveformViewerControl_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private ScottPlot.WinForms.FormsPlot formsPlot;
     }
 }

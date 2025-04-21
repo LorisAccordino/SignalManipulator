@@ -7,11 +7,16 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class AudioPlayerControl : UserControl
     {
-        private AudioPlayer audioPlayer = AudioEngine.Instance.AudioPlayer;
+        private AudioPlayer audioPlayer;
 
         public AudioPlayerControl()
         {
             InitializeComponent();
+        }
+
+        private void AudioPlayerControl_Load(object sender, EventArgs e)
+        {
+            audioPlayer = AudioEngine.Instance.AudioPlayer;
             InitializePlaybackEvents();
         }
 

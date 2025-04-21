@@ -94,13 +94,14 @@
             this.list.Size = new System.Drawing.Size(794, 409);
             this.list.TabIndex = 0;
             // 
-            // EffectsList
+            // EffectChainControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel);
-            this.Name = "EffectsList";
+            this.Name = "EffectChainControl";
             this.Size = new System.Drawing.Size(800, 450);
+            this.Load += new System.EventHandler(this.EffectChainControl_Load);
             this.panel.ResumeLayout(false);
             this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);

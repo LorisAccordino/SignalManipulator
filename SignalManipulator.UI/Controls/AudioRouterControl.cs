@@ -6,11 +6,16 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class AudioRouterControl : UserControl
     {
-        private AudioRouter audioRouter = AudioEngine.Instance.AudioRouter;
+        private AudioRouter audioRouter;
 
         public AudioRouterControl()
         {
             InitializeComponent();
+        }
+
+        private void AudioRouterControl_Load(object sender, EventArgs e)
+        {
+            audioRouter = AudioEngine.Instance.AudioRouter;
             LoadOutputDevices();
         }
 

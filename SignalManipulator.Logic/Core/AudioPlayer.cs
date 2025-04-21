@@ -22,6 +22,7 @@ namespace SignalManipulator.Logic.Core
         // Events
         public event EventHandler OnLoad;
         public event EventHandler OnUpdate;
+        public event EventHandler<byte[]> OnUpdateData;
         public event EventHandler OnStarted;
         public event EventHandler OnPaused;
         public event EventHandler OnStopped;
@@ -142,6 +143,7 @@ namespace SignalManipulator.Logic.Core
 
                 // Add samples to the buffer
                 BufferedWaveProvider.AddSamples(buffer, 0, buffer.Length);
+                OnUpdateData.Invoke(this, buffer);
 
                 // Wait for the buffer to be empty enough
                 while (IsBufferFull() && !IsStopped) Thread.Sleep(10);

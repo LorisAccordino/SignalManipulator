@@ -35,9 +35,10 @@
             // devicesLbl
             // 
             this.devicesLbl.AutoSize = true;
-            this.devicesLbl.Location = new System.Drawing.Point(12, 14);
+            this.devicesLbl.Location = new System.Drawing.Point(16, 17);
+            this.devicesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.devicesLbl.Name = "devicesLbl";
-            this.devicesLbl.Size = new System.Drawing.Size(93, 13);
+            this.devicesLbl.Size = new System.Drawing.Size(118, 16);
             this.devicesLbl.TabIndex = 0;
             this.devicesLbl.Text = "Avalaible devices:";
             // 
@@ -47,20 +48,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesCmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.devicesCmbx.FormattingEnabled = true;
-            this.devicesCmbx.Location = new System.Drawing.Point(111, 11);
+            this.devicesCmbx.Location = new System.Drawing.Point(148, 14);
+            this.devicesCmbx.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.devicesCmbx.Name = "devicesCmbx";
-            this.devicesCmbx.Size = new System.Drawing.Size(235, 21);
+            this.devicesCmbx.Size = new System.Drawing.Size(312, 24);
             this.devicesCmbx.TabIndex = 1;
             this.devicesCmbx.SelectedIndexChanged += new System.EventHandler(this.devicesCmbx_SelectedIndexChanged);
             // 
-            // AudioRouter
+            // AudioRouterControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.devicesCmbx);
             this.Controls.Add(this.devicesLbl);
-            this.Name = "AudioRouter";
-            this.Size = new System.Drawing.Size(353, 86);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "AudioRouterControl";
+            this.Size = new System.Drawing.Size(471, 106);
+            this.Load += new System.EventHandler(this.AudioRouterControl_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
