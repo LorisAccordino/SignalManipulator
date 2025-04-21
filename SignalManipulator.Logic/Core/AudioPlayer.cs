@@ -24,6 +24,7 @@ namespace SignalManipulator.Logic.Core
         public event EventHandler OnUpdate;
         public event EventHandler<byte[]> OnUpdateData;
         public event EventHandler OnStarted;
+        public event EventHandler OnResume;
         public event EventHandler OnPaused;
         public event EventHandler OnStopped;
         public event EventHandler<bool> OnPlaybackStateChanged;
@@ -75,7 +76,7 @@ namespace SignalManipulator.Logic.Core
             effectChain.SourceProvider.InnerProvider = audioFileReader;
 
             // Audio inits and settings
-            BufferedWaveProvider = new BufferedWaveProvider(this.audioFileReader.WaveFormat);
+            BufferedWaveProvider = new BufferedWaveProvider(audioFileReader.WaveFormat);
             audioRouter.InitOutputs(BufferedWaveProvider);
             OnLoad?.Invoke(this, EventArgs.Empty);
         }
@@ -96,10 +97,12 @@ namespace SignalManipulator.Logic.Core
             {
                 playbackThread = new Thread(PlaybackThreadRoutine);
                 playbackThread.Start();
+                OnStarted?.Invoke(this, EventArgs.Empty);
             }
 
             updateTimer.Start();
-            OnStarted?.Invoke(this, EventArgs.Empty);
+            //OnStarted?.Invoke(this, EventArgs.Empty);
+            OnResume?.Invoke(this, EventArgs.Empty);
         }
 
         public void Pause()
@@ -119,8 +122,8 @@ namespace SignalManipulator.Logic.Core
             BufferedWaveProvider.ClearBuffer();
 
             updateTimer.Stop();
-            OnStopped?.Invoke(this, EventArgs.Empty);
             OnUpdate?.Invoke(this, EventArgs.Empty);
+            OnStopped?.Invoke(this, EventArgs.Empty);
         }
 
         public bool IsBufferFull(int samples = 44100)

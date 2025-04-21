@@ -31,6 +31,7 @@ namespace SignalManipulator
         private void InitializeComponent()
         {
             this.visualizationGroupBox = new System.Windows.Forms.GroupBox();
+            this.waveformViewer = new SignalManipulator.UI.Controls.WaveformViewerControl();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.leftSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.importGroupBox = new System.Windows.Forms.GroupBox();
@@ -39,15 +40,14 @@ namespace SignalManipulator
             this.rightSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.bottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.playbackGroupBox = new System.Windows.Forms.GroupBox();
+            this.audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
             this.routingGroupBox = new System.Windows.Forms.GroupBox();
+            this.audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioOFD = new System.Windows.Forms.OpenFileDialog();
-            this.audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
-            this.audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
-            this.waveformViewer = new SignalManipulator.UI.Controls.WaveformViewerControl();
             this.visualizationGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
@@ -76,19 +76,29 @@ namespace SignalManipulator
             this.visualizationGroupBox.Controls.Add(this.waveformViewer);
             this.visualizationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.visualizationGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.visualizationGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizationGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizationGroupBox.Name = "visualizationGroupBox";
-            this.visualizationGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizationGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.visualizationGroupBox.Size = new System.Drawing.Size(741, 400);
             this.visualizationGroupBox.TabIndex = 0;
             this.visualizationGroupBox.TabStop = false;
             this.visualizationGroupBox.Text = "Visualization:";
             // 
+            // waveformViewer
+            // 
+            this.waveformViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.waveformViewer.Location = new System.Drawing.Point(2, 15);
+            this.waveformViewer.Margin = new System.Windows.Forms.Padding(2);
+            this.waveformViewer.Name = "waveformViewer";
+            this.waveformViewer.Size = new System.Drawing.Size(737, 383);
+            this.waveformViewer.TabIndex = 0;
+            this.waveformViewer.Zoom = 1;
+            // 
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainSplitContainer.Location = new System.Drawing.Point(0, 24);
-            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
@@ -109,7 +119,7 @@ namespace SignalManipulator
             // 
             this.leftSideSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.leftSideSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.leftSideSplitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.leftSideSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.leftSideSplitContainer.Name = "leftSideSplitContainer";
             this.leftSideSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -132,10 +142,10 @@ namespace SignalManipulator
             // 
             this.importGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.importGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.importGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.importGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.importGroupBox.Name = "importGroupBox";
-            this.importGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.importGroupBox.Size = new System.Drawing.Size(112, 324);
+            this.importGroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.importGroupBox.Size = new System.Drawing.Size(150, 399);
             this.importGroupBox.TabIndex = 3;
             this.importGroupBox.TabStop = false;
             this.importGroupBox.Text = "Import:";
@@ -145,9 +155,9 @@ namespace SignalManipulator
             this.effectsGroupBox.Controls.Add(this.effectChain);
             this.effectsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.effectsGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.effectsGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.effectsGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.effectsGroupBox.Name = "effectsGroupBox";
-            this.effectsGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.effectsGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.effectsGroupBox.Size = new System.Drawing.Size(369, 554);
             this.effectsGroupBox.TabIndex = 1;
             this.effectsGroupBox.TabStop = false;
@@ -166,7 +176,7 @@ namespace SignalManipulator
             // 
             this.rightSideSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rightSideSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.rightSideSplitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rightSideSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.rightSideSplitContainer.Name = "rightSideSplitContainer";
             this.rightSideSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -188,7 +198,7 @@ namespace SignalManipulator
             // 
             this.bottomSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bottomSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.bottomSplitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.bottomSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.bottomSplitContainer.Name = "bottomSplitContainer";
             // 
             // bottomSplitContainer.Panel1
@@ -210,26 +220,44 @@ namespace SignalManipulator
             this.playbackGroupBox.Controls.Add(this.audioPlayer);
             this.playbackGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.playbackGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.playbackGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.playbackGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.playbackGroupBox.Name = "playbackGroupBox";
-            this.playbackGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.playbackGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.playbackGroupBox.Size = new System.Drawing.Size(400, 151);
             this.playbackGroupBox.TabIndex = 2;
             this.playbackGroupBox.TabStop = false;
             this.playbackGroupBox.Text = "Playback:";
+            // 
+            // audioPlayer
+            // 
+            this.audioPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.audioPlayer.Location = new System.Drawing.Point(2, 15);
+            this.audioPlayer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.audioPlayer.MinimumSize = new System.Drawing.Size(262, 110);
+            this.audioPlayer.Name = "audioPlayer";
+            this.audioPlayer.Size = new System.Drawing.Size(396, 134);
+            this.audioPlayer.TabIndex = 0;
             // 
             // routingGroupBox
             // 
             this.routingGroupBox.Controls.Add(this.audioRouter);
             this.routingGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.routingGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.routingGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.routingGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.routingGroupBox.Name = "routingGroupBox";
-            this.routingGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.routingGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.routingGroupBox.Size = new System.Drawing.Size(338, 151);
             this.routingGroupBox.TabIndex = 4;
             this.routingGroupBox.TabStop = false;
             this.routingGroupBox.Text = "Audio routing:";
+            // 
+            // audioRouter
+            // 
+            this.audioRouter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.audioRouter.Location = new System.Drawing.Point(2, 15);
+            this.audioRouter.Name = "audioRouter";
+            this.audioRouter.Size = new System.Drawing.Size(334, 134);
+            this.audioRouter.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -269,33 +297,6 @@ namespace SignalManipulator
             // 
             this.audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
             // 
-            // audioPlayer
-            // 
-            this.audioPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.audioPlayer.Location = new System.Drawing.Point(2, 15);
-            this.audioPlayer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.audioPlayer.MinimumSize = new System.Drawing.Size(262, 110);
-            this.audioPlayer.Name = "audioPlayer";
-            this.audioPlayer.Size = new System.Drawing.Size(396, 134);
-            this.audioPlayer.TabIndex = 0;
-            // 
-            // audioRouter
-            // 
-            this.audioRouter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.audioRouter.Location = new System.Drawing.Point(2, 15);
-            this.audioRouter.Name = "audioRouter";
-            this.audioRouter.Size = new System.Drawing.Size(334, 134);
-            this.audioRouter.TabIndex = 0;
-            // 
-            // waveformViewer
-            // 
-            this.waveformViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.waveformViewer.Location = new System.Drawing.Point(2, 15);
-            this.waveformViewer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.waveformViewer.Name = "waveformViewer";
-            this.waveformViewer.Size = new System.Drawing.Size(737, 383);
-            this.waveformViewer.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,7 +305,7 @@ namespace SignalManipulator
             this.Controls.Add(this.mainSplitContainer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(1128, 616);
             this.Name = "MainForm";
             this.Text = "Signal Manipulator";
@@ -352,9 +353,9 @@ namespace SignalManipulator
         private System.Windows.Forms.ToolStripMenuItem saveAudioToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog audioOFD;
         private EffectChainControl effectChain;
-        private WaveformViewerControl waveformViewer;
         private AudioPlayerControl audioPlayer;
         private AudioRouterControl audioRouter;
+        private WaveformViewerControl waveformViewer;
     }
 }
 
