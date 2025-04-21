@@ -26,12 +26,9 @@ namespace SignalManipulator.Logic.Core
         private static readonly AudioRouter audioRouter = new AudioRouter(Instance);
         public AudioRouter AudioRouter => audioRouter;
 
+
         private static readonly AudioViewer audioViewer = new AudioViewer();
         public AudioViewer AudioViewer => audioViewer;
-        //private static readonly WaveformViewer waveformViewer = new WaveformViewer();
-        //public WaveformViewer WaveformViewer => waveformViewer;
-        //private static readonly SpectrumViewer spectrumViewer = new SpectrumViewer();
-        //public SpectrumViewer SpectrumViewer => spectrumViewer;
 
         private AudioEngine()
         {

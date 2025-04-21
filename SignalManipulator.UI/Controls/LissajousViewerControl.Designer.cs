@@ -33,11 +33,15 @@
             // 
             // formsPlot
             // 
+            this.formsPlot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.formsPlot.DisplayScale = 0F;
-            this.formsPlot.Location = new System.Drawing.Point(18, 13);
+            this.formsPlot.Location = new System.Drawing.Point(92, 0);
             this.formsPlot.Name = "formsPlot";
-            this.formsPlot.Size = new System.Drawing.Size(406, 225);
+            this.formsPlot.Size = new System.Drawing.Size(338, 328);
             this.formsPlot.TabIndex = 0;
+            this.formsPlot.Resize += new System.EventHandler(this.formsPlot_Resize);
             // 
             // LissajousViewerControl
             // 
@@ -45,7 +49,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.formsPlot);
             this.Name = "LissajousViewerControl";
-            this.Size = new System.Drawing.Size(461, 253);
+            this.Size = new System.Drawing.Size(515, 331);
             this.ResumeLayout(false);
 
         }

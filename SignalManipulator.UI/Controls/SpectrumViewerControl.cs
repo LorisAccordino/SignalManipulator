@@ -19,7 +19,7 @@ namespace SignalManipulator.UI.Controls
         private object lockObject = new object();
 
         private const int MAX_HZ = 20000;
-        private const int MAX_AMP = 110;
+        private const int MAX_DB = 125;
 
         private double[] smoothedMagnitudes;
         private double[] lastFrequencies;
@@ -67,7 +67,7 @@ namespace SignalManipulator.UI.Controls
             // Initialize
             spectrumPlot = formsPlot.Plot.Add.DataLogger();
             formsPlot.Plot.Axes.SetLimitsX(0, MAX_HZ);
-            formsPlot.Plot.Axes.SetLimitsY(0, MAX_AMP);
+            formsPlot.Plot.Axes.SetLimitsY(0, MAX_DB);
 
             spectrumPlot.ViewFull();
             spectrumPlot.ManageAxisLimits = false;

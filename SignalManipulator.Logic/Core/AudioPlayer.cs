@@ -14,6 +14,7 @@ namespace SignalManipulator.Logic.Core
         public bool IsStopped => PlaybackState == PlaybackState.Stopped;
 
         public string GetCurrentTime(string format = @"mm\:ss\.fff") => audioFileReader?.CurrentTime.ToString(format);
+        public int CurrentTime => (int)audioFileReader?.CurrentTime.TotalSeconds;
 
         public double PlaybackSpeed { get => playbackTimeStrechEffect.Speed; set => playbackTimeStrechEffect.Speed = value; }
         public bool PreservePitch { get => playbackTimeStrechEffect.PreservePitch; set => playbackTimeStrechEffect.PreservePitch = value; }
@@ -33,6 +34,8 @@ namespace SignalManipulator.Logic.Core
         // Audio providers & logic components
         public BufferedWaveProvider BufferedWaveProvider { get; private set; } = new BufferedWaveProvider(AudioEngine.DEFAULT_WAVE_FORMAT);
         public WaveFormat WaveFormat => BufferedWaveProvider?.WaveFormat ?? AudioEngine.DEFAULT_WAVE_FORMAT;
+        public string WaveFormatDesc => WaveFormat.ToString();
+        public int Duration => (int)audioFileReader.TotalTime.TotalSeconds;
         private AudioFileReader audioFileReader;
         private Thread playbackThread;
         private System.Timers.Timer updateTimer = new System.Timers.Timer(1000.0 / AudioEngine.TARGET_FPS);
@@ -124,6 +127,11 @@ namespace SignalManipulator.Logic.Core
             updateTimer.Stop();
             OnUpdate?.Invoke(this, EventArgs.Empty);
             OnStopped?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void SetTimeTo(int time)
+        {
+            audioFileReader.CurrentTime = TimeSpan.FromSeconds(time);
         }
 
         public bool IsBufferFull(int samples = 44100)
