@@ -101,7 +101,6 @@
             this.Controls.Add(this.panel);
             this.Name = "EffectChainControl";
             this.Size = new System.Drawing.Size(800, 450);
-            this.Load += new System.EventHandler(this.EffectChainControl_Load);
             this.panel.ResumeLayout(false);
             this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);

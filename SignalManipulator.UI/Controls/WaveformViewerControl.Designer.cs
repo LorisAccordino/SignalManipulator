@@ -47,7 +47,6 @@
             this.Controls.Add(this.formsPlot);
             this.Name = "WaveformViewerControl";
             this.Size = new System.Drawing.Size(746, 399);
-            this.Load += new System.EventHandler(this.WaveformViewerControl_Load);
             this.ResumeLayout(false);
 
         }

@@ -1,4 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -10,11 +11,11 @@ namespace SignalManipulator.UI.Controls
         public EffectChainControl()
         {
             InitializeComponent();
-        }
 
-        private void EffectChainControl_Load(object sender, System.EventArgs e)
-        {
-            effectChain = AudioEngine.Instance.EffectChain;
+            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            {
+                effectChain = AudioEngine.Instance.EffectChain;
+            }
         }
 
         private void addEffectButton_Click(object sender, System.EventArgs e)

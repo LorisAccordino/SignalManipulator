@@ -1,70 +1,69 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Viewers;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
     public partial class WaveformViewerControl : UserControl
     {
-        private AudioEngine audioEngine;
-
+        private WaveformViewer viewer;
         private DataStreamer wavePlot;
-        private double[] waveform;
+        private List<double> waveform = new List<double>();
 
-        public WaveformViewerControl Instance;
+        //public WaveformViewerControl Instance;
 
         public WaveformViewerControl()
         {
-            Instance = this;
+            //Instance = this;
 
             InitializeComponent();
-        }
 
-        private void WaveformViewerControl_Load(object sender, EventArgs e)
-        {
-            InitializePlot();
+            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            {
+                viewer = AudioEngine.Instance.WaveformViewer;
+                viewer.OnUpdate += UpdatePlot;
+                viewer.OnWaveformUpdated += UpdatePlotData;
 
-            audioEngine = AudioEngine.Instance;
-            audioEngine.AudioPlayer.OnUpdate += (s, _) => UpdatePlot();
-            audioEngine.AudioPlayer.OnUpdateData += (s, buf) => UpdateWaveform(buf);
-
-            waveform = new double[AudioEngine.CHUNK_SIZE];
+                InitializePlot();
+            }
         }
 
 
         private void InitializePlot()
         {
-            wavePlot = formsPlot.Plot.Add.DataStreamer(AudioEngine.SAMPLE_RATE);
-            formsPlot.Plot.Axes.SetLimitsX(0, AudioEngine.SAMPLE_RATE);
+            wavePlot = formsPlot.Plot.Add.DataStreamer(viewer.SampleRate);
+            formsPlot.Plot.Axes.SetLimitsX(0, viewer.SampleRate);
+            formsPlot.Plot.Axes.SetLimitsY(-1, 1);
             wavePlot.ViewScrollLeft();
             wavePlot.ManageAxisLimits = false;
         }
 
-        private byte[] latestBuffer = Array.Empty<byte>();
-
-        public void UpdateWaveform(byte[] buffer)
+        private void UpdatePlotData(double[] waveform)
         {
-            latestBuffer = buffer;
+            this.waveform.AddRange(waveform);
         }
 
         private void UpdatePlot()
         {
-            if (latestBuffer.Length == 0) return;
-
-            // Convert to float PCM data
-            int sampleCount = latestBuffer.Length / 2; // 16-bit
-            waveform = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
+            // Add waveform
+            for (int i = 0; i < waveform.Count; i++)
             {
-                short sample = BitConverter.ToInt16(latestBuffer, i * 2);
-                waveform[i] = sample / 32768.0;
+                wavePlot.Add(waveform[i]);
             }
+            //wavePlot.AddRange(waveform.ToArray());
+            waveform.Clear();
 
-            wavePlot.AddRange(waveform);
-            formsPlot.Refresh();
-            formsPlot.Plot.Axes.AutoScaleX();
+            // Update plot
+            formsPlot.SafeInvoke(() =>
+            {
+                formsPlot.Refresh();
+                float zoomMultiplier = viewer.SampleRate / (AudioEngine.CHUNK_SIZE * 100f);
+                formsPlot.Plot.Axes.SetLimitsX(viewer.SampleRate - (AudioEngine.CHUNK_SIZE * (zoom * zoomMultiplier)), viewer.SampleRate);
+            });
         }
     }
 }

@@ -188,7 +188,6 @@
             this.MinimumSize = new System.Drawing.Size(349, 135);
             this.Name = "AudioPlayerControl";
             this.Size = new System.Drawing.Size(379, 161);
-            this.Load += new System.EventHandler(this.AudioPlayerControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

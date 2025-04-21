@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Viewers;
 
 namespace SignalManipulator.Logic.Core
 {
@@ -10,10 +11,9 @@ namespace SignalManipulator.Logic.Core
 
         // Consts
         public const int CHUNK_SIZE = 512;
-        public const int SAMPLE_RATE = 44100; // 44.1 kHz
-        public const int CHANNELS = 2; // Stereo Audio
         public const int TARGET_FPS = 30;
-        public static readonly WaveFormat WAVE_FORMAT = WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);
+        public static readonly WaveFormat DEFAULT_WAVE_FORMAT = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+        //public WaveFormat WAVE_FORMAT => AudioPlayer.WaveFormat;
 
 
         // Modules references
@@ -25,6 +25,9 @@ namespace SignalManipulator.Logic.Core
 
         private static readonly AudioRouter audioRouter = new AudioRouter(Instance);
         public AudioRouter AudioRouter => audioRouter;
+
+        private static readonly WaveformViewer waveformViewer = new WaveformViewer();
+        public WaveformViewer WaveformViewer => waveformViewer;
 
         private AudioEngine()
         {

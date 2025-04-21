@@ -7,7 +7,7 @@ namespace SignalManipulator.Logic.Providers
     {
         public IWaveProvider InnerProvider { get; set; }
 
-        public WaveFormat WaveFormat => InnerProvider?.WaveFormat ?? AudioEngine.WAVE_FORMAT;
+        public WaveFormat WaveFormat => InnerProvider?.WaveFormat ?? AudioEngine.DEFAULT_WAVE_FORMAT;
 
         public int Read(byte[] buffer, int offset, int count)
         {

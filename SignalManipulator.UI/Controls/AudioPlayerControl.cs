@@ -1,5 +1,6 @@
 ﻿using SignalManipulator.Logic.Core;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,12 +13,12 @@ namespace SignalManipulator.UI.Controls
         public AudioPlayerControl()
         {
             InitializeComponent();
-        }
 
-        private void AudioPlayerControl_Load(object sender, EventArgs e)
-        {
-            audioPlayer = AudioEngine.Instance.AudioPlayer;
-            InitializePlaybackEvents();
+            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            {
+                audioPlayer = AudioEngine.Instance.AudioPlayer;
+                InitializePlaybackEvents();
+            }
         }
 
         private void InitializePlaybackEvents()

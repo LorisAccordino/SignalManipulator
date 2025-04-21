@@ -1,5 +1,6 @@
 ﻿using SignalManipulator.Logic.Core;
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -11,12 +12,12 @@ namespace SignalManipulator.UI.Controls
         public AudioRouterControl()
         {
             InitializeComponent();
-        }
 
-        private void AudioRouterControl_Load(object sender, EventArgs e)
-        {
-            audioRouter = AudioEngine.Instance.AudioRouter;
-            LoadOutputDevices();
+            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            {
+                audioRouter = AudioEngine.Instance.AudioRouter;
+                LoadOutputDevices();
+            }
         }
 
         private void LoadOutputDevices()

@@ -30,10 +30,11 @@ namespace SignalManipulator.Logic.Core
 
 
         // Audio providers & logic components
-        public BufferedWaveProvider BufferedWaveProvider { get; private set; } = new BufferedWaveProvider(AudioEngine.WAVE_FORMAT);
+        public BufferedWaveProvider BufferedWaveProvider { get; private set; } = new BufferedWaveProvider(AudioEngine.DEFAULT_WAVE_FORMAT);
+        public WaveFormat WaveFormat => BufferedWaveProvider?.WaveFormat ?? AudioEngine.DEFAULT_WAVE_FORMAT;
         private AudioFileReader audioFileReader;
         private Thread playbackThread;
-        private System.Timers.Timer updateTimer = new System.Timers.Timer(1.0 / AudioEngine.TARGET_FPS);
+        private System.Timers.Timer updateTimer = new System.Timers.Timer(1000.0 / AudioEngine.TARGET_FPS);
 
 
         // Audio modules references
@@ -67,19 +68,16 @@ namespace SignalManipulator.Logic.Core
 
         public void LoadAudio(string path)
         {
-            LoadAudio(new AudioFileReader(path));
-            OnLoad?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void LoadAudio(AudioFileReader audioFileReader)
-        {
-            Stop(); // Stop previous if any            
-            this.audioFileReader = audioFileReader;
+            Stop(); // Stop previous if any
+                    
+            // Update providers
+            audioFileReader = new AudioFileReader(path);
             effectChain.SourceProvider.InnerProvider = audioFileReader;
 
             // Audio inits and settings
             BufferedWaveProvider = new BufferedWaveProvider(this.audioFileReader.WaveFormat);
             audioRouter.InitOutputs(BufferedWaveProvider);
+            OnLoad?.Invoke(this, EventArgs.Empty);
         }
 
 

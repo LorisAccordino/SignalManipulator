@@ -64,7 +64,6 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AudioRouterControl";
             this.Size = new System.Drawing.Size(471, 106);
-            this.Load += new System.EventHandler(this.AudioRouterControl_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
