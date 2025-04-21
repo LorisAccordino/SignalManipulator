@@ -81,9 +81,9 @@
             this.zoomAmntLbl.AutoSize = true;
             this.zoomAmntLbl.Location = new System.Drawing.Point(508, 11);
             this.zoomAmntLbl.Name = "zoomAmntLbl";
-            this.zoomAmntLbl.Size = new System.Drawing.Size(27, 13);
+            this.zoomAmntLbl.Size = new System.Drawing.Size(30, 13);
             this.zoomAmntLbl.TabIndex = 3;
-            this.zoomAmntLbl.Text = "1.0x";
+            this.zoomAmntLbl.Text = "100x";
             // 
             // zoomSlider
             // 

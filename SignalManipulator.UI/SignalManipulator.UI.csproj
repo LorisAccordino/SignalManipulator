@@ -118,6 +118,12 @@
     <Compile Include="Controls\AudioPlayerControl.Designer.cs">
       <DependentUpon>AudioPlayerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SpectrumViewerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SpectrumViewerControl.Designer.cs">
+      <DependentUpon>SpectrumViewerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WaveformViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -136,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AudioPlayerControl.resx">
       <DependentUpon>AudioPlayerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SpectrumViewerControl.resx">
+      <DependentUpon>SpectrumViewerControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\WaveformViewerControl.resx">
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>

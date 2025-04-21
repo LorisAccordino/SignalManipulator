@@ -1,7 +1,8 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Effects;
 using System;
 
-namespace SignalManipulator.Logic.Effects
+namespace SignalManipulator.Logic.Utils
 {
     public static class EffectFactoryHelper
     {
@@ -17,5 +18,4 @@ namespace SignalManipulator.Logic.Effects
             };
         }
     }
-
 }

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
@@ -82,6 +85,9 @@
     <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -95,14 +101,17 @@
     <Compile Include="Core\AudioRouter.cs" />
     <Compile Include="Core\EffectChain.cs" />
     <Compile Include="Effects\AudioEffect.cs" />
-    <Compile Include="Effects\EffectFactoryHelper.cs" />
+    <Compile Include="Effects\EchoEffect.cs" />
+    <Compile Include="Utils\EffectFactoryHelper.cs" />
     <Compile Include="Effects\IAudioEffect.cs" />
     <Compile Include="Effects\PitchShiftEffect.cs" />
     <Compile Include="Effects\SoundTouchEffect.cs" />
     <Compile Include="Effects\TimeStretchEffect.cs" />
-    <Compile Include="Helpers\AudioHelper.cs" />
+    <Compile Include="Utils\AudioMathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\DynamicWaveProvider.cs" />
+    <Compile Include="Utils\FrequencySpectrum.cs" />
+    <Compile Include="Viewers\SpectrumViewer.cs" />
     <Compile Include="Viewers\WaveformViewer.cs" />
   </ItemGroup>
   <ItemGroup />

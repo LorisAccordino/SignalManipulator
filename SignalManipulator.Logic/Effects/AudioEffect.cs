@@ -6,16 +6,13 @@ namespace SignalManipulator.Logic.Effects
     {
         public abstract string Name { get; }
         public WaveFormat WaveFormat => sourceProvider.WaveFormat;
-        private IWaveProvider sourceProvider;
+        protected IWaveProvider sourceProvider;
 
         public AudioEffect(IWaveProvider sourceProvider)
         {
             this.sourceProvider = sourceProvider;
         }
-        
-        public virtual int Read(byte[] buffer, int offset, int count)
-        {
-            return sourceProvider.Read(buffer, offset, count);
-        }
+
+        public abstract int Read(byte[] buffer, int offset, int count);
     }
 }

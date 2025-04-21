@@ -12,10 +12,11 @@ namespace SignalManipulator.UI.Controls
     {
         private WaveformViewer viewer;
         private DataStreamer wavePlot;
-        private List<double> waveform = new List<double>();
+        private List<double[]> waveformBuffer = new List<double[]>();
+        private object lockObject = new object();
 
         public float Zoom { get; set; } = 1.0f;
-        private float zoomMultiplier;
+        private float zoomMultiplier => viewer.SampleRate / (AudioEngine.CHUNK_SIZE * 100f);
 
         public WaveformViewerControl()
         {
@@ -25,60 +26,72 @@ namespace SignalManipulator.UI.Controls
             {
                 viewer = AudioEngine.Instance.WaveformViewer;
 
-                viewer.OnStarted += InitializePlot;
-                viewer.OnStopped += InitializePlot;
-                viewer.OnUpdate += UpdatePlot;
-                viewer.OnWaveformUpdated += UpdatePlotData;
-
-                zoomMultiplier = viewer.SampleRate / (AudioEngine.CHUNK_SIZE * 100f);
-                Zoom = 1;
-
+                InitializeEvents();
                 InitializePlot();
             }
         }
 
+        private void InitializeEvents()
+        {
+            viewer.OnStarted += ResetPlot;
+            viewer.OnStopped += ResetPlot;
+            viewer.OnUpdate += UpdatePlot;
+            viewer.OnWaveformUpdated += UpdatePlotData;
+        }
 
         private void InitializePlot()
         {
+            formsPlot.Plot.Title("Signal Waveform");
+            formsPlot.Plot.XLabel("Time");
+            formsPlot.Plot.YLabel("Amplitude");
+            formsPlot.UserInputProcessor.Disable();
+            
+            ResetPlot();
+        }
+
+        private void ResetPlot()
+        {
             // Clear previous data
             formsPlot.Plot.Clear();
-            waveform.Clear();
+            lock (lockObject) waveformBuffer.Clear();
             //wavePlot.Clear();
 
             // Initialize
             wavePlot = formsPlot.Plot.Add.DataStreamer(viewer.SampleRate);
             formsPlot.Plot.Axes.SetLimitsX(0, viewer.SampleRate);
             formsPlot.Plot.Axes.SetLimitsY(-1, 1);
+
             wavePlot.ViewScrollLeft();
             wavePlot.ManageAxisLimits = false;
         }
 
         private void UpdatePlotData(double[] waveform)
         {
-            this.waveform.AddRange(waveform);
+            lock (lockObject) waveformBuffer.Add(waveform);
         }
 
         private void UpdatePlot()
         {
-            // Add waveform points
-            for (int i = 0; i < waveform.Count; i++)
+            // Update waveform points
+            lock (lockObject)
             {
-                wavePlot.Add(waveform[i]);
+                for (int i = 0; i < waveformBuffer.Count; i++) 
+                    wavePlot.AddRange(waveformBuffer[i]);
+
+                waveformBuffer.Clear();
             }
-            waveform.Clear();
 
             // Update plot
-            formsPlot.SafeInvoke(() =>
-            {
-                formsPlot.Refresh();
-                formsPlot.Plot.Axes.SetLimitsX(viewer.SampleRate - (AudioEngine.CHUNK_SIZE * (Zoom * zoomMultiplier)), viewer.SampleRate);
-            });
+            formsPlot.SafeInvoke(() => formsPlot.Refresh());
         }
 
         private void zoomSlider_Scroll(object sender, EventArgs e)
         {
-            Zoom = zoomSlider.Value / 10.0f;
+            Zoom = (zoomSlider.Maximum + zoomSlider.Minimum - zoomSlider.Value) / 10.0f;
             zoomAmntLbl.Text = Zoom + "x";
+
+            float width = viewer.SampleRate - (AudioEngine.CHUNK_SIZE * (Zoom * zoomMultiplier));
+            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(width, viewer.SampleRate));
         }
     }
 }
