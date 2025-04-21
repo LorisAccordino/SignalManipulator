@@ -1,9 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using SignalManipulator.Logic.Core;
+using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
     public partial class EffectChainControl: UserControl
     {
+        private EffectChain effectChain = AudioEngine.Instance.EffectChain;
+
         public EffectChainControl()
         {
             InitializeComponent();

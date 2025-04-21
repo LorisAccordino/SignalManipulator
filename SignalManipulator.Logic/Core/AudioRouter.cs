@@ -16,27 +16,16 @@ namespace SignalManipulator.Logic.Core
         public AudioRouter(AudioEngine audioEngine)
         {
             this.audioEngine = audioEngine;
+            InitOutputs(audioEngine.AudioPlayer.BufferedWaveProvider);
             ChangeDevice(0);
         }
 
         public void InitOutputs(BufferedWaveProvider bufferedWaveProvider)
         {
-            /*
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                var wo = new WaveOutEvent { DeviceNumber = i };
-                wo.Init(audioEngine.AudioPlayer.BufferedWaveProvider);
-
-                outputDevices[i] = wo;
-                //providers[i] = bufferedWaveProvider;
-            }
-            */
-
             // Output
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 outputDevices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
-                //outputDevices[i].Init(soundTouchWaveProvider);
                 outputDevices[i].Init(bufferedWaveProvider);
             }
         }

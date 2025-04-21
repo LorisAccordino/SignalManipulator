@@ -93,9 +93,15 @@
     <Compile Include="Core\AudioEngine.cs" />
     <Compile Include="Core\AudioPlayer.cs" />
     <Compile Include="Core\AudioRouter.cs" />
+    <Compile Include="Core\EffectChain.cs" />
     <Compile Include="Effects\AudioEffect.cs" />
+    <Compile Include="Effects\EffectFactoryHelper.cs" />
+    <Compile Include="Effects\IAudioEffect.cs" />
+    <Compile Include="Effects\PitchShiftEffect.cs" />
+    <Compile Include="Effects\SoundTouchEffect.cs" />
     <Compile Include="Effects\TimeStretchEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\DynamicWaveProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

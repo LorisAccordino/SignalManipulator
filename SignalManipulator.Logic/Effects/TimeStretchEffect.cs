@@ -1,13 +1,10 @@
 ﻿using NAudio.Wave;
-using SoundTouch;
-using SoundTouch.Net.NAudioSupport;
 
 namespace SignalManipulator.Logic.Effects
 {
-    public class TimeStretchEffect : AudioEffect
+    public class TimeStretchEffect : SoundTouchEffect
     {
-        private SoundTouchWaveProvider soundTouchWaveProvider;
-        private SoundTouchProcessor soundTouchProcessor = new SoundTouchProcessor();
+        public override string Name => "Time Strech";
 
         public double Speed
         {
@@ -34,16 +31,9 @@ namespace SignalManipulator.Logic.Effects
             }
         }
 
-        public TimeStretchEffect(IWaveProvider sourceProvider)
+        public TimeStretchEffect(IWaveProvider sourceProvider) : base(sourceProvider)
         {
-            soundTouchWaveProvider = new SoundTouchWaveProvider(sourceProvider, soundTouchProcessor);
             Speed = 1.0f;
-        }
-
-        public override byte[] Process(byte[] data)
-        {
-            soundTouchWaveProvider.Read(data, 0, data.Length);
-            return data;
         }
     }
 }

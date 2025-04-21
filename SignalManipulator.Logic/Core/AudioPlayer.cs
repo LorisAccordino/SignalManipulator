@@ -1,7 +1,6 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Effects;
-using System.IO.Ports;
-using System.IO;
+using System;
 using System.Threading;
 
 namespace SignalManipulator.Logic.Core
@@ -9,70 +8,129 @@ namespace SignalManipulator.Logic.Core
     public class AudioPlayer
     {
         // Properties
-        public double PlaybackSpeed { get; set; } = 1.0;
-        public bool IsPlaying => audioRouter.CurrentDevice.PlaybackState == PlaybackState.Playing;
-        public bool IsPaused => audioRouter.CurrentDevice.PlaybackState == PlaybackState.Paused;
-        public bool IsStopped => audioRouter.CurrentDevice.PlaybackState == PlaybackState.Stopped;
+        public PlaybackState PlaybackState => audioRouter.CurrentDevice.PlaybackState;
+        public bool IsPlaying => PlaybackState == PlaybackState.Playing;
+        public bool IsPaused => PlaybackState == PlaybackState.Paused;
+        public bool IsStopped => PlaybackState == PlaybackState.Stopped;
 
-        public string GetCurrentTime(string format = @"mm\:ss\.fff") => audioFile.CurrentTime.ToString(format);
+        public string GetCurrentTime(string format = @"mm\:ss\.fff") => audioFileReader?.CurrentTime.ToString(format);
 
+        public double PlaybackSpeed { get => playbackTimeStrechEffect.Speed; set => playbackTimeStrechEffect.Speed = value; }
+        public bool PreservePitch { get => playbackTimeStrechEffect.PreservePitch; set => playbackTimeStrechEffect.PreservePitch = value; }
+
+
+        // Events
+        public event EventHandler OnLoad;
+        public event EventHandler OnUpdate;
+        public event EventHandler OnStarted;
+        public event EventHandler OnPaused;
+        public event EventHandler OnStopped;
+        public event EventHandler<bool> OnPlaybackStateChanged;
 
 
         // Audio providers & logic components
         public BufferedWaveProvider BufferedWaveProvider { get; private set; } = new BufferedWaveProvider(AudioEngine.WAVE_FORMAT);
-        private AudioFileReader audioFile;
+        private AudioFileReader audioFileReader;
         private Thread playbackThread;
+        private System.Timers.Timer updateTimer = new System.Timers.Timer(1.0 / AudioEngine.TARGET_FPS);
 
 
         // Audio modules references
         private AudioEngine audioEngine;
         private AudioRouter audioRouter => audioEngine.AudioRouter;
+        private EffectChain effectChain => audioEngine.EffectChain;
+
+        private TimeStretchEffect playbackTimeStrechEffect;
 
         public AudioPlayer(AudioEngine audioEngine)
         {
             this.audioEngine = audioEngine;
+
+            // Playback rate "effect"
+            effectChain.AddEffect<TimeStretchEffect>();
+            playbackTimeStrechEffect = effectChain.GetEffect(0) as TimeStretchEffect;
+            PlaybackSpeed = 1.0;
+            PreservePitch = false;
+
+            InitializePlaybackEvents();
         }
+
+        private void InitializePlaybackEvents()
+        {
+            OnStarted += (s, e) => OnPlaybackStateChanged.Invoke(this, true);
+            OnPaused += (s, e) => OnPlaybackStateChanged.Invoke(this, false);
+            OnStopped += (s, e) => OnPlaybackStateChanged.Invoke(this, false);
+            updateTimer.Elapsed += (s, e) => OnUpdate.Invoke(s, e);
+        }
+
 
         public void LoadAudio(string path)
         {
             LoadAudio(new AudioFileReader(path));
+            OnLoad?.Invoke(this, EventArgs.Empty);
         }
 
         public void LoadAudio(AudioFileReader audioFileReader)
         {
-            // Stop previous if any
-            Stop();
+            Stop(); // Stop previous if any            
+            this.audioFileReader = audioFileReader;
+            effectChain.SourceProvider.InnerProvider = audioFileReader;
 
-            // Audio file init
-            audioFile = audioFileReader;
-
-            // Processing providers
-            BufferedWaveProvider = new BufferedWaveProvider(audioFile.WaveFormat);
-            //soundTouchWaveProvider = new SoundTouchWaveProvider(bufferedWaveProvider, soundTouchProcessor);
-            //timeStrechEffect = new TimeStretchEffect(audioFile);
-
-            // Init outputs
+            // Audio inits and settings
+            BufferedWaveProvider = new BufferedWaveProvider(this.audioFileReader.WaveFormat);
             audioRouter.InitOutputs(BufferedWaveProvider);
-
-            /*
-            // Output
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                outputDevices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
-                //outputDevices[i].Init(soundTouchWaveProvider);
-                outputDevices[i].Init(bufferedWaveProvider);
-            }
-            */
-
-            // Update UI
-            playingAudioLbl.Text = Path.GetFileName(path);
-            playPauseBtn.Enabled = true;
-            stopBtn.Enabled = true;
-
-            // Recreate the thread
-            playbackThread = new Thread(PlaybackThreadRoutine);
         }
 
+
+
+        // State methods
+
+        public void Play()
+        {
+            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+
+            bool isStopped = IsStopped;
+            audioRouter.CurrentDevice.Play();
+
+            // Start playback thread
+            if (isStopped)
+            {
+                playbackThread = new Thread(PlaybackThreadRoutine);
+                playbackThread.Start();
+            }
+
+            updateTimer.Start();
+            OnStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Pause()
+        {
+            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+            
+            audioRouter.CurrentDevice.Pause();
+            OnPaused?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Stop()
+        {
+            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+
+            audioRouter.CurrentDevice.Stop();
+            audioFileReader.CurrentTime = TimeSpan.Zero;
+            BufferedWaveProvider.ClearBuffer();
+
+            updateTimer.Stop();
+            OnStopped?.Invoke(this, EventArgs.Empty);
+            OnUpdate?.Invoke(this, EventArgs.Empty);
+        }
+
+        public bool IsBufferFull(int samples = 44100)
+        {
+            return BufferedWaveProvider.BufferedBytes > samples * PlaybackSpeed;
+        }
+
+
+        // Thread routine
         private void PlaybackThreadRoutine()
         {
             byte[] buffer = new byte[AudioEngine.CHUNK_SIZE];
@@ -80,37 +138,14 @@ namespace SignalManipulator.Logic.Core
             while (!IsStopped)
             {
                 // Effects
-                //timeStrechEffect.Process(buffer);
+                effectChain.ProcessEffects(buffer);
 
-                // Add samples
+                // Add samples to the buffer
                 BufferedWaveProvider.AddSamples(buffer, 0, buffer.Length);
 
-                // Wait for the buffer to empty enough
+                // Wait for the buffer to be empty enough
                 while (IsBufferFull() && !IsStopped) Thread.Sleep(10);
             }
-        }
-
-
-        public void Play()
-        {
-
-        }
-
-        public void Pause()
-        {
-
-        }
-
-        public void Stop()
-        {
-
-        }
-
-
-        // State methods
-        public bool IsBufferFull(int samples = 44100)
-        {
-            return BufferedWaveProvider.BufferedBytes > samples * PlaybackSpeed;
         }
     }
 }

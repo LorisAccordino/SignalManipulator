@@ -1,4 +1,4 @@
-﻿using SignalManipulator.UI.Modules;
+﻿using SignalManipulator.UI.Controls;
 
 namespace SignalManipulator
 {
@@ -35,7 +35,7 @@ namespace SignalManipulator
             this.leftSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.importGroupBox = new System.Windows.Forms.GroupBox();
             this.effectsGroupBox = new System.Windows.Forms.GroupBox();
-            this.effectsList = new SignalManipulator.UI.Modules.EffectsChainControl();
+            this.effectsList = new SignalManipulator.UI.Controls.EffectChainControl();
             this.rightSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.bottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.playbackGroupBox = new System.Windows.Forms.GroupBox();
@@ -45,8 +45,8 @@ namespace SignalManipulator
             this.openAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioOFD = new System.Windows.Forms.OpenFileDialog();
-            this.audioPlayer = new SignalManipulator.UI.Modules.AudioPlayerControl();
-            this.audioRouter = new SignalManipulator.UI.Modules.AudioRouterControl();
+            this.audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
+            this.audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -337,7 +337,7 @@ namespace SignalManipulator
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAudioToolStripMenuItem;
-        private EffectsChainControl effectsList;
+        private EffectChainControl effectsList;
         private System.Windows.Forms.OpenFileDialog audioOFD;
         private AudioPlayerControl audioPlayer;
         private AudioRouterControl audioRouter;

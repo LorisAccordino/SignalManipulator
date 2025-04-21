@@ -1,0 +1,9 @@
+﻿using NAudio.Wave;
+
+namespace SignalManipulator.Logic.Effects
+{
+    public interface IAudioEffect : IWaveProvider
+    {
+        string Name { get; }
+    }
+}
