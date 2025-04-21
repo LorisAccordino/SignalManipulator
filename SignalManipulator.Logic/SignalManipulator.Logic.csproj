@@ -111,8 +111,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\DynamicWaveProvider.cs" />
     <Compile Include="Utils\FrequencySpectrum.cs" />
-    <Compile Include="Viewers\SpectrumViewer.cs" />
-    <Compile Include="Viewers\WaveformViewer.cs" />
+    <Compile Include="Viewers\AudioViewer.cs" />
+    <Compile Include="Viewers\LissajousViewer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

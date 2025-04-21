@@ -10,7 +10,7 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class WaveformViewerControl : UserControl
     {
-        private WaveformViewer viewer;
+        private AudioViewer viewer;
         private DataStreamer wavePlot;
         private List<double[]> waveformBuffer = new List<double[]>();
         private object lockObject = new object();
@@ -24,7 +24,7 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                viewer = AudioEngine.Instance.WaveformViewer;
+                viewer = AudioEngine.Instance.AudioViewer;
 
                 InitializeEvents();
                 InitializePlot();

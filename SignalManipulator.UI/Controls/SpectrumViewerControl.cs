@@ -12,7 +12,7 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class SpectrumViewerControl : UserControl
     {
-        private SpectrumViewer viewer;
+        private AudioViewer viewer;
         private DataLogger spectrumPlot;
         private List<double> waveformBuffer = new List<double>();
         private FrequencySpectrum spectrum; // Spectrum: freqs, magnitudes
@@ -31,7 +31,7 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                viewer = AudioEngine.Instance.SpectrumViewer;
+                viewer = AudioEngine.Instance.AudioViewer;
 
                 InitializeEvents();
                 InitializePlot();
