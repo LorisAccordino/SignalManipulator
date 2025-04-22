@@ -1,4 +1,6 @@
 ﻿using SignalManipulator.Logic.Core.Buffering;
+using SignalManipulator.Logic.Core.Sourcing;
+using SignalManipulator.Logic.Effects;
 using System;
 using System.Linq;
 using System.Threading;
@@ -12,6 +14,10 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly IBufferManager buffer;
         private readonly EffectChain effects;
         private CancellationTokenSource cts;
+        private TimeStretchEffect timeStrech;
+
+        public double Speed { get => timeStrech.Speed; set => timeStrech.Speed = value; }
+        public bool PreservePitch { get => timeStrech.PreservePitch; set => timeStrech.PreservePitch = value; }
 
         public event EventHandler<byte[]> OnDataAvailable;
         public event EventHandler OnFinished;
@@ -21,6 +27,8 @@ namespace SignalManipulator.Logic.Core.Playback
             this.source = source;
             this.buffer = buffer;
             this.effects = effects;
+            this.effects.AddEffect<TimeStretchEffect>();
+            timeStrech = effects.GetEffect<TimeStretchEffect>(0);
         }
 
         public void Start()
@@ -34,7 +42,8 @@ namespace SignalManipulator.Logic.Core.Playback
             var buffer = new byte[AudioEngine.CHUNK_SIZE];
             while (!ct.IsCancellationRequested)
             {
-                int read = effects.Output.Read(buffer, 0, buffer.Length);
+                //int read = effects.Output.Read(buffer, 0, buffer.Length);
+                int read = effects.EffectList.Last().Read(buffer, 0, buffer.Length);
                 if (read == 0) break;
                 this.buffer.AddSamples(buffer, 0, read);
                 OnDataAvailable?.Invoke(this, buffer.ToArray());
@@ -51,11 +60,5 @@ namespace SignalManipulator.Logic.Core.Playback
             buffer.Clear();
             source.Seek(TimeSpan.Zero);
         }
-
-        public void SetSpeed(float speed)
-        {
-            // delega al tuo TimeStretchEffect
-        }
-        public void SetPitchPreserve(bool preserve) { /* idem */ }
     }
 }

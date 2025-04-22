@@ -1,4 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Playback;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -26,8 +27,8 @@ namespace SignalManipulator.UI.Controls
             Disposed += (s, e) => audioPlayer.Stop();
             audioPlayer.OnUpdate += (s, e) => timeLbl.SafeInvoke(() =>
             {
-                timeLbl.Text = audioPlayer.GetCurrentTime();
-                timeBar.Value = audioPlayer.CurrentTime;
+                timeLbl.Text = audioPlayer.CurrentTime.ToString(@"mm\:ss\.fff");
+                timeBar.Value = (int)audioPlayer.CurrentTime.TotalSeconds;
             }) ;
             audioPlayer.OnPlaybackStateChanged += (s, e) => { playBtn.Visible = !e; pauseBtn.Visible = e; };
         }
@@ -35,12 +36,12 @@ namespace SignalManipulator.UI.Controls
 
         public void LoadAudio(string path)
         {
-            audioPlayer.LoadAudio(path);
+            audioPlayer.Load(path);
 
             // Update UI
-            playingAudioLbl.Text = Path.GetFileName(path);
+            playingAudioLbl.Text = audioPlayer.FileName;
             wvFmtLbl.Text = audioPlayer.WaveFormatDesc;
-            timeBar.Maximum = audioPlayer.Duration;
+            timeBar.Maximum = (int)audioPlayer.TotalTime.TotalSeconds;
         }
 
         private void playBtn_Click(object sender, EventArgs e) => audioPlayer.Play();
@@ -51,7 +52,7 @@ namespace SignalManipulator.UI.Controls
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            audioPlayer.PlaybackSpeed = ((float)trackBar1.Value + 25) / 100; // TODO: to fix!!!
+            audioPlayer.PlaybackSpeed = trackBar1.Value;
             speedLbl.Text = audioPlayer.PlaybackSpeed + "x";
         }
 
@@ -62,7 +63,7 @@ namespace SignalManipulator.UI.Controls
 
         private void timeBar_Scroll(object sender, EventArgs e)
         {
-            audioPlayer.SetTimeTo(timeBar.Value);
+            audioPlayer.Seek(TimeSpan.FromSeconds(timeBar.Value));
         }
     }
 }

@@ -1,53 +1,65 @@
 ﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SignalManipulator.Logic.Core
 {
     public class AudioRouter
     {
-        // Outputs
-        public WaveOutEvent CurrentDevice => outputDevices[currentDeviceIndex];
-        private Dictionary<int, WaveOutEvent> outputDevices = new Dictionary<int, WaveOutEvent>();
+        private Dictionary<int, WaveOutEvent> devices = new Dictionary<int, WaveOutEvent>();
         private int currentDeviceIndex = -1;
 
-        // AudioEngine reference
-        private AudioEngine audioEngine;
-
-        public AudioRouter(AudioEngine audioEngine)
+        public WaveOutEvent CurrentDevice
         {
-            this.audioEngine = audioEngine;
-            InitOutputs(audioEngine.AudioPlayer.BufferedWaveProvider);
-            ChangeDevice(0);
+            get
+            {
+                if (currentDeviceIndex < 0 || !devices.ContainsKey(currentDeviceIndex))
+                    throw new InvalidOperationException("No device selected");
+                return devices[currentDeviceIndex];
+            }
         }
 
-        public void InitOutputs(BufferedWaveProvider bufferedWaveProvider)
+
+        // Init the output based on the provider, overwriting the previous ones
+        public void InitOutputs(IWaveProvider outputProvider)
         {
+            // Dispose the older WaveOutEvent
+            foreach (var w in devices.Values)
+                w.Dispose();
+            devices.Clear();
+
             // Output
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
-                outputDevices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
-                outputDevices[i].Init(bufferedWaveProvider);
+                devices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
+                devices[i].Init(outputProvider);
             }
+
+            // Select as default the first one
+            if (devices.Count > 0) ChangeDevice(0);
         }
 
         public void ChangeDevice(int newDevice)
         {
             if (currentDeviceIndex >= 0)
-                outputDevices[currentDeviceIndex].Pause();
+                devices[currentDeviceIndex].Pause();
 
-            outputDevices[newDevice].Play();
+            devices[newDevice].Play();
             currentDeviceIndex = newDevice;
         }
 
         public string[] GetOutputDevices()
         {
-            string[] devices = new string[WaveOut.DeviceCount];
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                var caps = WaveOut.GetCapabilities(i);
-                devices[i] = $"{i}: {caps.ProductName}";
-            }
-            return devices;
+            return Enumerable.Range(0, WaveOut.DeviceCount)
+                             .Select(i => $"{i}: {WaveOut.GetCapabilities(i).ProductName}")
+                             .ToArray();
+        }
+
+        public void Dispose()
+        {
+            foreach (var w in devices.Values) w.Dispose();
+            devices.Clear();
         }
     }
 }

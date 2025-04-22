@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Viewers;
 
 namespace SignalManipulator.Logic.Core
@@ -17,15 +18,14 @@ namespace SignalManipulator.Logic.Core
 
 
         // Modules references
-        private static readonly EffectChain effectChain = new EffectChain(Instance);
-        public EffectChain EffectChain => effectChain;
-
-        private static readonly AudioPlayer audioPlayer = new AudioPlayer(Instance);
-        public AudioPlayer AudioPlayer => audioPlayer;
-
         private static readonly AudioRouter audioRouter = new AudioRouter(Instance);
         public AudioRouter AudioRouter => audioRouter;
 
+        private static readonly EffectChain effectChain = new EffectChain(Instance);
+        public EffectChain EffectChain => effectChain;
+
+        private static readonly AudioPlayer audioPlayer = new AudioPlayer(audioRouter, effectChain);
+        public AudioPlayer AudioPlayer => audioPlayer;
 
         private static readonly AudioViewer audioViewer = new AudioViewer();
         public AudioViewer AudioViewer => audioViewer;

@@ -30,7 +30,12 @@ namespace SignalManipulator.Logic.Core
 
         public IAudioEffect GetEffect(int index)
         {
-            return effectList[index];
+            return GetEffect<IAudioEffect>(index);
+        }
+
+        public T GetEffect<T>(int index) where T : IAudioEffect
+        {
+            return (T)effectList[index];
         }
 
         public void RemoveEffect(IAudioEffect effect)
