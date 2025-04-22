@@ -97,9 +97,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AudioEngine.cs" />
-    <Compile Include="Core\AudioPlayer.cs" />
+    <Compile Include="Core\Sourcing\AudioFileLoader.cs" />
+    <Compile Include="Core\Playback\AudioPlayer.cs" />
     <Compile Include="Core\AudioRouter.cs" />
+    <Compile Include="Core\Buffering\BufferedWaveManager.cs" />
     <Compile Include="Core\EffectChain.cs" />
+    <Compile Include="Core\Sourcing\IAudioSource.cs" />
+    <Compile Include="Core\Buffering\IBufferManager.cs" />
+    <Compile Include="Core\Playback\IPlaybackService.cs" />
+    <Compile Include="Core\Playback\PlaybackService.cs" />
     <Compile Include="Effects\AudioEffect.cs" />
     <Compile Include="Effects\EchoEffect.cs" />
     <Compile Include="Utils\EffectFactoryHelper.cs" />

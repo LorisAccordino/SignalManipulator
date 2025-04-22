@@ -77,7 +77,7 @@ namespace SignalManipulator.UI.Controls
         private void UpdatePlotData(double[] waveform)
         {
             //lock (lockObject) this.spectrum = spectrum;
-            lock (lockObject) waveformBuffer.AddRange(waveform);
+            lock (lockObject) waveformBuffer.AddRange(AudioMathHelper.MakeMono(waveform));
         }
 
         private void CalculateSmoothedFFT()
@@ -123,7 +123,7 @@ namespace SignalManipulator.UI.Controls
 
                 for (int i = 0; i < spectrum.Frequencies.Length; i++)
                 {
-                    Coordinates coordinates = new Coordinates(spectrum.Frequencies[i] * 2, spectrum.Magnitudes[i]);
+                    Coordinates coordinates = new Coordinates(spectrum.Frequencies[i], spectrum.Magnitudes[i]);
 
                     if (spectrumPlot.Data.Coordinates.Count > i)
                         spectrumPlot.Data.Coordinates[i] = coordinates;

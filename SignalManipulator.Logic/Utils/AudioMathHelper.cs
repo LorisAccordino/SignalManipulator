@@ -41,6 +41,16 @@ namespace SignalManipulator.Logic.Utils
             return (left, right);
         }
 
+        public static double[] MakeMono(double[] stereo)
+        {
+            double[] mono = new double[stereo.Length / 2];
+            for (int i = 0; i < mono.Length; i++)
+            {
+                mono[i] = (stereo[i * 2] + stereo[i * 2 + 1]) / 2.0;
+            }
+            return mono;
+        }
+
 
         public static byte[] ConvertFloatToPcm(float[] input, WaveFormat format)
         {

@@ -3,7 +3,7 @@ using SignalManipulator.Logic.Effects;
 using System;
 using System.Threading;
 
-namespace SignalManipulator.Logic.Core
+namespace SignalManipulator.Logic.Core.Playback
 {
     public class AudioPlayer
     {
@@ -63,10 +63,10 @@ namespace SignalManipulator.Logic.Core
 
         private void InitializePlaybackEvents()
         {
-            OnStarted += (s, e) => OnPlaybackStateChanged.Invoke(this, true);
-            OnPaused += (s, e) => OnPlaybackStateChanged.Invoke(this, false);
-            OnStopped += (s, e) => OnPlaybackStateChanged.Invoke(this, false);
-            updateTimer.Elapsed += (s, e) => OnUpdate.Invoke(s, e);
+            OnStarted += (s, e) => OnPlaybackStateChanged?.Invoke(this, true);
+            OnPaused += (s, e) => OnPlaybackStateChanged?.Invoke(this, false);
+            OnStopped += (s, e) => OnPlaybackStateChanged?.Invoke(this, false);
+            updateTimer.Elapsed += (s, e) => OnUpdate?.Invoke(s, e);
         }
 
 
@@ -90,7 +90,7 @@ namespace SignalManipulator.Logic.Core
 
         public void Play()
         {
-            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+            if (!IsAudioReady()) return;
 
             bool isStopped = IsStopped;
             audioRouter.CurrentDevice.Play();
@@ -110,7 +110,7 @@ namespace SignalManipulator.Logic.Core
 
         public void Pause()
         {
-            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+            if (!IsAudioReady()) return;
             
             audioRouter.CurrentDevice.Pause();
             OnPaused?.Invoke(this, EventArgs.Empty);
@@ -118,7 +118,7 @@ namespace SignalManipulator.Logic.Core
 
         public void Stop()
         {
-            if (audioRouter.CurrentDevice == null || audioFileReader == null) return;
+            if (!IsAudioReady()) return;
 
             audioRouter.CurrentDevice.Stop();
             audioFileReader.CurrentTime = TimeSpan.Zero;
@@ -134,10 +134,18 @@ namespace SignalManipulator.Logic.Core
             audioFileReader.CurrentTime = TimeSpan.FromSeconds(time);
         }
 
+
+        private bool IsAudioReady()
+        {
+            return audioRouter.CurrentDevice != null && audioFileReader != null;
+        }
+
+
         public bool IsBufferFull(int samples = 44100)
         {
             return BufferedWaveProvider.BufferedBytes > samples * PlaybackSpeed;
         }
+
 
 
         // Thread routine
@@ -152,7 +160,7 @@ namespace SignalManipulator.Logic.Core
 
                 // Add samples to the buffer
                 BufferedWaveProvider.AddSamples(buffer, 0, buffer.Length);
-                OnUpdateData.Invoke(this, buffer);
+                OnUpdateData?.Invoke(this, buffer);
 
                 // Wait for the buffer to be empty enough
                 while (IsBufferFull() && !IsStopped) Thread.Sleep(10);

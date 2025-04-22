@@ -96,7 +96,7 @@
             // 
             this.timeInfoLbl.AutoSize = true;
             this.timeInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeInfoLbl.Location = new System.Drawing.Point(9, 27);
+            this.timeInfoLbl.Location = new System.Drawing.Point(9, 28);
             this.timeInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.timeInfoLbl.Name = "timeInfoLbl";
             this.timeInfoLbl.Size = new System.Drawing.Size(95, 16);
@@ -107,7 +107,7 @@
             // 
             this.timeLbl.AutoSize = true;
             this.timeLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeLbl.Location = new System.Drawing.Point(100, 28);
+            this.timeLbl.Location = new System.Drawing.Point(100, 29);
             this.timeLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.timeLbl.Name = "timeLbl";
             this.timeLbl.Size = new System.Drawing.Size(62, 16);
@@ -183,7 +183,7 @@
             // 
             this.wvFmtInfoLbl.AutoSize = true;
             this.wvFmtInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wvFmtInfoLbl.Location = new System.Drawing.Point(10, 46);
+            this.wvFmtInfoLbl.Location = new System.Drawing.Point(10, 50);
             this.wvFmtInfoLbl.Name = "wvFmtInfoLbl";
             this.wvFmtInfoLbl.Size = new System.Drawing.Size(86, 16);
             this.wvFmtInfoLbl.TabIndex = 11;
@@ -193,7 +193,7 @@
             // 
             this.wvFmtLbl.AutoSize = true;
             this.wvFmtLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wvFmtLbl.Location = new System.Drawing.Point(100, 46);
+            this.wvFmtLbl.Location = new System.Drawing.Point(100, 51);
             this.wvFmtLbl.Name = "wvFmtLbl";
             this.wvFmtLbl.Size = new System.Drawing.Size(10, 16);
             this.wvFmtLbl.TabIndex = 12;
@@ -204,7 +204,7 @@
             this.timeBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.timeBar.AutoSize = false;
-            this.timeBar.Location = new System.Drawing.Point(163, 26);
+            this.timeBar.Location = new System.Drawing.Point(163, 27);
             this.timeBar.Name = "timeBar";
             this.timeBar.Size = new System.Drawing.Size(146, 26);
             this.timeBar.TabIndex = 13;

@@ -1,9 +1,11 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Utils;
 using SignalManipulator.Logic.Viewers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -76,7 +78,7 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 for (int i = 0; i < waveformBuffer.Count; i++) 
-                    wavePlot.AddRange(waveformBuffer[i]);
+                    wavePlot.AddRange(AudioMathHelper.MakeMono(waveformBuffer[i]));
 
                 waveformBuffer.Clear();
             }
