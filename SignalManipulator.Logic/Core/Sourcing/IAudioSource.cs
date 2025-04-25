@@ -5,7 +5,7 @@ namespace SignalManipulator.Logic.Core.Sourcing
 {
     public interface IAudioSource : IDisposable
     {
-        IWaveProvider SourceProvider { get; }
+        ISampleProvider SourceProvider { get; }
         string FileName { get; }
         TimeSpan CurrentTime { get; }
         TimeSpan TotalTime { get; }

@@ -6,7 +6,7 @@ namespace SignalManipulator.Logic.Core.Sourcing
     public class AudioFileLoader : IAudioSource
     {
         private AudioFileReader reader;
-        public IWaveProvider SourceProvider => reader;
+        public ISampleProvider SourceProvider => reader;
         public string FileName => reader?.FileName;
         public TimeSpan CurrentTime => reader?.CurrentTime ?? TimeSpan.Zero;
         public TimeSpan TotalTime => reader?.TotalTime ?? TimeSpan.Zero;

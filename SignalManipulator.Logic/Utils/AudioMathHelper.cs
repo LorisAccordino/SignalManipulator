@@ -26,31 +26,6 @@ namespace SignalManipulator.Logic.Utils
             return Math.Pow(10.0, decibels / 20.0);
         }
 
-        public static (double[] left, double[] right) SplitStereo(double[] interleaved)
-        {
-            int sampleCount = interleaved.Length / 2;
-            double[] left = new double[sampleCount];
-            double[] right = new double[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                left[i] = interleaved[2 * i];
-                right[i] = interleaved[2 * i + 1];
-            }
-
-            return (left, right);
-        }
-
-        public static double[] MakeMono(double[] stereo)
-        {
-            double[] mono = new double[stereo.Length / 2];
-            for (int i = 0; i < mono.Length; i++)
-            {
-                mono[i] = (stereo[i * 2] + stereo[i * 2 + 1]) / 2.0;
-            }
-            return mono;
-        }
-
 
         public static byte[] ConvertFloatToPcm(float[] input, WaveFormat format)
         {
@@ -206,6 +181,12 @@ namespace SignalManipulator.Logic.Utils
             }
 
             return output;
+        }
+
+        public static double[] CalculateFFT(float[] samples, int sampleRate, out double[] frequencies)
+        {
+            double[] asDouble = Array.ConvertAll(samples, x => (double)x);
+            return CalculateFFT(asDouble, sampleRate, out frequencies);
         }
 
         public static double[] CalculateFFT(double[] samples, int sampleRate, out double[] frequencies)

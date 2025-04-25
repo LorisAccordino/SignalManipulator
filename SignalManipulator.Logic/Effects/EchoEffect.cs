@@ -14,27 +14,27 @@ namespace SignalManipulator.Logic.Effects
         public float WetMix { get; set; } = 0.5f;         // Wet quantity
         public float DryMix { get; set; } = 1.0f;         // Dry quantity
 
-        private double[] echoBuffer = Array.Empty<double>();
+        private float[] echoBuffer = Array.Empty<float>();
         private int echoIndex = 0;
 
-        public EchoEffect(IWaveProvider sourceProvider) : base(sourceProvider) { }
+        public EchoEffect(ISampleProvider sourceProvider) : base(sourceProvider) { }
 
-        public void Process(double[] buffer, int sampleRate)
+        public void Process(float[] buffer, int sampleRate)
         {
             int delaySamples = (DelayMs * sampleRate) / 1000;
 
             if (echoBuffer.Length != delaySamples)
             {
-                echoBuffer = new double[delaySamples];
+                echoBuffer = new float[delaySamples];
                 echoIndex = 0;
             }
 
             for (int i = 0; i < buffer.Length; i++)
             {
-                double dry = buffer[i];
-                double delayedSample = echoBuffer[echoIndex];
+                float dry = buffer[i];
+                float delayedSample = echoBuffer[echoIndex];
 
-                double wet = delayedSample * WetMix;
+                float wet = delayedSample * WetMix;
                 buffer[i] = dry * DryMix + wet;
 
                 // Write in the echo buffer
@@ -45,26 +45,17 @@ namespace SignalManipulator.Logic.Effects
             }
         }
 
-        public override int Read(byte[] buffer, int offset, int count)
+        public override int Read(float[] samples, int offset, int count)
         {
             // Read the original data
-            int bytesRead = sourceProvider.Read(buffer, offset, count);
-            if (bytesRead == 0)
+            int samplesRead = sourceProvider.Read(samples, offset, count);
+            if (samplesRead == 0)
                 return 0;
 
-            // Convert to double
-            double[] doubleBuffer = AudioMathHelper.ConvertPcmToDouble(buffer, WaveFormat);
-
             // Apply effect
-            Process(doubleBuffer, WaveFormat.SampleRate);
+            Process(samples, WaveFormat.SampleRate);
 
-            // Convert back to byte[]
-            byte[] processedBytes = AudioMathHelper.ConvertDoubleToPcm(doubleBuffer, WaveFormat);
-
-            // Copy into the original buffer
-            Array.Copy(processedBytes, 0, buffer, offset, bytesRead);
-
-            return bytesRead;
+            return samplesRead;
         }
     }
 }

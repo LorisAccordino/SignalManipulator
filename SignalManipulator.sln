@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManipulator.UI", "Sig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManipulator.Logic", "SignalManipulator.Logic\SignalManipulator.Logic.csproj", "{27D82DD1-06E7-419F-A4E1-27EE2099120F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManipulator.Benchmarks", "SignalManipulator.Benchmarks\SignalManipulator.Benchmarks.csproj", "{9AC4F227-038E-4AA2-8084-AB1EB0545613}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{27D82DD1-06E7-419F-A4E1-27EE2099120F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D82DD1-06E7-419F-A4E1-27EE2099120F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D82DD1-06E7-419F-A4E1-27EE2099120F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

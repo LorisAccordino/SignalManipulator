@@ -12,9 +12,10 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class SpectrumViewerControl : UserControl
     {
-        private AudioViewer viewer;
+        private AudioVisualizer viewer;
         private DataLogger spectrumPlot;
         private List<double> waveformBuffer = new List<double>();
+        //private List<FrequencySpectrum> spectrumBuffer = new List<FrequencySpectrum>();
         private FrequencySpectrum spectrum; // Spectrum: freqs, magnitudes
         private object lockObject = new object();
 
@@ -44,7 +45,7 @@ namespace SignalManipulator.UI.Controls
             viewer.OnStopped += ResetPlot;
             viewer.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
-            viewer.OnWaveformUpdated += UpdatePlotData;
+            viewer.OnFrameAvailable += (frame) => UpdatePlotData(frame.DoubleMono);
         }
 
         private void InitializePlot()
@@ -74,10 +75,11 @@ namespace SignalManipulator.UI.Controls
         }
 
         //private void UpdatePlotData(FrequencySpectrum spectrum)
-        private void UpdatePlotData(double[] waveform)
+        private void UpdatePlotData(double[] monoWaveform)
         {
             //lock (lockObject) this.spectrum = spectrum;
-            lock (lockObject) waveformBuffer.AddRange(AudioMathHelper.MakeMono(waveform));
+            lock (lockObject) waveformBuffer.AddRange(monoWaveform);
+            //lock (lockObject) spectrumBuffer.Add(spectrum);
         }
 
         private void CalculateSmoothedFFT()
@@ -133,6 +135,7 @@ namespace SignalManipulator.UI.Controls
 
                 spectrum = null;
                 waveformBuffer.Clear();
+                //spectrumBuffer.Clear();
             }
 
             formsPlot.SafeInvoke(() => formsPlot.Refresh());

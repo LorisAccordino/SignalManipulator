@@ -12,13 +12,15 @@ namespace SignalManipulator.Logic.Core
 
         // Consts
         public const int CHUNK_SIZE = 512;
-        public const int TARGET_FPS = 30;
-        public static readonly WaveFormat DEFAULT_WAVE_FORMAT = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+        public const int SAMPLE_RATE = 44100;
+        public const int CHANNELS = 2;
+        public const int TARGET_FPS = 20;
+        public static readonly WaveFormat DEFAULT_WAVE_FORMAT = WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);
         //public WaveFormat WAVE_FORMAT => AudioPlayer.WaveFormat;
 
 
         // Modules references
-        private static readonly AudioRouter audioRouter = new AudioRouter(Instance);
+        private static readonly AudioRouter audioRouter = new AudioRouter();
         public AudioRouter AudioRouter => audioRouter;
 
         private static readonly EffectChain effectChain = new EffectChain(Instance);
@@ -27,8 +29,8 @@ namespace SignalManipulator.Logic.Core
         private static readonly AudioPlayer audioPlayer = new AudioPlayer(audioRouter, effectChain);
         public AudioPlayer AudioPlayer => audioPlayer;
 
-        private static readonly AudioViewer audioViewer = new AudioViewer();
-        public AudioViewer AudioViewer => audioViewer;
+        private static readonly AudioVisualizer audioViewer = new AudioVisualizer();
+        public AudioVisualizer AudioViewer => audioViewer;
 
         private AudioEngine()
         {

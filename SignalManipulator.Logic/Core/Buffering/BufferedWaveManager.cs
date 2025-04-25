@@ -15,8 +15,8 @@ namespace SignalManipulator.Logic.Core.Buffering
         public void AddSamples(byte[] buffer, int offset, int count) => 
             this.buffer.AddSamples(buffer, offset, count);
 
-        public bool IsFull(int thresholdSamples) =>
-            buffer.BufferedBytes > thresholdSamples * buffer.WaveFormat.AverageBytesPerSecond / buffer.WaveFormat.SampleRate;
+        public bool IsFull(int thresholdSamples = AudioEngine.SAMPLE_RATE) =>
+            buffer.BufferedBytes > thresholdSamples * (buffer.WaveFormat.AverageBytesPerSecond / buffer.WaveFormat.SampleRate);
 
         public void Clear() => buffer.ClearBuffer();
     }

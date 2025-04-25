@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,12 @@ namespace SignalManipulator.Logic.Core
             }
         }
 
-
         // Init the output based on the provider, overwriting the previous ones
+        public void InitOutputs(ISampleProvider outputProvider) => InitOutputs(outputProvider.ToWaveProvider());
         public void InitOutputs(IWaveProvider outputProvider)
         {
+            if (outputProvider == null) return;
+
             // Dispose the older WaveOutEvent
             foreach (var w in devices.Values)
                 w.Dispose();
@@ -42,6 +45,8 @@ namespace SignalManipulator.Logic.Core
 
         public void ChangeDevice(int newDevice)
         {
+            if (devices.Count <= 0) return;
+
             if (currentDeviceIndex >= 0)
                 devices[currentDeviceIndex].Pause();
 

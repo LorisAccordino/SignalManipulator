@@ -6,7 +6,7 @@ namespace SignalManipulator.Logic.Core.Buffering
     {
         IWaveProvider OutputProvider { get; }
         void AddSamples(byte[] buffer, int offset, int count);
-        bool IsFull(int thresholdSamples);
+        bool IsFull(int thresholdSamples = AudioEngine.SAMPLE_RATE);
         void Clear();
     }
 }

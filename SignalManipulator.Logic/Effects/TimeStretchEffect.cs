@@ -8,11 +8,11 @@ namespace SignalManipulator.Logic.Effects
 
         public double Speed
         {
-            get => preservePitch ? soundTouchProcessor.Tempo : soundTouchProcessor.Rate;
+            get => preservePitch ? Processor.Tempo : Processor.Rate;
             set
             {
-                soundTouchProcessor.Rate = preservePitch ? 1.0 : value;
-                soundTouchProcessor.Tempo = !preservePitch ? 1.0 : value;
+                Processor.Rate = preservePitch ? 1.0 : value;
+                Processor.Tempo = !preservePitch ? 1.0 : value;
             }
         }
 
@@ -31,7 +31,7 @@ namespace SignalManipulator.Logic.Effects
             }
         }
 
-        public TimeStretchEffect(IWaveProvider sourceProvider) : base(sourceProvider)
+        public TimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
             Speed = 1.0f;
         }

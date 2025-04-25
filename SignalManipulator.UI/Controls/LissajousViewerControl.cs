@@ -12,7 +12,7 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class LissajousViewerControl : UserControl
     {
-        private AudioViewer viewer;
+        private AudioVisualizer viewer;
         private Scatter xyPlot;
         private List<double> waveformBuffer = new List<double>();
         private object lockObject = new object();
@@ -40,7 +40,7 @@ namespace SignalManipulator.UI.Controls
             viewer.OnStopped += ResetPlot;
             viewer.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
-            viewer.OnWaveformUpdated += UpdatePlotData;
+            viewer.OnFrameAvailable += (frame) => UpdatePlotData(frame.DoubleStereo);
         }
 
         private void InitializePlot()
@@ -90,18 +90,14 @@ namespace SignalManipulator.UI.Controls
             {
                 if (waveformBuffer.Count < MAX_SAMPLES) return;
 
-                var (tmpLeft, tmpRight) = AudioMathHelper.SplitStereo(waveformBuffer.ToArray());
+                (double[] tmpLeft, double[] tmpRight) = waveformBuffer.ToArray().SplitStereo();
                 waveformBuffer.Clear();
 
                 Array.Copy(tmpLeft, left, tmpLeft.Length);
                 Array.Copy(tmpRight, right, tmpRight.Length);
             }
 
-            formsPlot.SafeInvoke(() =>
-            {
-                formsPlot.Refresh();
-                formsPlot.Update();
-            });
+            formsPlot.SafeInvoke(() => formsPlot.Refresh());
         }
 
         private void formsPlot_Resize(object sender, EventArgs e)

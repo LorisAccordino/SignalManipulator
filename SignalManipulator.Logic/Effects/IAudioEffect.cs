@@ -2,8 +2,9 @@
 
 namespace SignalManipulator.Logic.Effects
 {
-    public interface IAudioEffect : IWaveProvider
+    public interface IAudioEffect : ISampleProvider
     {
         string Name { get; }
+        void SetSource(ISampleProvider newSourceProvider);
     }
 }

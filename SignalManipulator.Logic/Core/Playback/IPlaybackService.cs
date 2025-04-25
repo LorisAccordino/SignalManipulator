@@ -6,9 +6,10 @@ namespace SignalManipulator.Logic.Core.Playback
     {
         double Speed { get; set; }
         bool PreservePitch { get; set; }
-        event EventHandler<byte[]> OnDataAvailable;
+        event Action OnUpdate;
+        event Action<float[]> OnDataAvailable;
         event EventHandler OnFinished;
-        void Start();
+        void Play();
         void Pause();
         void Stop();
     }

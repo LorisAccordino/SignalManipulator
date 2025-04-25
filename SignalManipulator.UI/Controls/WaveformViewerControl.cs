@@ -1,20 +1,18 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Utils;
 using SignalManipulator.Logic.Viewers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
     public partial class WaveformViewerControl : UserControl
     {
-        private AudioViewer viewer;
+        private AudioVisualizer viewer;
         private DataStreamer wavePlot;
-        private List<double[]> waveformBuffer = new List<double[]>();
+        private List<AudioFrame> frames = new List<AudioFrame>();
         private object lockObject = new object();
 
         public float Zoom { get; set; } = 1.0f;
@@ -38,7 +36,7 @@ namespace SignalManipulator.UI.Controls
             viewer.OnStarted += ResetPlot;
             viewer.OnStopped += ResetPlot;
             viewer.OnUpdate += UpdatePlot;
-            viewer.OnWaveformUpdated += UpdatePlotData;
+            viewer.OnFrameAvailable += UpdatePlotData;
         }
 
         private void InitializePlot()
@@ -55,7 +53,7 @@ namespace SignalManipulator.UI.Controls
         {
             // Clear previous data
             formsPlot.Plot.Clear();
-            lock (lockObject) waveformBuffer.Clear();
+            lock (lockObject) frames.Clear();
             //wavePlot.Clear();
 
             // Initialize
@@ -67,9 +65,9 @@ namespace SignalManipulator.UI.Controls
             wavePlot.ManageAxisLimits = false;
         }
 
-        private void UpdatePlotData(double[] waveform)
+        private void UpdatePlotData(AudioFrame frame)
         {
-            lock (lockObject) waveformBuffer.Add(waveform);
+            lock (lockObject) frames.Add(frame);
         }
 
         private void UpdatePlot()
@@ -77,10 +75,10 @@ namespace SignalManipulator.UI.Controls
             // Update waveform points
             lock (lockObject)
             {
-                for (int i = 0; i < waveformBuffer.Count; i++) 
-                    wavePlot.AddRange(AudioMathHelper.MakeMono(waveformBuffer[i]));
+                for (int i = 0; i < frames.Count; i++)
+                    wavePlot.AddRange(frames[i].DoubleMono);
 
-                waveformBuffer.Clear();
+                frames.Clear();
             }
 
             // Update plot

@@ -6,9 +6,9 @@ namespace SignalManipulator.Logic.Effects
     {
         public override string Name => "Pitch Shift";
 
-        public double Pitch { get => soundTouchProcessor.Pitch; set => soundTouchProcessor.Pitch = value; }
+        public double Pitch { get => Processor.Pitch; set => Processor.Pitch = value; }
 
-        public PitchShiftEffect(IWaveProvider sourceProvider) : base(sourceProvider)
+        public PitchShiftEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
             Pitch = 1.0;
         }

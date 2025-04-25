@@ -25,7 +25,7 @@ namespace SignalManipulator.UI.Controls
         private void InitializePlaybackEvents()
         {
             Disposed += (s, e) => audioPlayer.Stop();
-            audioPlayer.OnUpdate += (s, e) => timeLbl.SafeInvoke(() =>
+            audioPlayer.OnUpdate += () => timeLbl.SafeInvoke(() =>
             {
                 timeLbl.Text = audioPlayer.CurrentTime.ToString(@"mm\:ss\.fff");
                 timeBar.Value = (int)audioPlayer.CurrentTime.TotalSeconds;
@@ -52,7 +52,7 @@ namespace SignalManipulator.UI.Controls
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            audioPlayer.PlaybackSpeed = trackBar1.Value;
+            audioPlayer.PlaybackSpeed = trackBar1.Value / 100f;
             speedLbl.Text = audioPlayer.PlaybackSpeed + "x";
         }
 

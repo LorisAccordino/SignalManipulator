@@ -173,7 +173,7 @@ namespace SignalManipulator.Logic.Core.Playback
     public class AudioPlayer
     {
         private readonly IAudioSource loader;
-        private readonly IBufferManager buffer;
+        //private readonly IBufferManager buffer;
         private readonly IPlaybackService playback;
 
         private readonly AudioRouter router;
@@ -189,9 +189,9 @@ namespace SignalManipulator.Logic.Core.Playback
         public string FileName => loader.FileName;
         public TimeSpan CurrentTime => loader.CurrentTime;
         public TimeSpan TotalTime => loader.TotalTime;
-        public WaveFormat WaveFormat => loader.SourceProvider.WaveFormat;
+        public WaveFormat WaveFormat => loader.SourceProvider?.WaveFormat ?? AudioEngine.DEFAULT_WAVE_FORMAT;
         public string WaveFormatDesc => WaveFormat.ToString();
-        public IWaveProvider OutputProvider => buffer.OutputProvider;
+        //public IWaveProvider OutputProvider => buffer.OutputProvider;
 
         public double PlaybackSpeed { get => playback.Speed; set => playback.Speed = value; }
         public bool PreservePitch { get => playback.PreservePitch; set => playback.PreservePitch = value; }
@@ -199,35 +199,45 @@ namespace SignalManipulator.Logic.Core.Playback
 
         // Events
         public event EventHandler OnLoad;
-        public event EventHandler OnUpdate;
-        public event EventHandler<byte[]> OnUpdateData;
         public event EventHandler OnStarted;
         public event EventHandler OnResume;
         public event EventHandler OnPaused;
         public event EventHandler OnStopped;
         public event EventHandler<bool> OnPlaybackStateChanged;
 
+        public event Action OnUpdate;
+        public event Action<float[]> OnDataAvailable;
+
 
         public AudioPlayer(AudioRouter router, EffectChain effects)
         {
+            loader = new AudioFileLoader();
+            //buffer = new BufferedWaveManager(AudioEngine.DEFAULT_WAVE_FORMAT);
+            //playback = new PlaybackService(loader, buffer, effects);
+            playback = new PlaybackService(loader, effects, router);
             this.router = router;
             this.effects = effects;
 
-            loader = new AudioFileLoader();
-            buffer = new BufferedWaveManager(AudioEngine.DEFAULT_WAVE_FORMAT);
-            playback = new PlaybackService(loader, buffer, effects);
-            
             // Events wiring
-
+            playback.OnUpdate += () => OnUpdate?.Invoke();
+            playback.OnDataAvailable += (samples) => OnDataAvailable?.Invoke(samples);
         }
 
         public void Load(string path)
         {
             loader.Load(path);
-            buffer.Clear();
-            effects.SourceProvider.InnerProvider = loader.SourceProvider;
+
+            // Reset buffer and effect chain
+            //buffer.Clear();
+            //effects.SourceProvider.InnerProvider = loader.SourceProvider;
+            effects.SetSource(loader.SourceProvider);
+
+            // Init outputs
+            //router.InitOutputs(OutputProvider);
+
+            OnLoad?.Invoke(this, EventArgs.Empty);
         }
-        public void Play() => playback.Start();
+        public void Play() => playback.Play();
         public void Pause() => playback.Pause();
         public void Stop() => playback.Stop();
 
