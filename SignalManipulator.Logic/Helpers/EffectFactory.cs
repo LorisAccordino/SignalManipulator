@@ -2,9 +2,9 @@
 using SignalManipulator.Logic.Effects;
 using System;
 
-namespace SignalManipulator.Logic.Utils
+namespace SignalManipulator.Logic.Helpers
 {
-    public static class EffectFactoryHelper
+    public static class EffectFactory
     {
         public static Func<ISampleProvider, IAudioEffect> Create<T>() where T : IAudioEffect
         {

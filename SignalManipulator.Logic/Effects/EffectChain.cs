@@ -1,11 +1,10 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Helpers;
 using SignalManipulator.Logic.Providers;
-using SignalManipulator.Logic.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SignalManipulator.Logic.Core
+namespace SignalManipulator.Logic.Effects
 {
     public class EffectChain : ISampleProvider
     {
@@ -31,7 +30,7 @@ namespace SignalManipulator.Logic.Core
             //ISampleProvider input = effectList.Count == 0 ? (ISampleProvider)SourceProvider : effectList.Last();
             //ISampleProvider input = effectList.Count == 0 ? SourceProvider.ToSampleProvider() : effectList.Last();
             ISampleProvider input = effectList.Count == 0 ? SourceProvider : effectList.Last();
-            var factory = EffectFactoryHelper.Create<T>();
+            var factory = EffectFactory.Create<T>();
             effectList.Add(factory(input));
         }
 

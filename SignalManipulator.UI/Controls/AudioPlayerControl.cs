@@ -1,17 +1,16 @@
 ﻿using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Events;
 using SignalManipulator.Logic.Core.Playback;
+using SignalManipulator.Logic.Events;
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
     public partial class AudioPlayerControl : UserControl
     {
-        private PlaybackController playback;
-        private AudioEventDispatcher audioEventDispatcher;
+        private IPlaybackController playback;
+        private IAudioEventDispatcher audioEventDispatcher;
 
         public AudioPlayerControl()
         {

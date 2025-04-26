@@ -1,6 +1,6 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Events;
+using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class LissajousViewerControl : UserControl
     {
-        private AudioEventDispatcher audioEventDispatcher;
+        private IAudioEventDispatcher audioEventDispatcher;
         private Scatter xyPlot;
         private List<double> waveformBuffer = new List<double>();
         private object lockObject = new object();
@@ -40,7 +40,7 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
-            audioEventDispatcher.FrameReady += (frame) => UpdatePlotData(frame.DoubleStereo);
+            audioEventDispatcher.WaveformReady += (frame) => UpdatePlotData(frame.DoubleStereo);
         }
 
         private void InitializePlot()

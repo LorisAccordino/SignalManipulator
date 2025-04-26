@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SignalManipulator.Logic.Core
+namespace SignalManipulator.Logic.Core.Routing
 {
-    public class AudioRouter
+    public class AudioRouter : IAudioRouter
     {
         private Dictionary<int, WaveOutEvent> devices = new Dictionary<int, WaveOutEvent>();
         private int currentDeviceIndex = -1;

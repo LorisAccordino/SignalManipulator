@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.AudioMath;
 using System;
 
 namespace SignalManipulator.Logic.Providers
@@ -11,8 +11,8 @@ namespace SignalManipulator.Logic.Providers
 
         public event Action<byte[]> OnBytes;
         public event Action<float[]> OnSamples;
-        public event Action<AudioFrame> FrameReady;
-        public event Action<FrequencySpectrum> SpectrumReady;
+        public event Action<WaveformFrame> WaveformReady;
+        public event Action<FFTFrame> FFTReady;
 
         public bool EnableSpectrum { get; set; } = false;
 
@@ -30,13 +30,13 @@ namespace SignalManipulator.Logic.Providers
             float[] samples = buffer.AsFloats();
             OnSamples?.Invoke(samples);
 
-            AudioFrame frame = new AudioFrame(samples);
-            FrameReady?.Invoke(frame);
+            WaveformFrame frame = new WaveformFrame(samples);
+            WaveformReady?.Invoke(frame);
 
             if (EnableSpectrum)
             {
-                double[] magnitudes = AudioMathHelper.CalculateFFT(frame.DoubleStereo, SampleRate, out double[] freqs);
-                SpectrumReady?.Invoke(new FrequencySpectrum(freqs, magnitudes));
+                double[] magnitudes = FFTCalculator.CalculateFFT(frame.DoubleStereo, SampleRate, out double[] freqs);
+                FFTReady?.Invoke(new FFTFrame(freqs, magnitudes));
             }
 
             return read;

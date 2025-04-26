@@ -1,9 +1,9 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Events;
 using SignalManipulator.Logic.Core.Playback;
-using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.Events;
+using SignalManipulator.Logic.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,12 +13,12 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class SpectrumViewerControl : UserControl
     {
-        private PlaybackController playback;
-        private AudioEventDispatcher audioEventDispatcher;
+        private IPlaybackController playback;
+        private IAudioEventDispatcher audioEventDispatcher;
         private DataLogger spectrumPlot;
         private List<double> waveformBuffer = new List<double>();
         //private List<FrequencySpectrum> spectrumBuffer = new List<FrequencySpectrum>();
-        private FrequencySpectrum spectrum; // Spectrum: freqs, magnitudes
+        private FFTFrame spectrum; // Spectrum: freqs, magnitudes
         private object lockObject = new object();
 
         private const int MAX_HZ = 20000;
@@ -48,7 +48,7 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
-            audioEventDispatcher.FrameReady += (frame) => UpdatePlotData(frame.DoubleMono);
+            audioEventDispatcher.WaveformReady += (frame) => UpdatePlotData(frame.DoubleMono);
         }
 
         private void InitializePlot()
@@ -90,7 +90,7 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 // Calculate FFT from waveform data
-                FrequencySpectrum rawSpectrum = FrequencySpectrum.FromFFT(waveformBuffer.ToArray(), playback.SampleRate);
+                FFTFrame rawSpectrum = FFTFrame.FromFFT(waveformBuffer.ToArray(), playback.SampleRate);
 
                 // Initialize if null
                 if (smoothedMagnitudes == null || smoothedMagnitudes.Length != rawSpectrum.Magnitudes.Length)
@@ -110,7 +110,7 @@ namespace SignalManipulator.UI.Controls
                 }
 
                 // Create the new spectrum
-                spectrum = new FrequencySpectrum(lastFrequencies, smoothedMagnitudes.ToArray());
+                spectrum = new FFTFrame(lastFrequencies, smoothedMagnitudes.ToArray());
             }
         }
 

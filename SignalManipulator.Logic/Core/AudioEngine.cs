@@ -1,7 +1,9 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Core.Events;
 using SignalManipulator.Logic.Core.Playback;
+using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
+using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core
@@ -24,8 +26,8 @@ namespace SignalManipulator.Logic.Core
         // Modules references
         private static readonly IAudioSource audioLoader = new AudioFileLoader();
 
-        private static readonly AudioRouter audioRouter = new AudioRouter();
-        public AudioRouter AudioRouter => audioRouter;
+        private static readonly IAudioRouter audioRouter = new AudioRouter();
+        public IAudioRouter AudioRouter => audioRouter;
 
         private static readonly EffectChain effectChain = new EffectChain();
         public EffectChain EffectChain => effectChain;
@@ -35,13 +37,13 @@ namespace SignalManipulator.Logic.Core
         private static readonly IPlaybackService playbackService = 
             new PlaybackService(audioLoader, audioRouter, effectChain, audioDataProvider);
 
-        private static readonly PlaybackController playbackController = 
+        private static readonly IPlaybackController playbackController = 
             new PlaybackController(audioLoader, playbackService, audioRouter, effectChain);
-        public PlaybackController PlaybackController => playbackController;
+        public IPlaybackController PlaybackController => playbackController;
 
-        private static readonly AudioEventDispatcher audioEventDispatcher = 
+        private static readonly IAudioEventDispatcher audioEventDispatcher = 
             new AudioEventDispatcher(audioLoader, playbackService, audioDataProvider);
-        public AudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
+        public IAudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
 
         //private static readonly AudioPlayer audioPlayer = new AudioPlayer(audioRouter, effectChain);
         //public AudioPlayer AudioPlayer => audioPlayer;

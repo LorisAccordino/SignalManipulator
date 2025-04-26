@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Providers;
@@ -9,7 +10,7 @@ namespace SignalManipulator.Logic.Core.Playback
     public class PlaybackService : IPlaybackService
     {
         private readonly IAudioSource source;
-        private readonly AudioRouter router;
+        private readonly IAudioRouter router;
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
         private readonly System.Timers.Timer updateTimer;
@@ -27,7 +28,7 @@ namespace SignalManipulator.Logic.Core.Playback
         public event Action OnUpdate;
         //public event Action<AudioFrame> FrameReady;
 
-        public PlaybackService(IAudioSource source, AudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
+        public PlaybackService(IAudioSource source, IAudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
         {
             this.source = source;
             this.router = router;

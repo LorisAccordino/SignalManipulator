@@ -1,7 +1,7 @@
-﻿using SignalManipulator.Logic.Utils;
+﻿using SignalManipulator.Logic.Models;
 using System;
 
-namespace SignalManipulator.Logic.Core.Events
+namespace SignalManipulator.Logic.Events
 {
     public interface IAudioEventDispatcher
     {
@@ -12,7 +12,7 @@ namespace SignalManipulator.Logic.Core.Events
         event Action<bool> OnPlaybackStateChanged; // bool: isPlaying?
 
         event Action OnUpdate;
-        event Action<AudioFrame> FrameReady;
-        event Action<FrequencySpectrum> SpectrumReady;
+        event Action<WaveformFrame> WaveformReady;
+        event Action<FFTFrame> FFTReady;
     }
 }

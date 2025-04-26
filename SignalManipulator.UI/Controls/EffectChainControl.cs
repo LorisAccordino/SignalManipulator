@@ -1,4 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Effects;
 using System.ComponentModel;
 using System.Windows.Forms;
 

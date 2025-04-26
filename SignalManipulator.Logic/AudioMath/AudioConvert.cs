@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace SignalManipulator.Logic.Utils
+namespace SignalManipulator.Logic.AudioMath
 {
     public static class AudioConvert
     {
@@ -54,7 +54,6 @@ namespace SignalManipulator.Logic.Utils
             return (left.ToDouble(), right.ToDouble());
         }
 
-
         public static float[] ToMono(this float[] stereo)
         {
             float[] mono = new float[stereo.Length / 2];
@@ -63,6 +62,19 @@ namespace SignalManipulator.Logic.Utils
                 mono[i] = (stereo[i * 2] + stereo[i * 2 + 1]) / 2.0f;
             }
             return mono;
+        }
+
+        public static float ToDecibels(this float linear) => (float)ToDecibels((double)linear);
+        public static double ToDecibels(this double linear)
+        {
+            if (linear <= 0) return double.NegativeInfinity;
+            return 20.0 * Math.Log10(linear);
+        }
+
+        public static float ToLinear(this float decibels) => (float)ToLinear((double)decibels);
+        public static double ToLinear(this double decibels)
+        {
+            return Math.Pow(10.0, decibels / 20.0);
         }
     }
 }

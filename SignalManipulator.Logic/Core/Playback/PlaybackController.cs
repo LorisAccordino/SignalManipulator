@@ -1,5 +1,7 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
+using SignalManipulator.Logic.Effects;
 using System;
 
 namespace SignalManipulator.Logic.Core.Playback
@@ -8,10 +10,10 @@ namespace SignalManipulator.Logic.Core.Playback
     {
         private readonly IAudioSource loader;
         private readonly IPlaybackService playback;
-        private readonly AudioRouter router;
+        private readonly IAudioRouter router;
         private readonly EffectChain effects;
 
-        public PlaybackController(IAudioSource loader, IPlaybackService playback, AudioRouter router, EffectChain effects)
+        public PlaybackController(IAudioSource loader, IPlaybackService playback, IAudioRouter router, EffectChain effects)
         {
             this.loader = loader;
             this.playback = playback;

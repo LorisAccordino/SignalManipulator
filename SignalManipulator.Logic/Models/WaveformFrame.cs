@@ -1,16 +1,15 @@
-﻿using SignalManipulator.Logic.Utils;
-using System;
+﻿using SignalManipulator.Logic.AudioMath;
 
-namespace SignalManipulator.Logic.Core
+namespace SignalManipulator.Logic.Models
 {
-    public class AudioFrame
+    public class WaveformFrame
     {
         private readonly float[] floatStereo;
         private double[] cachedDoubleStereo;
         private float[] cachedMono;
         private double[] cachedDoubleMono;
 
-        public AudioFrame(float[] stereoSamples)
+        public WaveformFrame(float[] stereoSamples)
         {
             floatStereo = stereoSamples;
         }

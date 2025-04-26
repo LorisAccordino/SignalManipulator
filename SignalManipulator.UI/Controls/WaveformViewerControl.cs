@@ -1,7 +1,8 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Events;
 using SignalManipulator.Logic.Core.Playback;
+using SignalManipulator.Logic.Events;
+using SignalManipulator.Logic.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,10 +12,10 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class WaveformViewerControl : UserControl
     {
-        private PlaybackController playback;
-        private AudioEventDispatcher audioEventDispatcher;
+        private IPlaybackController playback;
+        private IAudioEventDispatcher audioEventDispatcher;
         private DataStreamer wavePlot;
-        private List<AudioFrame> frames = new List<AudioFrame>();
+        private List<WaveformFrame> frames = new List<WaveformFrame>();
         private object lockObject = new object();
 
         public float Zoom { get; set; } = 1.0f;
@@ -39,7 +40,7 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.OnLoad += ResetPlot;
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
-            audioEventDispatcher.FrameReady += UpdatePlotData;
+            audioEventDispatcher.WaveformReady += UpdatePlotData;
         }
 
         private void InitializePlot()
@@ -69,7 +70,7 @@ namespace SignalManipulator.UI.Controls
             wavePlot.ManageAxisLimits = false;
         }
 
-        private void UpdatePlotData(AudioFrame frame)
+        private void UpdatePlotData(WaveformFrame frame)
         {
             lock (lockObject) frames.Add(frame);
         }

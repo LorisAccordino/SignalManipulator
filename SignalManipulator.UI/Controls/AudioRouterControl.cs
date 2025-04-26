@@ -1,4 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Routing;
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -7,7 +8,7 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class AudioRouterControl : UserControl
     {
-        private AudioRouter audioRouter;
+        private IAudioRouter audioRouter;
 
         public AudioRouterControl()
         {

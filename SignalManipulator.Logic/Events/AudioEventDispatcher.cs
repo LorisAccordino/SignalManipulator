@@ -1,10 +1,10 @@
-﻿using SignalManipulator.Logic.Core.Playback;
+﻿using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Providers;
-using SignalManipulator.Logic.Utils;
 using System;
 
-namespace SignalManipulator.Logic.Core.Events
+namespace SignalManipulator.Logic.Events
 {
     public class AudioEventDispatcher : IAudioEventDispatcher
     {
@@ -15,8 +15,8 @@ namespace SignalManipulator.Logic.Core.Events
         public event Action<bool> OnPlaybackStateChanged;
 
         public event Action OnUpdate;
-        public event Action<AudioFrame> FrameReady;
-        public event Action<FrequencySpectrum> SpectrumReady;
+        public event Action<WaveformFrame> WaveformReady;
+        public event Action<FFTFrame> FFTReady;
 
         public AudioEventDispatcher(IAudioSource audioSource, IPlaybackService playbackService, AudioDataProvider dataProvider)
         {
@@ -31,8 +31,8 @@ namespace SignalManipulator.Logic.Core.Events
 
             // Frame & update
             playbackService.OnUpdate += () => OnUpdate?.Invoke();
-            dataProvider.FrameReady += frame => FrameReady?.Invoke(frame);
-            dataProvider.SpectrumReady += spec => SpectrumReady?.Invoke(spec);
+            dataProvider.WaveformReady += frame => WaveformReady?.Invoke(frame);
+            dataProvider.FFTReady += spec => FFTReady?.Invoke(spec);
         }
     }
 }

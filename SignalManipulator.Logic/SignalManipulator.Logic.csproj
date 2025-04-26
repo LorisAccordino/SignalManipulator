@@ -97,15 +97,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AudioEngine.cs" />
-    <Compile Include="Core\AudioFrame.cs" />
-    <Compile Include="Core\Events\AudioEventDispatcher.cs" />
-    <Compile Include="Core\Events\IAudioEventDispatcher.cs" />
+    <Compile Include="Core\Routing\IAudioRouter.cs" />
+    <Compile Include="Helpers\EventForwarder.cs" />
+    <Compile Include="Models\WaveformFrame.cs" />
+    <Compile Include="Events\AudioEventDispatcher.cs" />
+    <Compile Include="Events\IAudioEventDispatcher.cs" />
     <Compile Include="Core\Playback\IPlaybackController.cs" />
     <Compile Include="Core\Playback\PlaybackController.cs" />
     <Compile Include="Core\Sourcing\AudioFileLoader.cs" />
-    <Compile Include="Core\Playback\AudioPlayer.cs" />
-    <Compile Include="Core\AudioRouter.cs" />
-    <Compile Include="Core\EffectChain.cs" />
+    <Compile Include="Core\Routing\AudioRouter.cs" />
+    <Compile Include="Effects\EffectChain.cs" />
     <Compile Include="Core\Sourcing\IAudioSource.cs" />
     <Compile Include="Core\Playback\IPlaybackService.cs" />
     <Compile Include="Core\Playback\PlaybackService.cs" />
@@ -113,16 +114,15 @@
     <Compile Include="Effects\EchoEffect.cs" />
     <Compile Include="Providers\DefaultSampleProvider.cs" />
     <Compile Include="Providers\AudioDataProvider.cs" />
-    <Compile Include="Utils\AudioConvert.cs" />
-    <Compile Include="Utils\EffectFactoryHelper.cs" />
+    <Compile Include="AudioMath\AudioConvert.cs" />
+    <Compile Include="Helpers\EffectFactory.cs" />
     <Compile Include="Effects\IAudioEffect.cs" />
     <Compile Include="Effects\PitchShiftEffect.cs" />
     <Compile Include="Effects\SoundTouchEffect.cs" />
     <Compile Include="Effects\TimeStretchEffect.cs" />
-    <Compile Include="Utils\AudioMathHelper.cs" />
+    <Compile Include="AudioMath\FFTCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\DynamicWaveProvider.cs" />
-    <Compile Include="Utils\FrequencySpectrum.cs" />
+    <Compile Include="Models\FFTFrame.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

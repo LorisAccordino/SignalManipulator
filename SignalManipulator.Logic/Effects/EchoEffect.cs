@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Utils;
 using System;
 
 namespace SignalManipulator.Logic.Effects
