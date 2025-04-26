@@ -6,5 +6,6 @@ namespace SignalManipulator.Logic.Effects
     {
         string Name { get; }
         void SetSource(ISampleProvider newSourceProvider);
+        void Reset();
     }
 }

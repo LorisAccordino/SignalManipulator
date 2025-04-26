@@ -8,6 +8,7 @@ namespace SignalManipulator.Logic.Effects
     public abstract class SoundTouchEffect : AudioEffect
     {
         private readonly SoundTouchProcessor processor;
+        private SoundTouchWaveProvider soundTouchWaveProvider;
         private ISampleProvider processedProvider;
 
         public SoundTouchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
@@ -25,13 +26,18 @@ namespace SignalManipulator.Logic.Effects
         private void RebuildInternalPipeline()
         {
             var waveProvider = sourceProvider.ToWaveProvider();
-            var soundTouchWaveProvider = new SoundTouchWaveProvider(waveProvider, processor);
+            soundTouchWaveProvider = new SoundTouchWaveProvider(waveProvider, processor);
             processedProvider = soundTouchWaveProvider.ToSampleProvider();
         }
 
         public override int Read(float[] samples, int offset, int count)
         {
             return processedProvider.Read(samples, offset, count);
+        }
+
+        public override void Reset()
+        {
+            soundTouchWaveProvider.Clear();
         }
 
         protected SoundTouchProcessor Processor => processor;

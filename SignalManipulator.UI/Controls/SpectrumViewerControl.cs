@@ -1,8 +1,9 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Events;
+using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Utils;
-using SignalManipulator.Logic.Viewers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class SpectrumViewerControl : UserControl
     {
-        private AudioVisualizer viewer;
+        private PlaybackController playback;
+        private AudioEventDispatcher audioEventDispatcher;
         private DataLogger spectrumPlot;
         private List<double> waveformBuffer = new List<double>();
         //private List<FrequencySpectrum> spectrumBuffer = new List<FrequencySpectrum>();
@@ -32,7 +34,8 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                viewer = AudioEngine.Instance.AudioViewer;
+                playback = AudioEngine.Instance.PlaybackController;
+                audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
                 InitializeEvents();
                 InitializePlot();
@@ -41,11 +44,11 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            viewer.OnStarted += ResetPlot;
-            viewer.OnStopped += ResetPlot;
-            viewer.OnUpdate += UpdatePlot;
+            audioEventDispatcher.OnLoad += ResetPlot;
+            audioEventDispatcher.OnStopped += ResetPlot;
+            audioEventDispatcher.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
-            viewer.OnFrameAvailable += (frame) => UpdatePlotData(frame.DoubleMono);
+            audioEventDispatcher.FrameReady += (frame) => UpdatePlotData(frame.DoubleMono);
         }
 
         private void InitializePlot()
@@ -87,7 +90,7 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 // Calculate FFT from waveform data
-                FrequencySpectrum rawSpectrum = FrequencySpectrum.FromFFT(waveformBuffer.ToArray(), viewer.SampleRate);
+                FrequencySpectrum rawSpectrum = FrequencySpectrum.FromFFT(waveformBuffer.ToArray(), playback.SampleRate);
 
                 // Initialize if null
                 if (smoothedMagnitudes == null || smoothedMagnitudes.Length != rawSpectrum.Magnitudes.Length)

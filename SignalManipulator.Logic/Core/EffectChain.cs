@@ -16,13 +16,14 @@ namespace SignalManipulator.Logic.Core
         private List<IAudioEffect> effectList = new List<IAudioEffect>();
 
         // Audio modules references
-        private AudioEngine audioEngine;
+        //private AudioEngine audioEngine;
         //public DynamicWaveProvider SourceProvider { get; private set; } = new DynamicWaveProvider();
         public ISampleProvider SourceProvider { get; private set; } = new DefaultSampleProvider();
 
-        public EffectChain(AudioEngine audioEngine)
+        //public EffectChain(AudioEngine audioEngine)
+        public EffectChain()
         {
-            this.audioEngine = audioEngine;
+            //this.audioEngine = audioEngine;
         }
 
         public void AddEffect<T>() where T : IAudioEffect
@@ -77,13 +78,10 @@ namespace SignalManipulator.Logic.Core
                 effectList.Last().Read(samples, offset, count);
         }
 
-        /*public void ProcessEffects(byte[] buffer)
+        public void ResetAll()
         {
-            if (effectList.Count == 0) 
-                SourceProvider.Read(buffer, 0, buffer.Length);
-            else
-                effectList.Last().Read(buffer, 0, buffer.Length);
+            foreach (var effect in effectList)
+                effect.Reset();
         }
-        */
     }
 }

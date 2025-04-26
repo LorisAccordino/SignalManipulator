@@ -1,4 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Events;
 using SignalManipulator.Logic.Core.Playback;
 using System;
 using System.ComponentModel;
@@ -9,7 +10,8 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class AudioPlayerControl : UserControl
     {
-        private AudioPlayer audioPlayer;
+        private PlaybackController playback;
+        private AudioEventDispatcher audioEventDispatcher;
 
         public AudioPlayerControl()
         {
@@ -17,53 +19,55 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                audioPlayer = AudioEngine.Instance.AudioPlayer;
+                //audioPlayer = AudioEngine.Instance.AudioPlayer;
+                playback = AudioEngine.Instance.PlaybackController;
+                audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
                 InitializePlaybackEvents();
             }
         }
 
         private void InitializePlaybackEvents()
         {
-            Disposed += (s, e) => audioPlayer.Stop();
-            audioPlayer.OnUpdate += () => timeLbl.SafeInvoke(() =>
+            Disposed += (s, e) => playback.Stop();
+            audioEventDispatcher.OnUpdate += () => timeLbl.SafeInvoke(() =>
             {
-                timeLbl.Text = audioPlayer.CurrentTime.ToString(@"mm\:ss\.fff");
-                timeBar.Value = (int)audioPlayer.CurrentTime.TotalSeconds;
+                timeLbl.Text = playback.CurrentTime.ToString(@"mm\:ss\.fff");
+                timeBar.Value = (int)playback.CurrentTime.TotalSeconds;
             }) ;
-            audioPlayer.OnPlaybackStateChanged += (s, e) => { playBtn.Visible = !e; pauseBtn.Visible = e; };
+            audioEventDispatcher.OnPlaybackStateChanged += (playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
         }
 
 
         public void LoadAudio(string path)
         {
-            audioPlayer.Load(path);
+            playback.Load(path);
 
             // Update UI
-            playingAudioLbl.Text = audioPlayer.FileName;
-            wvFmtLbl.Text = audioPlayer.WaveFormatDesc;
-            timeBar.Maximum = (int)audioPlayer.TotalTime.TotalSeconds;
+            playingAudioLbl.Text = playback.FileName;
+            wvFmtLbl.Text = playback.WaveFormatDesc;
+            timeBar.Maximum = (int)playback.TotalTime.TotalSeconds;
         }
 
-        private void playBtn_Click(object sender, EventArgs e) => audioPlayer.Play();
+        private void playBtn_Click(object sender, EventArgs e) => playback.Play();
 
-        private void pauseBtn_Click(object sender, EventArgs e) => audioPlayer.Pause();
+        private void pauseBtn_Click(object sender, EventArgs e) => playback.Pause();
 
-        private void stopBtn_Click(object sender, EventArgs e) => audioPlayer.Stop();
+        private void stopBtn_Click(object sender, EventArgs e) => playback.Stop();
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            audioPlayer.PlaybackSpeed = trackBar1.Value / 100f;
-            speedLbl.Text = audioPlayer.PlaybackSpeed + "x";
+            playback.PlaybackSpeed = trackBar1.Value / 100f;
+            speedLbl.Text = playback.PlaybackSpeed + "x";
         }
 
         private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            audioPlayer.PreservePitch = pitchCheckBox.Checked;
+            playback.PreservePitch = pitchCheckBox.Checked;
         }
 
         private void timeBar_Scroll(object sender, EventArgs e)
         {
-            audioPlayer.Seek(TimeSpan.FromSeconds(timeBar.Value));
+            playback.Seek(TimeSpan.FromSeconds(timeBar.Value));
         }
     }
 }
