@@ -8,7 +8,7 @@ namespace SignalManipulator.Logic.Events
 {
     public class AudioEventDispatcher : IAudioEventDispatcher
     {
-        public event Action OnLoad;
+        public event Action<AudioInfo> OnLoad;
         public event Action OnResume;
         public event Action OnPaused;
         public event Action OnStopped;
@@ -21,7 +21,7 @@ namespace SignalManipulator.Logic.Events
         public AudioEventDispatcher(IAudioSource audioSource, IPlaybackService playbackService, AudioDataProvider dataProvider)
         {
             // File loading
-            audioSource.LoadCompleted += () => OnLoad?.Invoke();
+            audioSource.LoadCompleted += (info) => OnLoad?.Invoke(info);
 
             // Playback state
             playbackService.OnResume += () => OnResume?.Invoke();

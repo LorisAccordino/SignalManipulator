@@ -1,7 +1,7 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
-using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.AudioMath;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,10 +36,9 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += ResetPlot;
+            audioEventDispatcher.OnLoad += _ => ResetPlot();
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
-            //viewer.OnSpectrumUpdated += UpdatePlotData;
             audioEventDispatcher.WaveformReady += (frame) => UpdatePlotData(frame.DoubleStereo);
         }
 
@@ -54,15 +53,11 @@ namespace SignalManipulator.UI.Controls
             ResetPlot();
         }
 
-        //double[] xs = { 0.5, 0.5, 0.5 }; // stessa X
-        //double[] ys = { 0.25, 0.5, 0.75 }; // Y diversi
-
         private void ResetPlot()
         {
             // Clear previous data
             formsPlot.Plot.Clear();
             lock (lockObject) waveformBuffer.Clear();
-            //spectrumPlot.Clear();
 
             // Initialize
             xyPlot = formsPlot.Plot.Add.Scatter(left, right);

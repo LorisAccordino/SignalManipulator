@@ -11,14 +11,13 @@ namespace SignalManipulator.UI.Controls
     {
         private IPlaybackController playback;
         private IAudioEventDispatcher audioEventDispatcher;
-
+        
         public AudioPlayerControl()
         {
             InitializeComponent();
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                //audioPlayer = AudioEngine.Instance.AudioPlayer;
                 playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
                 InitializePlaybackEvents();
@@ -30,8 +29,8 @@ namespace SignalManipulator.UI.Controls
             Disposed += (s, e) => playback.Stop();
             audioEventDispatcher.OnUpdate += () => timeLbl.SafeInvoke(() =>
             {
-                timeLbl.Text = playback.CurrentTime.ToString(@"mm\:ss\.fff");
-                timeBar.Value = (int)playback.CurrentTime.TotalSeconds;
+                timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
+                timeBar.Value = (int)playback.Info.CurrentTime.TotalSeconds;
             }) ;
             audioEventDispatcher.OnPlaybackStateChanged += (playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
         }
@@ -42,9 +41,9 @@ namespace SignalManipulator.UI.Controls
             playback.Load(path);
 
             // Update UI
-            playingAudioLbl.Text = playback.FileName;
-            wvFmtLbl.Text = playback.WaveFormatDesc;
-            timeBar.Maximum = (int)playback.TotalTime.TotalSeconds;
+            playingAudioLbl.Text = playback.Info.FileName;
+            wvFmtLbl.Text = playback.Info.WaveFormatDescription;
+            timeBar.Maximum = (int)playback.Info.TotalTime.TotalSeconds;
         }
 
         private void playBtn_Click(object sender, EventArgs e) => playback.Play();

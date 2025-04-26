@@ -5,7 +5,7 @@ namespace SignalManipulator.Logic.Events
 {
     public interface IAudioEventDispatcher
     {
-        event Action OnLoad;
+        event Action<AudioInfo> OnLoad;
         event Action OnResume;
         event Action OnPaused;
         event Action OnStopped;

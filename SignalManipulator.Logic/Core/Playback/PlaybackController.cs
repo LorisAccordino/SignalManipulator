@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Models;
 using System;
 
 namespace SignalManipulator.Logic.Core.Playback
@@ -25,7 +26,7 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Load(string path)
         {
             loader.Load(path);
-            effects.SetSource(loader.SourceProvider);
+            effects.SetSource(loader.Info.SourceProvider);
         }
 
         public void Play() => playback.Play();
@@ -39,23 +40,10 @@ namespace SignalManipulator.Logic.Core.Playback
         public bool IsStopped => router.CurrentDevice.PlaybackState == PlaybackState.Stopped;
 
         // --- Audio info ---
-        public string FileName => loader.FileName;
-        public TimeSpan CurrentTime => loader.CurrentTime;
-        public TimeSpan TotalTime => loader.TotalTime;
-        public WaveFormat WaveFormat => loader.SourceProvider?.WaveFormat ?? AudioEngine.DEFAULT_WAVE_FORMAT;
-        public string WaveFormatDesc => WaveFormat.ToString();
-        public int SampleRate => WaveFormat.SampleRate;
+        public AudioInfo Info => loader.Info;
 
         // --- Parameters ---
-        public double PlaybackSpeed
-        {
-            get => playback.Speed;
-            set => playback.Speed = value;
-        }
-        public bool PreservePitch
-        {
-            get => playback.PreservePitch;
-            set => playback.PreservePitch = value;
-        }
+        public double PlaybackSpeed { get => playback.Speed; set => playback.Speed = value; }
+        public bool PreservePitch { get => playback.PreservePitch; set => playback.PreservePitch = value; }
     }
 }

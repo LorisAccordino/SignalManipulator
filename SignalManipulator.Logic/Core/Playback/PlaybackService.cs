@@ -26,7 +26,6 @@ namespace SignalManipulator.Logic.Core.Playback
         public event Action<bool> OnPlaybackStateChanged; // bool: playing?
 
         public event Action OnUpdate;
-        //public event Action<AudioFrame> FrameReady;
 
         public PlaybackService(IAudioSource source, IAudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
         {
@@ -37,10 +36,6 @@ namespace SignalManipulator.Logic.Core.Playback
 
             this.effects.AddEffect<TimeStretchEffect>();
             timeStrech = effects.GetEffect<TimeStretchEffect>(0);
-
-            // Insert an AudioDataProvider to catch the waveform
-            //audioDataProvider = new AudioDataProvider(effects);
-            //audioDataProvider.FrameReady += (frame) => FrameReady?.Invoke(frame);
 
             // Initialize the audio
             router.InitOutputs(this.audioDataProvider as IWaveProvider);

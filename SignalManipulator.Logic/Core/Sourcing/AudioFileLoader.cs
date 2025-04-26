@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Models;
 using System;
 
 namespace SignalManipulator.Logic.Core.Sourcing
@@ -6,18 +7,27 @@ namespace SignalManipulator.Logic.Core.Sourcing
     public class AudioFileLoader : IAudioSource
     {
         private AudioFileReader reader;
-        public ISampleProvider SourceProvider => reader;
-        public string FileName => reader?.FileName;
-        public TimeSpan CurrentTime => reader?.CurrentTime ?? TimeSpan.Zero;
-        public TimeSpan TotalTime => reader?.TotalTime ?? TimeSpan.Zero;
-        
-        public event Action LoadCompleted;
+
+        // Audio info
+        public AudioInfo Info => new AudioInfo
+        {
+            SourceProvider = reader,
+            FileName = reader?.FileName,
+            CurrentTime = reader?.CurrentTime ?? TimeSpan.Zero,
+            TotalTime = reader?.TotalTime ?? TimeSpan.Zero,
+            SampleRate = reader.WaveFormat.SampleRate,
+            Channels = reader.WaveFormat.Channels,
+            BitsPerSample = reader.WaveFormat.BitsPerSample,
+            WaveFormatDescription = reader.WaveFormat.ToString()
+        };
+
+        public event Action<AudioInfo> LoadCompleted;
 
         public void Load(string path)
         {
             reader?.Dispose();
             reader = new AudioFileReader(path);
-            LoadCompleted?.Invoke();
+            LoadCompleted?.Invoke(Info);
         }
 
         public void Seek(TimeSpan position)

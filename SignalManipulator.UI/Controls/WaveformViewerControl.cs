@@ -1,6 +1,5 @@
 ﻿using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using System;
@@ -12,14 +11,14 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class WaveformViewerControl : UserControl
     {
-        private IPlaybackController playback;
         private IAudioEventDispatcher audioEventDispatcher;
         private DataStreamer wavePlot;
         private List<WaveformFrame> frames = new List<WaveformFrame>();
         private object lockObject = new object();
 
+        private int sampleRate;
+        private float zoomMultiplier => sampleRate / (AudioEngine.CHUNK_SIZE * 100f);
         public float Zoom { get; set; } = 1.0f;
-        private float zoomMultiplier => playback.SampleRate / (AudioEngine.CHUNK_SIZE * 100f);
 
         public WaveformViewerControl()
         {
@@ -27,7 +26,6 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
                 InitializeEvents();
@@ -37,7 +35,8 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += ResetPlot;
+            audioEventDispatcher.OnLoad += info => sampleRate = info.SampleRate;
+            audioEventDispatcher.OnLoad += _ => ResetPlot();
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
             audioEventDispatcher.WaveformReady += UpdatePlotData;
@@ -62,8 +61,8 @@ namespace SignalManipulator.UI.Controls
             //wavePlot.Clear();
 
             // Initialize
-            wavePlot = formsPlot.Plot.Add.DataStreamer(playback.SampleRate);
-            formsPlot.Plot.Axes.SetLimitsX(0, playback.SampleRate);
+            wavePlot = formsPlot.Plot.Add.DataStreamer(sampleRate);
+            formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
             formsPlot.Plot.Axes.SetLimitsY(-1, 1);
 
             wavePlot.ViewScrollLeft();
@@ -94,8 +93,8 @@ namespace SignalManipulator.UI.Controls
             Zoom = (zoomSlider.Maximum + zoomSlider.Minimum - zoomSlider.Value) / 10.0f;
             zoomAmntLbl.Text = Zoom + "x";
 
-            float width = playback.SampleRate - (AudioEngine.CHUNK_SIZE * (Zoom * zoomMultiplier));
-            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(width, playback.SampleRate));
+            float width = sampleRate - (AudioEngine.CHUNK_SIZE * (Zoom * zoomMultiplier));
+            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(width, sampleRate));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using ScottPlot;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ namespace SignalManipulator.UI.Controls
 {
     public partial class SpectrumViewerControl : UserControl
     {
-        private IPlaybackController playback;
         private IAudioEventDispatcher audioEventDispatcher;
         private DataLogger spectrumPlot;
         private List<double> waveformBuffer = new List<double>();
@@ -23,6 +21,8 @@ namespace SignalManipulator.UI.Controls
 
         private const int MAX_HZ = 20000;
         private const int MAX_DB = 125;
+
+        private int sampleRate;
 
         private double[] smoothedMagnitudes;
         private double[] lastFrequencies;
@@ -34,7 +34,6 @@ namespace SignalManipulator.UI.Controls
 
             if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
             {
-                playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
                 InitializeEvents();
@@ -44,7 +43,8 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += ResetPlot;
+            audioEventDispatcher.OnLoad += info => sampleRate = info.SampleRate;
+            audioEventDispatcher.OnLoad += _ => ResetPlot();
             audioEventDispatcher.OnStopped += ResetPlot;
             audioEventDispatcher.OnUpdate += UpdatePlot;
             //viewer.OnSpectrumUpdated += UpdatePlotData;
@@ -90,7 +90,7 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 // Calculate FFT from waveform data
-                FFTFrame rawSpectrum = FFTFrame.FromFFT(waveformBuffer.ToArray(), playback.SampleRate);
+                FFTFrame rawSpectrum = FFTFrame.FromFFT(waveformBuffer.ToArray(), sampleRate);
 
                 // Initialize if null
                 if (smoothedMagnitudes == null || smoothedMagnitudes.Length != rawSpectrum.Magnitudes.Length)

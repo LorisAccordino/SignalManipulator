@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.AudioMath;
 using System;
 using System.Linq;
 

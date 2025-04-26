@@ -1,4 +1,4 @@
-﻿using NAudio.Wave;
+﻿using SignalManipulator.Logic.Models;
 using System;
 
 namespace SignalManipulator.Logic.Core.Playback
@@ -18,12 +18,7 @@ namespace SignalManipulator.Logic.Core.Playback
         bool IsStopped { get; }
 
         // Audio info
-        string FileName { get; }
-        TimeSpan CurrentTime { get; }
-        TimeSpan TotalTime { get; }
-        WaveFormat WaveFormat { get; }
-        string WaveFormatDesc { get; }
-        int SampleRate { get; }
+        AudioInfo Info { get; }
 
         // Parameters
         double PlaybackSpeed { get; set; }
