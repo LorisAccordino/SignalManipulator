@@ -32,7 +32,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
@@ -141,6 +141,7 @@ namespace SignalManipulator.UI.Controls
                 //spectrumBuffer.Clear();
             }
 
+            // Update plot
             formsPlot.SafeInvoke(() => formsPlot.Refresh());
         }
     }

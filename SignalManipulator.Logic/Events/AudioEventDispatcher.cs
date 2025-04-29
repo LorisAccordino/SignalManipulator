@@ -1,6 +1,5 @@
 ﻿using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Core.Playback;
-using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Providers;
 using System;
 
@@ -18,10 +17,10 @@ namespace SignalManipulator.Logic.Events
         public event Action<WaveformFrame> WaveformReady;
         public event Action<FFTFrame> FFTReady;
 
-        public AudioEventDispatcher(IAudioSource audioSource, IPlaybackService playbackService, AudioDataProvider dataProvider)
+        public AudioEventDispatcher(IPlaybackService playbackService, AudioDataProvider dataProvider)
         {
             // File loading
-            audioSource.LoadCompleted += (info) => OnLoad?.Invoke(info);
+            playbackService.LoadCompleted += (info) => OnLoad?.Invoke(info);
 
             // Playback state
             playbackService.OnResume += () => OnResume?.Invoke();

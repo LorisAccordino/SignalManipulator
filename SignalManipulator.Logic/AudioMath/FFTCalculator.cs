@@ -6,28 +6,43 @@ namespace SignalManipulator.Logic.AudioMath
 {
     public static class FFTCalculator
     {
-        public static double[] CalculateFFT(double[] samples, int sampleRate, out double[] frequencies)
+        public static Complex[] Forward(double[] realSamples, FourierOptions options = FourierOptions.Matlab)
         {
-            // Convert to complex (imaginary = 0)
-            Complex[] complexSamples = samples.Select(s => new Complex(s, 0)).ToArray();
+            Complex[] complexSamples = realSamples.Select(s => new Complex(s, 0)).ToArray();
+            Fourier.Forward(complexSamples, options);
+            return complexSamples;
+        }
 
-            // Apply FFT in-place
-            Fourier.Forward(complexSamples, FourierOptions.Matlab);
+        public static Complex[] Forward(Complex[] complexSamples, FourierOptions options = FourierOptions.Matlab)
+        {
+            var copy = (Complex[])complexSamples.Clone();
+            Fourier.Forward(copy, options);
+            return copy;
+        }
 
-            int n = complexSamples.Length;
-            int half = n / 2; // An half of the data is sufficient for the real spectrum
+        public static Complex[] Inverse(Complex[] spectrum, FourierOptions options = FourierOptions.Matlab)
+        {
+            var copy = (Complex[])spectrum.Clone();
+            Fourier.Inverse(copy, options);
+            return copy;
+        }
 
-            // Magnitude (ampltiude for each frequency)
+        public static (double[] Magnitudes, double[] Frequencies) CalculateMagnitudeSpectrum(double[] realSamples, int sampleRate)
+        {
+            Complex[] spectrum = Forward(realSamples);
+            int n = spectrum.Length;
+            int half = n / 2;
+
             double[] magnitudes = new double[half];
-            frequencies = new double[half];
+            double[] frequencies = new double[half];
 
             for (int i = 0; i < half; i++)
             {
-                magnitudes[i] = complexSamples[i].Magnitude;
+                magnitudes[i] = spectrum[i].Magnitude;
                 frequencies[i] = i * sampleRate / (double)n;
             }
 
-            return magnitudes;
+            return (magnitudes, frequencies);
         }
     }
 }

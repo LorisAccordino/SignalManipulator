@@ -1,7 +1,5 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Routing;
-using SignalManipulator.Logic.Core.Sourcing;
-using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Models;
 using System;
 
@@ -9,30 +7,21 @@ namespace SignalManipulator.Logic.Core.Playback
 {
     public class PlaybackController : IPlaybackController
     {
-        private readonly IAudioSource loader;
         private readonly IPlaybackService playback;
         private readonly IAudioRouter router;
-        private readonly EffectChain effects;
 
-        public PlaybackController(IAudioSource loader, IPlaybackService playback, IAudioRouter router, EffectChain effects)
+        public PlaybackController(IPlaybackService playback, IAudioRouter router)
         {
-            this.loader = loader;
             this.playback = playback;
             this.router = router;
-            this.effects = effects;
         }
 
         // --- Commands ---
-        public void Load(string path)
-        {
-            loader.Load(path);
-            effects.SetSource(loader.Info.SourceProvider);
-        }
-
-        public void Play() => playback.Play();
-        public void Pause() => playback.Pause();
-        public void Stop() => playback.Stop();
-        public void Seek(TimeSpan pos) => loader.Seek(pos);
+        public void Load(string path) => playback.Load(path);
+        public void Play() { if (!IsPlaying) playback.Play(); }
+        public void Pause() { if (IsPlaying) playback.Pause(); }
+        public void Stop() { if (IsPlaying) playback.Stop(); }
+        public void Seek(TimeSpan pos) => playback.Seek(pos);
 
         // --- State ---
         public bool IsPlaying => router.CurrentDevice.PlaybackState == PlaybackState.Playing;
@@ -40,7 +29,7 @@ namespace SignalManipulator.Logic.Core.Playback
         public bool IsStopped => router.CurrentDevice.PlaybackState == PlaybackState.Stopped;
 
         // --- Audio info ---
-        public AudioInfo Info => loader.Info;
+        public AudioInfo Info => playback.Info;
 
         // --- Parameters ---
         public double PlaybackSpeed { get => playback.Speed; set => playback.Speed = value; }

@@ -13,7 +13,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 effectChain = AudioEngine.Instance.EffectChain;
             }

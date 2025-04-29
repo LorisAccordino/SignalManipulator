@@ -6,7 +6,7 @@ namespace SignalManipulator.Logic.Providers
 {
     public class DefaultSampleProvider : ISampleProvider
     {
-        public WaveFormat WaveFormat => AudioEngine.DEFAULT_WAVE_FORMAT;
+        public WaveFormat WaveFormat => AudioEngine.WAVE_FORMAT;
 
         public int Read(float[] buffer, int offset, int count)
         {

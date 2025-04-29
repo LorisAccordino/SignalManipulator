@@ -2,7 +2,6 @@
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using System;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -16,7 +15,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;

@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Providers;
 using System;
 
 namespace SignalManipulator.Logic.Models
@@ -13,5 +14,25 @@ namespace SignalManipulator.Logic.Models
         public int Channels { get; set; }
         public int BitsPerSample { get; set; }
         public string WaveFormatDescription { get; set; }
+
+        public static AudioInfo Default
+        {
+            get
+            {
+                ISampleProvider source = new DefaultSampleProvider();
+                WaveFormat waveFormat = source.WaveFormat;
+                return new AudioInfo
+                {
+                    SourceProvider = source,
+                    FileName = string.Empty,
+                    CurrentTime = TimeSpan.Zero,
+                    TotalTime = TimeSpan.Zero,
+                    SampleRate = waveFormat.SampleRate,
+                    Channels = waveFormat.Channels,
+                    BitsPerSample = waveFormat.BitsPerSample,
+                    WaveFormatDescription = "No audio loaded"
+                };
+            }
+        }
     }
 }

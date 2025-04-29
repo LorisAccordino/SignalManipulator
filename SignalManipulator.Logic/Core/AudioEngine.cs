@@ -10,48 +10,41 @@ namespace SignalManipulator.Logic.Core
 {
     public class AudioEngine
     {
-        // Instance
-        private static readonly AudioEngine instance = new AudioEngine();
-        public static AudioEngine Instance => instance;
-
-        // Consts
+        // --- Constants ---
         public const int CHUNK_SIZE = 512;
         public const int SAMPLE_RATE = 44100;
         public const int CHANNELS = 2;
         public const int TARGET_FPS = 15;
-        public static readonly WaveFormat DEFAULT_WAVE_FORMAT = WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);
-        //public WaveFormat WAVE_FORMAT => AudioPlayer.WaveFormat;
 
+        public static readonly WaveFormat WAVE_FORMAT =
+            WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);
 
-        // Modules references
-        private static readonly IAudioSource audioLoader = new AudioFileLoader();
+        // --- Singleton ---
+        private static readonly AudioEngine instance = new AudioEngine();
+        public static AudioEngine Instance => instance;
 
-        private static readonly IAudioRouter audioRouter = new AudioRouter();
+        // --- Core modules (private) ---
+        private readonly IAudioSource audioLoader = new AudioFileLoader();
+        private readonly IAudioRouter audioRouter = new AudioRouter();
+        private readonly EffectChain effectChain = new EffectChain();
+        private readonly AudioDataProvider audioDataProvider;
+        private readonly IPlaybackService playbackService;
+        private readonly IPlaybackController playbackController;
+        private readonly IAudioEventDispatcher audioEventDispatcher;
+
+        // --- Public modules (exposed) ---
         public IAudioRouter AudioRouter => audioRouter;
-
-        private static readonly EffectChain effectChain = new EffectChain();
         public EffectChain EffectChain => effectChain;
-
-        private static readonly AudioDataProvider audioDataProvider = new AudioDataProvider(effectChain);
-
-        private static readonly IPlaybackService playbackService = 
-            new PlaybackService(audioLoader, audioRouter, effectChain, audioDataProvider);
-
-        private static readonly IPlaybackController playbackController = 
-            new PlaybackController(audioLoader, playbackService, audioRouter, effectChain);
         public IPlaybackController PlaybackController => playbackController;
-
-        private static readonly IAudioEventDispatcher audioEventDispatcher = 
-            new AudioEventDispatcher(audioLoader, playbackService, audioDataProvider);
         public IAudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
 
-        //private static readonly AudioPlayer audioPlayer = new AudioPlayer(audioRouter, effectChain);
-        //public AudioPlayer AudioPlayer => audioPlayer;
-
-
+        // --- Instance constructor ---
         private AudioEngine()
         {
-            
+            audioDataProvider = new AudioDataProvider(effectChain);
+            playbackService = new PlaybackService(audioLoader, audioRouter, effectChain, audioDataProvider);
+            playbackController = new PlaybackController(playbackService, audioRouter);
+            audioEventDispatcher = new AudioEventDispatcher(playbackService, audioDataProvider);
         }
     }
 }

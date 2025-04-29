@@ -9,25 +9,31 @@ namespace SignalManipulator.Logic.Core.Sourcing
         private AudioFileReader reader;
 
         // Audio info
-        public AudioInfo Info => new AudioInfo
+        public AudioInfo Info
         {
-            SourceProvider = reader,
-            FileName = reader?.FileName,
-            CurrentTime = reader?.CurrentTime ?? TimeSpan.Zero,
-            TotalTime = reader?.TotalTime ?? TimeSpan.Zero,
-            SampleRate = reader.WaveFormat.SampleRate,
-            Channels = reader.WaveFormat.Channels,
-            BitsPerSample = reader.WaveFormat.BitsPerSample,
-            WaveFormatDescription = reader.WaveFormat.ToString()
-        };
+            get
+            {
+                if (reader == null) return AudioInfo.Default;
 
-        public event Action<AudioInfo> LoadCompleted;
+                WaveFormat waveFormat = reader.WaveFormat;
+                return new AudioInfo
+                {
+                    SourceProvider = reader,
+                    FileName = reader?.FileName,
+                    CurrentTime = reader?.CurrentTime ?? TimeSpan.Zero,
+                    TotalTime = reader?.TotalTime ?? TimeSpan.Zero,
+                    SampleRate = waveFormat.SampleRate,
+                    Channels = waveFormat.Channels,
+                    BitsPerSample = waveFormat.BitsPerSample,
+                    WaveFormatDescription = waveFormat.ToString()
+                };
+            }
+        }
 
         public void Load(string path)
         {
             reader?.Dispose();
             reader = new AudioFileReader(path);
-            LoadCompleted?.Invoke(Info);
         }
 
         public void Seek(TimeSpan position)

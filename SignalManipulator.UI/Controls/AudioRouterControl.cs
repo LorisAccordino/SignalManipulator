@@ -14,7 +14,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 audioRouter = AudioEngine.Instance.AudioRouter;
                 LoadOutputDevices();

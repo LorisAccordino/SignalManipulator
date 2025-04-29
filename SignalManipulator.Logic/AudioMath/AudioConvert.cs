@@ -33,25 +33,22 @@ namespace SignalManipulator.Logic.AudioMath
             return MemoryMarshal.AsBytes(floats.AsSpan()).ToArray();
         }
 
-        public static (float[] left, float[] right) SplitStereo(this float[] interleaved)
+        public static void SplitStereo(this float[] stereo, float[] left, float[] right)
         {
-            int sampleCount = interleaved.Length / 2;
-            float[] left = new float[sampleCount];
-            float[] right = new float[sampleCount];
-
-            for (int i = 0; i < sampleCount; i++)
+            for (int i = 0, j = 0; j < stereo.Length; i++, j += 2)
             {
-                left[i] = interleaved[2 * i];
-                right[i] = interleaved[2 * i + 1];
+                left[i] = stereo[j];
+                right[i] = stereo[j + 1];
             }
-
-            return (left, right);
         }
 
-        public static (double[] left, double[] right) SplitStereo(this double[] interleaved)
+        public static void SplitStereo(this double[] stereo, double[] left, double[] right)
         {
-            (float[] left, float[] right) = interleaved.ToFloat().SplitStereo();
-            return (left.ToDouble(), right.ToDouble());
+            for (int i = 0, j = 0; j < stereo.Length; i++, j += 2)
+            {
+                left[i] = stereo[j];
+                right[i] = stereo[j + 1];
+            }
         }
 
         public static float[] ToMono(this float[] stereo)

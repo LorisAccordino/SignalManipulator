@@ -1,5 +1,4 @@
-﻿using NAudio.Wave;
-using SignalManipulator.Logic.Models;
+﻿using SignalManipulator.Logic.Models;
 using System;
 
 namespace SignalManipulator.Logic.Core.Sourcing
@@ -8,9 +7,6 @@ namespace SignalManipulator.Logic.Core.Sourcing
     {
         // Audio info
         AudioInfo Info { get; }
-
-        // Events
-        event Action<AudioInfo> LoadCompleted;
 
         // Methods
         void Load(string path);

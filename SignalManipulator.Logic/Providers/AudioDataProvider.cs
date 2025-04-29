@@ -14,6 +14,7 @@ namespace SignalManipulator.Logic.Providers
         public event Action<WaveformFrame> WaveformReady;
         public event Action<FFTFrame> FFTReady;
 
+        public WaveFormat WaveFormat => source.WaveFormat;
         public bool EnableSpectrum { get; set; } = false;
 
         public AudioDataProvider(ISampleProvider source) : this(source.ToWaveProvider()) { }
@@ -35,7 +36,7 @@ namespace SignalManipulator.Logic.Providers
 
             if (EnableSpectrum)
             {
-                double[] magnitudes = FFTCalculator.CalculateFFT(frame.DoubleStereo, SampleRate, out double[] freqs);
+                var (magnitudes, freqs) = FFTCalculator.CalculateMagnitudeSpectrum(frame.DoubleMono, WaveFormat.SampleRate);
                 FFTReady?.Invoke(new FFTFrame(freqs, magnitudes));
             }
 
@@ -49,8 +50,5 @@ namespace SignalManipulator.Logic.Providers
             Array.Copy(buffer, samples, count * 4);
             return read;
         }
-
-        public WaveFormat WaveFormat => source.WaveFormat;
-        public int SampleRate => WaveFormat.SampleRate;
     }
 }

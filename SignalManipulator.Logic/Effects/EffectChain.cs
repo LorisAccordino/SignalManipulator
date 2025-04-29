@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Helpers;
 using SignalManipulator.Logic.Providers;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace SignalManipulator.Logic.Effects
     public class EffectChain : ISampleProvider
     {
         //public WaveFormat WaveFormat => SourceProvider.InnerProvider?.WaveFormat;
-        public WaveFormat WaveFormat => SourceProvider?.WaveFormat;
+        public WaveFormat WaveFormat => SourceProvider?.WaveFormat ?? AudioEngine.WAVE_FORMAT;
         //public IWaveProvider Output => effectList.Count == 0 ? SourceProvider.InnerProvider : EffectList.Last();
         public IReadOnlyList<IAudioEffect> EffectList => effectList;
         private List<IAudioEffect> effectList = new List<IAudioEffect>();

@@ -4,7 +4,6 @@ using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -16,7 +15,7 @@ namespace SignalManipulator.UI.Controls
         private List<WaveformFrame> frames = new List<WaveformFrame>();
         private object lockObject = new object();
 
-        private int sampleRate;
+        private int sampleRate = AudioEngine.SAMPLE_RATE;
         private float zoomMultiplier => sampleRate / (AudioEngine.CHUNK_SIZE * 100f);
         public float Zoom { get; set; } = 1.0f;
 
@@ -24,7 +23,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
@@ -80,7 +79,8 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 for (int i = 0; i < frames.Count; i++)
-                    wavePlot.AddRange(frames[i].DoubleMono);
+                    wavePlot.AddRange(frames[i].DoubleMono);   
+
                 frames.Clear();
             }
 

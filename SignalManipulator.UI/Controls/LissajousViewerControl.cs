@@ -4,7 +4,6 @@ using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.AudioMath;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -25,7 +24,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+            if (!DesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 
@@ -84,14 +83,11 @@ namespace SignalManipulator.UI.Controls
             lock (lockObject)
             {
                 if (waveformBuffer.Count < MAX_SAMPLES) return;
-
-                (double[] tmpLeft, double[] tmpRight) = waveformBuffer.ToArray().SplitStereo();
+                waveformBuffer.ToArray().SplitStereo(left, right);
                 waveformBuffer.Clear();
-
-                Array.Copy(tmpLeft, left, tmpLeft.Length);
-                Array.Copy(tmpRight, right, tmpRight.Length);
             }
 
+            // Update plot
             formsPlot.SafeInvoke(() => formsPlot.Refresh());
         }
 

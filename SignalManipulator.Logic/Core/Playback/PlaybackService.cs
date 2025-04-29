@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Providers;
 using System;
 
@@ -13,13 +14,18 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly IAudioRouter router;
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
+
         private readonly System.Timers.Timer updateTimer;
         private readonly TimeStretchEffect timeStrech;
+
+        // Properties
+        public AudioInfo Info => source.Info;
 
         public double Speed { get => timeStrech.Speed; set => timeStrech.Speed = value; }
         public bool PreservePitch { get => timeStrech.PreservePitch; set => timeStrech.PreservePitch = value; }
 
         // Events
+        public event Action<AudioInfo> LoadCompleted;
         public event Action OnResume;
         public event Action OnPaused;
         public event Action OnStopped;
@@ -37,11 +43,17 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects.AddEffect<TimeStretchEffect>();
             timeStrech = effects.GetEffect<TimeStretchEffect>(0);
 
-            // Initialize the audio
-            router.InitOutputs(this.audioDataProvider as IWaveProvider);
-
             updateTimer = new System.Timers.Timer(1000.0 / AudioEngine.TARGET_FPS);
             updateTimer.Elapsed += (s, e) => OnUpdate?.Invoke();
+        }
+
+        public void Load(string path)
+        {
+            source.Load(path);
+            effects.SetSource(source.Info.SourceProvider);
+            router.InitOutputs(audioDataProvider as IWaveProvider);
+            Stop();
+            LoadCompleted?.Invoke(Info);
         }
 
         public void Play()
@@ -65,8 +77,12 @@ namespace SignalManipulator.Logic.Core.Playback
             updateTimer.Stop();
             effects.ResetAll();
             source.Seek(TimeSpan.Zero);
+            updateTimer.Stop();
+            OnUpdate?.Invoke();
             OnStopped?.Invoke();
             OnPlaybackStateChanged?.Invoke(false);
         }
+
+        public void Seek(TimeSpan pos) => source.Seek(pos);
     }
 }
