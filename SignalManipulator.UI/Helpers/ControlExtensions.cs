@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Controls
+namespace SignalManipulator.UI.Helpers
 {
     public static class ControlExtensions
     {

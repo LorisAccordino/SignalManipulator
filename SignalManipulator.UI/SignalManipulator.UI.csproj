@@ -105,7 +105,7 @@
     <Compile Include="Controls\AudioRouterControl.Designer.cs">
       <DependentUpon>AudioRouterControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ControlExtensions.cs" />
+    <Compile Include="Helpers\ControlExtensions.cs" />
     <Compile Include="Controls\EffectChainControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -136,6 +136,10 @@
     <Compile Include="Controls\WaveformViewerControl.Designer.cs">
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Scaling\ExponentialScaleMapper.cs" />
+    <Compile Include="Helpers\Scaling\IScaleMapper.cs" />
+    <Compile Include="Helpers\Scaling\LinearScaleMapper.cs" />
+    <Compile Include="Helpers\Scaling\LogarithmicScaleMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
