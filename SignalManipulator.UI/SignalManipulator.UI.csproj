@@ -99,6 +99,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Precision\PrecisionControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Precision\PrecisionScale.cs" />
     <Compile Include="Controls\AudioRouterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -163,9 +167,7 @@
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
