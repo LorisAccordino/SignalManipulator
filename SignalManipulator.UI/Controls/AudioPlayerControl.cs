@@ -1,6 +1,7 @@
 ﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
+using SignalManipulator.UI.Helpers;
 using System;
 using System.Windows.Forms;
 
@@ -26,12 +27,12 @@ namespace SignalManipulator.UI.Controls
         private void InitializePlaybackEvents()
         {
             Disposed += (s, e) => playback.Stop();
-            audioEventDispatcher.OnUpdate += () => timeLbl.SafeInvoke(() =>
+            audioEventDispatcher.OnUpdate += (s, e) => timeLbl.SafeInvoke(() =>
             {
                 timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
                 timeBar.Value = (int)playback.Info.CurrentTime.TotalSeconds;
-            }) ;
-            audioEventDispatcher.OnPlaybackStateChanged += (playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
+            });
+            audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
         }
 
 

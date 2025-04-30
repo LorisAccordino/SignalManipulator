@@ -5,6 +5,7 @@ using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Providers;
 using System;
+using System.Timers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
@@ -15,7 +16,7 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
 
-        private readonly System.Timers.Timer updateTimer;
+        private readonly Timer updateTimer;
         private readonly TimeStretchEffect timeStrech;
 
         // Properties
@@ -25,13 +26,12 @@ namespace SignalManipulator.Logic.Core.Playback
         public bool PreservePitch { get => timeStrech.PreservePitch; set => timeStrech.PreservePitch = value; }
 
         // Events
-        public event Action<AudioInfo> LoadCompleted;
-        public event Action OnResume;
-        public event Action OnPaused;
-        public event Action OnStopped;
-        public event Action<bool> OnPlaybackStateChanged; // bool: playing?
-
-        public event Action OnUpdate;
+        public event EventHandler<AudioInfo> LoadCompleted;
+        public event EventHandler OnResume;
+        public event EventHandler OnPaused;
+        public event EventHandler OnStopped;
+        public event EventHandler<bool> OnPlaybackStateChanged; // bool: playing?
+        public event EventHandler OnUpdate;
 
         public PlaybackService(IAudioSource source, IAudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
         {
@@ -43,8 +43,8 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects.AddEffect<TimeStretchEffect>();
             timeStrech = effects.GetEffect<TimeStretchEffect>(0);
 
-            updateTimer = new System.Timers.Timer(1000.0 / AudioEngine.TARGET_FPS);
-            updateTimer.Elapsed += (s, e) => OnUpdate?.Invoke();
+            updateTimer = new Timer(1000.0 / AudioEngine.TARGET_FPS);
+            updateTimer.Elapsed += (s, e) => OnUpdate?.Invoke(this, e);
         }
 
         public void Load(string path)
@@ -53,22 +53,22 @@ namespace SignalManipulator.Logic.Core.Playback
             effects.SetSource(source.Info.SourceProvider);
             router.InitOutputs(audioDataProvider as IWaveProvider);
             Stop();
-            LoadCompleted?.Invoke(Info);
+            LoadCompleted?.Invoke(this, Info);
         }
 
         public void Play()
         {
             updateTimer.Start();
             router.CurrentDevice.Play();
-            OnResume?.Invoke();
-            OnPlaybackStateChanged?.Invoke(true);
+            OnResume?.Invoke(this, EventArgs.Empty);
+            OnPlaybackStateChanged?.Invoke(this, true);
         }
 
         public void Pause()
         {
             router.CurrentDevice.Pause();
-            OnPaused?.Invoke();
-            OnPlaybackStateChanged?.Invoke(false);
+            OnPaused?.Invoke(this, EventArgs.Empty);
+            OnPlaybackStateChanged?.Invoke(this, false);
         }
 
         public void Stop()
@@ -78,9 +78,9 @@ namespace SignalManipulator.Logic.Core.Playback
             effects.ResetAll();
             source.Seek(TimeSpan.Zero);
             updateTimer.Stop();
-            OnUpdate?.Invoke();
-            OnStopped?.Invoke();
-            OnPlaybackStateChanged?.Invoke(false);
+            OnUpdate?.Invoke(this, EventArgs.Empty);
+            OnStopped?.Invoke(this, EventArgs.Empty);
+            OnPlaybackStateChanged?.Invoke(this, false);
         }
 
         public void Seek(TimeSpan pos) => source.Seek(pos);

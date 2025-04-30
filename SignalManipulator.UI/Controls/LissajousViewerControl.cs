@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using SignalManipulator.UI.Helpers;
 
 namespace SignalManipulator.UI.Controls
 {
@@ -35,10 +36,10 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += _ => ResetPlot();
-            audioEventDispatcher.OnStopped += ResetPlot;
-            audioEventDispatcher.OnUpdate += UpdatePlot;
-            audioEventDispatcher.WaveformReady += (frame) => UpdatePlotData(frame.DoubleStereo);
+            audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
+            audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
+            audioEventDispatcher.OnUpdate += (s, e) => UpdatePlot();
+            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleStereo);
         }
 
         private void InitializePlot()

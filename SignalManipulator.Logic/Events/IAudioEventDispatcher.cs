@@ -5,14 +5,14 @@ namespace SignalManipulator.Logic.Events
 {
     public interface IAudioEventDispatcher
     {
-        event Action<AudioInfo> OnLoad;
-        event Action OnResume;
-        event Action OnPaused;
-        event Action OnStopped;
-        event Action<bool> OnPlaybackStateChanged; // bool: isPlaying?
+        event EventHandler<AudioInfo> OnLoad;
+        event EventHandler OnResume;
+        event EventHandler OnPaused;
+        event EventHandler OnStopped;
+        event EventHandler<bool> OnPlaybackStateChanged; // bool: isPlaying?
 
-        event Action OnUpdate;
-        event Action<WaveformFrame> WaveformReady;
-        event Action<FFTFrame> FFTReady;
+        event EventHandler OnUpdate;
+        event EventHandler<WaveformFrame> WaveformReady;
+        event EventHandler<FFTFrame> FFTReady;
     }
 }

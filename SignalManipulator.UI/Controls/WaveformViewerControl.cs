@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -34,11 +35,11 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += info => sampleRate = info.SampleRate;
-            audioEventDispatcher.OnLoad += _ => ResetPlot();
-            audioEventDispatcher.OnStopped += ResetPlot;
-            audioEventDispatcher.OnUpdate += UpdatePlot;
-            audioEventDispatcher.WaveformReady += UpdatePlotData;
+            audioEventDispatcher.OnLoad += (s, info) => sampleRate = info.SampleRate;
+            audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
+            audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
+            audioEventDispatcher.OnUpdate += (s, e) => UpdatePlot();
+            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame);
         }
 
         private void InitializePlot()

@@ -9,10 +9,10 @@ namespace SignalManipulator.Logic.Providers
     {
         private readonly IWaveProvider source;
 
-        public event Action<byte[]> OnBytes;
-        public event Action<float[]> OnSamples;
-        public event Action<WaveformFrame> WaveformReady;
-        public event Action<FFTFrame> FFTReady;
+        public event EventHandler<byte[]> OnBytes;
+        public event EventHandler<float[]> OnSamples;
+        public event EventHandler<WaveformFrame> WaveformReady;
+        public event EventHandler<FFTFrame> FFTReady;
 
         public WaveFormat WaveFormat => source.WaveFormat;
         public bool EnableSpectrum { get; set; } = false;
@@ -26,18 +26,18 @@ namespace SignalManipulator.Logic.Providers
         public int Read(byte[] buffer, int offset, int count)
         {
             int read = source.Read(buffer, offset, count);
-            OnBytes?.Invoke(buffer);
+            OnBytes?.Invoke(this, buffer);
 
             float[] samples = buffer.AsFloats();
-            OnSamples?.Invoke(samples);
+            OnSamples?.Invoke(this, samples);
 
             WaveformFrame frame = new WaveformFrame(samples);
-            WaveformReady?.Invoke(frame);
+            WaveformReady?.Invoke(this, frame);
 
             if (EnableSpectrum)
             {
                 var (magnitudes, freqs) = FFTCalculator.CalculateMagnitudeSpectrum(frame.DoubleMono, WaveFormat.SampleRate);
-                FFTReady?.Invoke(new FFTFrame(freqs, magnitudes));
+                FFTReady?.Invoke(this, new FFTFrame(freqs, magnitudes));
             }
 
             return read;

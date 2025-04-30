@@ -1,5 +1,6 @@
 ﻿using SignalManipulator.Logic.Models;
 using System;
+using System.Timers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
@@ -13,12 +14,12 @@ namespace SignalManipulator.Logic.Core.Playback
         bool PreservePitch { get; set; }
 
         // Events
-        event Action<AudioInfo> LoadCompleted;
-        event Action OnResume;
-        event Action OnPaused;
-        event Action OnStopped;
-        event Action<bool> OnPlaybackStateChanged;
-        event Action OnUpdate;
+        event EventHandler<AudioInfo> LoadCompleted;
+        event EventHandler OnResume;
+        event EventHandler OnPaused;
+        event EventHandler OnStopped;
+        event EventHandler<bool> OnPlaybackStateChanged;
+        event EventHandler OnUpdate;
 
         // Methods
         void Load(string path);
