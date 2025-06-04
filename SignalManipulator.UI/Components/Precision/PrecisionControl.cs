@@ -5,20 +5,21 @@ using SignalManipulator.UI.Helpers.Scaling;
 
 namespace SignalManipulator.UI.Components.Precision
 {
-    public abstract class PrecisionControl : Control
+    public class PrecisionControl : Control
     {
         // Events
         public event EventHandler<double> ValueChanged;
 
         // Precision properties
-        private float precision = 0.01f;
-        private float minimum = 0;
-        private float maximum = 10;
+        private double precision = 0.01;
+        private double minimum = 0;
+        private double value = 2.5;
+        private double maximum = 10;
         private PrecisionScale precisionScale = PrecisionScale.Linear;
 
 
         [DefaultValue(0.01f)]
-        public float Precision
+        public double Precision
         {
             get => precision;
             set
@@ -30,7 +31,7 @@ namespace SignalManipulator.UI.Components.Precision
         }
 
         [DefaultValue(0)]
-        public float Minimum
+        public double Minimum
         {
             get => minimum;
             set
@@ -40,8 +41,24 @@ namespace SignalManipulator.UI.Components.Precision
             }
         }
 
+        [DefaultValue(2.5)]
+        public virtual double Value
+        {
+            get => value;
+            set
+            {
+                double clampled = Math.Min(Math.Max(value, Minimum), Maximum);
+                if (this.value != clampled)
+                {
+                    this.value = clampled;
+                    OnValueChanged(this, clampled);
+                    UpdateUIFromValue(clampled);
+                }
+            }
+        }
+
         [DefaultValue(10)]
-        public float Maximum
+        public double Maximum
         {
             get => maximum;
             set
@@ -69,11 +86,11 @@ namespace SignalManipulator.UI.Components.Precision
                 switch (PrecisionScale)
                 {
                     case PrecisionScale.Logarithmic:
-                        return new LogarithmicScaleMapper();
+                        return new LogScaleMapper(Minimum, Maximum, Precision);
                     case PrecisionScale.Exponential:
-                        return new ExponentialScaleMapper();
+                        return new ExpScaleMapper(Minimum, Maximum, Precision);
                     default:
-                        return new LinearScaleMapper();
+                        return new LinearScaleMapper(Minimum, Maximum, Precision);
                 }
             }
         }
@@ -84,8 +101,13 @@ namespace SignalManipulator.UI.Components.Precision
             ValueChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnRangeChanged() { }
-        protected virtual void OnPrecisionChanged() { }
-        protected virtual void OnScaleChanged() { }
+        protected virtual void OnRangeChanged() => UpdateUIFromValue(Value);
+        protected virtual void OnPrecisionChanged() => UpdateUIFromValue(Value);
+        protected virtual void OnScaleChanged() => UpdateUIFromValue(Value);
+
+
+        protected virtual void UpdateUIFromValue(double value) { }
+        protected virtual void UpdateValueFromUI(double value) { }
+
     }
 }

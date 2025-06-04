@@ -24,7 +24,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!DesignMode)
+            if (!DesignModeHelper.IsDesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
 

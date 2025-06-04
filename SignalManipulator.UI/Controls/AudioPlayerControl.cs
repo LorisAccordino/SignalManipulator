@@ -16,7 +16,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!DesignMode)
+            if (!DesignModeHelper.IsDesignMode)
             {
                 playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;

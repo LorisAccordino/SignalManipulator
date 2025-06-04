@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+
 namespace SignalManipulator.UI.Helpers.Scaling
 {
-    public class LinearScaleMapper : IScaleMapper
+    public class LinearScaleMapper : BaseScaleMapper
     {
-        public int ToControlUnits(double realValue, float realMin, float realMax, float precision, int controlMin, int controlMax)
+        public LinearScaleMapper(double realMin, double realMax, double precision) : base(realMin, realMax, precision) { }
+        public override int ToControlUnits(double realValue)
         {
-            double range = realMax - realMin;
-            double normalized = (realValue - realMin) / range;
-            return (int)(controlMin + normalized * (controlMax - controlMin));
+            return (int)Math.Round((realValue - realMin) / precision);
         }
 
-        public double ToRealValue(int controlUnits, float realMin, float realMax, float precision, int controlMin, int controlMax)
+        public override double ToRealValue(int controlUnits)
         {
-            double range = realMax - realMin;
-            double normalized = (double)(controlUnits - controlMin) / (controlMax - controlMin);
-            return realMin + normalized * range;
+            return realMin + controlUnits * precision;
         }
     }
 }

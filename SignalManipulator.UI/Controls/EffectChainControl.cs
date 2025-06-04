@@ -1,6 +1,6 @@
 ﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Effects;
-using System.ComponentModel;
+using SignalManipulator.UI.Helpers;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -13,7 +13,7 @@ namespace SignalManipulator.UI.Controls
         {
             InitializeComponent();
 
-            if (!DesignMode)
+            if (!DesignModeHelper.IsDesignMode)
             {
                 effectChain = AudioEngine.Instance.EffectChain;
             }

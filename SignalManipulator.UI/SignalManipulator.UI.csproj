@@ -103,6 +103,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\Precision\PrecisionScale.cs" />
+    <Compile Include="Components\Precision\PrecisionSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Precision\ValueLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Precision\ValueLabel.Designer.cs">
+      <DependentUpon>ValueLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AudioRouterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -140,10 +149,12 @@
     <Compile Include="Controls\WaveformViewerControl.Designer.cs">
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Scaling\ExponentialScaleMapper.cs" />
+    <Compile Include="Helpers\DesignModeHelper.cs" />
+    <Compile Include="Helpers\Scaling\BaseScaleMapper.cs" />
+    <Compile Include="Helpers\Scaling\ExpScaleMapper.cs" />
     <Compile Include="Helpers\Scaling\IScaleMapper.cs" />
     <Compile Include="Helpers\Scaling\LinearScaleMapper.cs" />
-    <Compile Include="Helpers\Scaling\LogarithmicScaleMapper.cs" />
+    <Compile Include="Helpers\Scaling\LogScaleMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
