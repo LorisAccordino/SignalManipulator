@@ -32,26 +32,26 @@
             this.leftSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.importGroupBox = new System.Windows.Forms.GroupBox();
             this.effectsGroupBox = new System.Windows.Forms.GroupBox();
-            this.effectChain = new SignalManipulator.UI.Controls.EffectChainControl();
             this.rightSideSplitContainer = new System.Windows.Forms.SplitContainer();
             this.visualizationGroupBox = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.waveformPage = new System.Windows.Forms.TabPage();
-            this.waveformViewer = new SignalManipulator.UI.Controls.WaveformViewerControl();
             this.spectrumPage = new System.Windows.Forms.TabPage();
-            this.spectrumViewer = new SignalManipulator.UI.Controls.SpectrumViewerControl();
             this.stereoPage = new System.Windows.Forms.TabPage();
-            this.lissajousViewer = new SignalManipulator.UI.Controls.LissajousViewerControl();
             this.bottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.playbackGroupBox = new System.Windows.Forms.GroupBox();
-            this.audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
             this.routingGroupBox = new System.Windows.Forms.GroupBox();
-            this.audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioOFD = new System.Windows.Forms.OpenFileDialog();
+            this.effectChain = new SignalManipulator.UI.Controls.EffectChainControl();
+            this.waveformViewer = new SignalManipulator.UI.Controls.WaveformViewerControl();
+            this.spectrumViewer = new SignalManipulator.UI.Controls.SpectrumViewerControl();
+            this.lissajousViewer = new SignalManipulator.UI.Controls.LissajousViewerControl();
+            this.audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
+            this.audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -82,8 +82,8 @@
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 28);
-            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 24);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.mainSplitContainer.Name = "mainSplitContainer";
             // 
             // mainSplitContainer.Panel1
@@ -95,15 +95,16 @@
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.rightSideSplitContainer);
             this.mainSplitContainer.Panel2MinSize = 700;
-            this.mainSplitContainer.Size = new System.Drawing.Size(1484, 683);
-            this.mainSplitContainer.SplitterDistance = 492;
+            this.mainSplitContainer.Size = new System.Drawing.Size(1113, 554);
+            this.mainSplitContainer.SplitterDistance = 369;
+            this.mainSplitContainer.SplitterWidth = 3;
             this.mainSplitContainer.TabIndex = 1;
             // 
             // leftSideSplitContainer
             // 
             this.leftSideSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.leftSideSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.leftSideSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.leftSideSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.leftSideSplitContainer.Name = "leftSideSplitContainer";
             this.leftSideSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -117,17 +118,18 @@
             // 
             this.leftSideSplitContainer.Panel2.Controls.Add(this.effectsGroupBox);
             this.leftSideSplitContainer.Panel2MinSize = 300;
-            this.leftSideSplitContainer.Size = new System.Drawing.Size(492, 683);
+            this.leftSideSplitContainer.Size = new System.Drawing.Size(369, 554);
             this.leftSideSplitContainer.SplitterDistance = 399;
+            this.leftSideSplitContainer.SplitterWidth = 3;
             this.leftSideSplitContainer.TabIndex = 0;
             // 
             // importGroupBox
             // 
             this.importGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.importGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.importGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.importGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.importGroupBox.Name = "importGroupBox";
-            this.importGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.importGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.importGroupBox.Size = new System.Drawing.Size(150, 399);
             this.importGroupBox.TabIndex = 3;
             this.importGroupBox.TabStop = false;
@@ -138,27 +140,19 @@
             this.effectsGroupBox.Controls.Add(this.effectChain);
             this.effectsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.effectsGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.effectsGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.effectsGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.effectsGroupBox.Name = "effectsGroupBox";
-            this.effectsGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.effectsGroupBox.Size = new System.Drawing.Size(492, 683);
+            this.effectsGroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.effectsGroupBox.Size = new System.Drawing.Size(369, 554);
             this.effectsGroupBox.TabIndex = 1;
             this.effectsGroupBox.TabStop = false;
             this.effectsGroupBox.Text = "Effects chain:";
-            // 
-            // effectChain
-            // 
-            this.effectChain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.effectChain.Location = new System.Drawing.Point(3, 17);
-            this.effectChain.Name = "effectChain";
-            this.effectChain.Size = new System.Drawing.Size(486, 664);
-            this.effectChain.TabIndex = 0;
             // 
             // rightSideSplitContainer
             // 
             this.rightSideSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rightSideSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.rightSideSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.rightSideSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.rightSideSplitContainer.Name = "rightSideSplitContainer";
             this.rightSideSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -171,8 +165,9 @@
             // 
             this.rightSideSplitContainer.Panel2.Controls.Add(this.bottomSplitContainer);
             this.rightSideSplitContainer.Panel2MinSize = 150;
-            this.rightSideSplitContainer.Size = new System.Drawing.Size(988, 683);
-            this.rightSideSplitContainer.SplitterDistance = 493;
+            this.rightSideSplitContainer.Size = new System.Drawing.Size(741, 554);
+            this.rightSideSplitContainer.SplitterDistance = 398;
+            this.rightSideSplitContainer.SplitterWidth = 3;
             this.rightSideSplitContainer.TabIndex = 0;
             // 
             // visualizationGroupBox
@@ -180,10 +175,10 @@
             this.visualizationGroupBox.Controls.Add(this.tabControl1);
             this.visualizationGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.visualizationGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.visualizationGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.visualizationGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizationGroupBox.Name = "visualizationGroupBox";
-            this.visualizationGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.visualizationGroupBox.Size = new System.Drawing.Size(988, 493);
+            this.visualizationGroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.visualizationGroupBox.Size = new System.Drawing.Size(741, 398);
             this.visualizationGroupBox.TabIndex = 0;
             this.visualizationGroupBox.TabStop = false;
             this.visualizationGroupBox.Text = "Visualization:";
@@ -194,82 +189,50 @@
             this.tabControl1.Controls.Add(this.spectrumPage);
             this.tabControl1.Controls.Add(this.stereoPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 17);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControl1.Location = new System.Drawing.Point(2, 15);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(982, 474);
+            this.tabControl1.Size = new System.Drawing.Size(737, 381);
             this.tabControl1.TabIndex = 1;
             // 
             // waveformPage
             // 
             this.waveformPage.Controls.Add(this.waveformViewer);
-            this.waveformPage.Location = new System.Drawing.Point(4, 25);
-            this.waveformPage.Margin = new System.Windows.Forms.Padding(4);
+            this.waveformPage.Location = new System.Drawing.Point(4, 22);
             this.waveformPage.Name = "waveformPage";
-            this.waveformPage.Padding = new System.Windows.Forms.Padding(4);
-            this.waveformPage.Size = new System.Drawing.Size(974, 445);
+            this.waveformPage.Padding = new System.Windows.Forms.Padding(3);
+            this.waveformPage.Size = new System.Drawing.Size(729, 355);
             this.waveformPage.TabIndex = 0;
             this.waveformPage.Text = "Signal Waveform";
             this.waveformPage.UseVisualStyleBackColor = true;
             // 
-            // waveformViewer
-            // 
-            this.waveformViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.waveformViewer.Location = new System.Drawing.Point(4, 4);
-            this.waveformViewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.waveformViewer.Name = "waveformViewer";
-            this.waveformViewer.Size = new System.Drawing.Size(966, 437);
-            this.waveformViewer.TabIndex = 0;
-            this.waveformViewer.Zoom = 1F;
-            // 
             // spectrumPage
             // 
             this.spectrumPage.Controls.Add(this.spectrumViewer);
-            this.spectrumPage.Location = new System.Drawing.Point(4, 25);
-            this.spectrumPage.Margin = new System.Windows.Forms.Padding(4);
+            this.spectrumPage.Location = new System.Drawing.Point(4, 22);
             this.spectrumPage.Name = "spectrumPage";
-            this.spectrumPage.Padding = new System.Windows.Forms.Padding(4);
-            this.spectrumPage.Size = new System.Drawing.Size(974, 445);
+            this.spectrumPage.Padding = new System.Windows.Forms.Padding(3);
+            this.spectrumPage.Size = new System.Drawing.Size(729, 355);
             this.spectrumPage.TabIndex = 1;
             this.spectrumPage.Text = "FFT Spectrum";
             this.spectrumPage.UseVisualStyleBackColor = true;
             // 
-            // spectrumViewer
-            // 
-            this.spectrumViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spectrumViewer.Location = new System.Drawing.Point(4, 4);
-            this.spectrumViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.spectrumViewer.Name = "spectrumViewer";
-            this.spectrumViewer.Size = new System.Drawing.Size(966, 437);
-            this.spectrumViewer.TabIndex = 0;
-            // 
             // stereoPage
             // 
             this.stereoPage.Controls.Add(this.lissajousViewer);
-            this.stereoPage.Location = new System.Drawing.Point(4, 25);
-            this.stereoPage.Margin = new System.Windows.Forms.Padding(4);
+            this.stereoPage.Location = new System.Drawing.Point(4, 22);
             this.stereoPage.Name = "stereoPage";
-            this.stereoPage.Padding = new System.Windows.Forms.Padding(4);
-            this.stereoPage.Size = new System.Drawing.Size(974, 445);
+            this.stereoPage.Padding = new System.Windows.Forms.Padding(3);
+            this.stereoPage.Size = new System.Drawing.Size(729, 355);
             this.stereoPage.TabIndex = 2;
             this.stereoPage.Text = "XY Stero Oscilloscpe";
             this.stereoPage.UseVisualStyleBackColor = true;
-            // 
-            // lissajousViewer
-            // 
-            this.lissajousViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lissajousViewer.Location = new System.Drawing.Point(4, 4);
-            this.lissajousViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.lissajousViewer.Name = "lissajousViewer";
-            this.lissajousViewer.Size = new System.Drawing.Size(966, 437);
-            this.lissajousViewer.TabIndex = 0;
             // 
             // bottomSplitContainer
             // 
             this.bottomSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bottomSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.bottomSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bottomSplitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.bottomSplitContainer.Name = "bottomSplitContainer";
             // 
             // bottomSplitContainer.Panel1
@@ -281,8 +244,9 @@
             // 
             this.bottomSplitContainer.Panel2.Controls.Add(this.routingGroupBox);
             this.bottomSplitContainer.Panel2MinSize = 300;
-            this.bottomSplitContainer.Size = new System.Drawing.Size(988, 186);
-            this.bottomSplitContainer.SplitterDistance = 533;
+            this.bottomSplitContainer.Size = new System.Drawing.Size(741, 153);
+            this.bottomSplitContainer.SplitterDistance = 400;
+            this.bottomSplitContainer.SplitterWidth = 3;
             this.bottomSplitContainer.TabIndex = 0;
             // 
             // playbackGroupBox
@@ -290,45 +254,26 @@
             this.playbackGroupBox.Controls.Add(this.audioPlayer);
             this.playbackGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.playbackGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.playbackGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.playbackGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.playbackGroupBox.Name = "playbackGroupBox";
-            this.playbackGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.playbackGroupBox.Size = new System.Drawing.Size(533, 186);
+            this.playbackGroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.playbackGroupBox.Size = new System.Drawing.Size(400, 153);
             this.playbackGroupBox.TabIndex = 2;
             this.playbackGroupBox.TabStop = false;
             this.playbackGroupBox.Text = "Playback:";
-            // 
-            // audioPlayer
-            // 
-            this.audioPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.audioPlayer.Location = new System.Drawing.Point(3, 17);
-            this.audioPlayer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.audioPlayer.MinimumSize = new System.Drawing.Size(349, 135);
-            this.audioPlayer.Name = "audioPlayer";
-            this.audioPlayer.Size = new System.Drawing.Size(527, 167);
-            this.audioPlayer.TabIndex = 0;
             // 
             // routingGroupBox
             // 
             this.routingGroupBox.Controls.Add(this.audioRouter);
             this.routingGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.routingGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.routingGroupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.routingGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.routingGroupBox.Name = "routingGroupBox";
-            this.routingGroupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.routingGroupBox.Size = new System.Drawing.Size(451, 186);
+            this.routingGroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.routingGroupBox.Size = new System.Drawing.Size(338, 153);
             this.routingGroupBox.TabIndex = 4;
             this.routingGroupBox.TabStop = false;
             this.routingGroupBox.Text = "Audio routing:";
-            // 
-            // audioRouter
-            // 
-            this.audioRouter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.audioRouter.Location = new System.Drawing.Point(3, 17);
-            this.audioRouter.Margin = new System.Windows.Forms.Padding(4);
-            this.audioRouter.Name = "audioRouter";
-            this.audioRouter.Size = new System.Drawing.Size(445, 167);
-            this.audioRouter.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -337,8 +282,8 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1484, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1113, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -348,36 +293,92 @@
             this.openAudioToolStripMenuItem,
             this.saveAudioToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openAudioToolStripMenuItem
             // 
             this.openAudioToolStripMenuItem.Name = "openAudioToolStripMenuItem";
-            this.openAudioToolStripMenuItem.Size = new System.Drawing.Size(170, 26);
+            this.openAudioToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.openAudioToolStripMenuItem.Text = "Open audio";
             this.openAudioToolStripMenuItem.Click += new System.EventHandler(this.openAudioToolStripMenuItem_Click);
             // 
             // saveAudioToolStripMenuItem
             // 
             this.saveAudioToolStripMenuItem.Name = "saveAudioToolStripMenuItem";
-            this.saveAudioToolStripMenuItem.Size = new System.Drawing.Size(170, 26);
+            this.saveAudioToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.saveAudioToolStripMenuItem.Text = "Save audio";
             // 
             // audioOFD
             // 
             this.audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
             // 
+            // effectChain
+            // 
+            this.effectChain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.effectChain.Location = new System.Drawing.Point(2, 15);
+            this.effectChain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.effectChain.Name = "effectChain";
+            this.effectChain.Size = new System.Drawing.Size(365, 537);
+            this.effectChain.TabIndex = 0;
+            // 
+            // waveformViewer
+            // 
+            this.waveformViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.waveformViewer.Location = new System.Drawing.Point(3, 3);
+            this.waveformViewer.Margin = new System.Windows.Forms.Padding(2);
+            this.waveformViewer.Name = "waveformViewer";
+            this.waveformViewer.Size = new System.Drawing.Size(723, 349);
+            this.waveformViewer.TabIndex = 0;
+            this.waveformViewer.Zoom = 1F;
+            // 
+            // spectrumViewer
+            // 
+            this.spectrumViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spectrumViewer.Location = new System.Drawing.Point(3, 3);
+            this.spectrumViewer.Margin = new System.Windows.Forms.Padding(4);
+            this.spectrumViewer.Name = "spectrumViewer";
+            this.spectrumViewer.Size = new System.Drawing.Size(723, 349);
+            this.spectrumViewer.TabIndex = 0;
+            // 
+            // lissajousViewer
+            // 
+            this.lissajousViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lissajousViewer.Location = new System.Drawing.Point(3, 3);
+            this.lissajousViewer.Margin = new System.Windows.Forms.Padding(4);
+            this.lissajousViewer.Name = "lissajousViewer";
+            this.lissajousViewer.Size = new System.Drawing.Size(723, 349);
+            this.lissajousViewer.TabIndex = 0;
+            // 
+            // audioPlayer
+            // 
+            this.audioPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.audioPlayer.Location = new System.Drawing.Point(2, 15);
+            this.audioPlayer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.audioPlayer.MinimumSize = new System.Drawing.Size(262, 110);
+            this.audioPlayer.Name = "audioPlayer";
+            this.audioPlayer.Size = new System.Drawing.Size(396, 136);
+            this.audioPlayer.TabIndex = 0;
+            // 
+            // audioRouter
+            // 
+            this.audioRouter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.audioRouter.Location = new System.Drawing.Point(2, 15);
+            this.audioRouter.Margin = new System.Windows.Forms.Padding(4);
+            this.audioRouter.Name = "audioRouter";
+            this.audioRouter.Size = new System.Drawing.Size(334, 136);
+            this.audioRouter.TabIndex = 0;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1484, 711);
+            this.ClientSize = new System.Drawing.Size(1113, 578);
             this.Controls.Add(this.mainSplitContainer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(1498, 747);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MinimumSize = new System.Drawing.Size(1128, 613);
             this.Name = "MainForm";
             this.Text = "Signal Manipulator";
             this.mainSplitContainer.Panel1.ResumeLayout(false);
@@ -431,11 +432,11 @@
         private System.Windows.Forms.TabPage waveformPage;
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoPage;
-        private UI.Controls.AudioPlayerControl audioPlayer;
         private UI.Controls.EffectChainControl effectChain;
         private UI.Controls.WaveformViewerControl waveformViewer;
         private UI.Controls.SpectrumViewerControl spectrumViewer;
-        private UI.Controls.LissajousViewerControl lissajousViewer;
         private UI.Controls.AudioRouterControl audioRouter;
+        private UI.Controls.AudioPlayerControl audioPlayer;
+        private UI.Controls.LissajousViewerControl lissajousViewer;
     }
 }

@@ -1,39 +1,91 @@
-﻿using System;
+﻿using SignalManipulator.UI.Helpers;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Components.Precision
 {
+    [DesignerCategory("Code")]
+    [DefaultProperty("Value")]
+    [DefaultEvent("ValueChanged")]
     public class PrecisionSlider : PrecisionControl
     {
+        private const int CONSTRAINT_SIZE = 40;
+        private const int DEFAULT_SIZE = 200;
+        private const int MIN_TRACKBAR_SIZE = 100;
+        private const int Y_LBL_OFFSET = 4;
+
         private TrackBar trackBar;
         private Label descriptionLabel;
         private ValueLabel valueLabel;
 
-        //private bool isUpdatingValue = false;
+        private bool isUpdatingValue = false;
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override string Text { get => base.Text; set => base.Text = value; }
 
-        [DefaultValue("Value: ")]
-        public override string Text
+        [DefaultValue("Value:")]
+        public string Description
         {
-            get { return descriptionLabel.Text; }
+            get => descriptionLabel.Text;
             set
             {
-                descriptionLabel.Text = value;
-                AdjustControls();
+                if (descriptionLabel.Text != value)
+                {
+                    descriptionLabel.Text = value;
+                    AdjustUI();
+                }
             }
         }
 
-        public override double Value
+        [DefaultValue("")]
+        public string Suffix
         {
+            get => valueLabel.Suffix;
+            set
+            {
+                if (valueLabel.Suffix != value)
+                {
+                    valueLabel.Suffix = value;
+                    AdjustUI();
+                }
+            }
+        }
+
+        public override double Maximum
+        {
+            get => base.Maximum;
+            set
+            {
+                if (base.Maximum != value)
+                {
+                    base.Maximum = value;
+                    AdjustUI();
+                }
+            }
+        }
+
+        public override double Value 
+        { 
             get => base.Value;
             set
             {
                 base.Value = value;
-                valueLabel.Value = value;
+                valueLabel.Value = base.Value;
             }
         }
+
+        public override double Precision
+        {
+            get => base.Precision;
+            set
+            {
+                base.Precision = value;
+                valueLabel.DecimalPlaces = MathHelper.GetDecimalPlaces(base.Precision);
+            }
+        }
+
 
         [DefaultValue(Orientation.Horizontal)]
         public Orientation Orientation
@@ -41,117 +93,148 @@ namespace SignalManipulator.UI.Components.Precision
             get => trackBar.Orientation;
             set
             {
-                trackBar.Orientation = value;
-                AdjustSizeForOrientation(value);
-                AdjustControls();
+                if (trackBar.Orientation != value)
+                {
+                    trackBar.Orientation = value;
+                    ApplyOrientationConstraints();
+                    AdjustUI();
+                }
             }
         }
 
-        public int TickFrequency
-        {
-            get => trackBar.TickFrequency;
-            set => trackBar.TickFrequency = value;
-        }
+        public int TickFrequency { get => trackBar.TickFrequency; set => trackBar.TickFrequency = value; }
 
 
         public PrecisionSlider()
         {
-            // Initialize controls
+            // Create controls
             trackBar = new TrackBar();
-            descriptionLabel = new Label();
-            //valueLabel = new Label();
+            descriptionLabel = new Label { AutoSize = true };
             valueLabel = new ValueLabel();
 
-            descriptionLabel.AutoSize = true;
-            valueLabel.AutoSize = true;
-
-            // Initializes the component properties and styles
-            Orientation = Orientation.Horizontal;
-
-            // Event handling
-            //trackBar.ValueChanged += TrackBarValueChanged;
-            Resize += (sender, e) => AdjustControls();
-
-            // Initialize default properties
-            Precision = 0.01f;
-            Minimum = 0.0f;
-            Maximum = 10f;
-            Value = 2.5f;
-            Text = "Value: ";
-            //valueSuffix = "";
-
-            // Add controls to the PrecisionSlider component
             Controls.Add(trackBar);
             Controls.Add(descriptionLabel);
             Controls.Add(valueLabel);
 
-            // Adjust controls
-            AdjustControls();
+            // Register events
+            trackBar.ValueChanged += (s, e) => UpdateValueFromUI();
+            PrecisionSettingsChanged += (s, e) => UpdateTrackbarSettings();
 
-            OnValueChanged(this, Value);
+            // Initialize some default properties
+            Description = "Value:";
+            Width = DEFAULT_SIZE;
         }
 
-        /*
-        private void TrackBarValueChanged(object sender, EventArgs e)
+        protected override void OnCreateControl()
         {
-            if (!isUpdatingValue)
-            {
-                isUpdatingValue = true;
-                double newValue = ScaleMapper.ToRealValue(trackBar.Value, trackBar.Minimum, trackBar.Maximum, PrecisionScale);
-                internalValue = Math.Clamp(newValue, Minimum, Maximum);
-                UpdateValueLabel();
-                OnValueChanged(new ValueEventArgs<double>(internalValue));
-                isUpdatingValue = false;
-            }
-        }
-        */
+            base.OnCreateControl();
 
-        private void UpdateTrackBarRange()
-        {
-            trackBar.Minimum = (int)(Minimum / Precision);
-            trackBar.Maximum = (int)(Maximum / Precision);
+            UpdateTrackbarSettings();
+            ApplyOrientationConstraints();
+            AdjustUI();
         }
 
-        private void AdjustSizeForOrientation(Orientation orientation)
-        {
-            if (orientation == Orientation.Horizontal)
-            {
-                Height = 56;
-                Width = 300;
-            }
-            else
-            {
-                Width = 56;
-                Height = 300;
-            }
-        }
-
-        private void AdjustControls()
+        public override Size GetPreferredSize(Size proposedSize)
         {
             if (Orientation == Orientation.Horizontal)
             {
-                trackBar.Left = descriptionLabel.Width;
-                //trackBar.Width = Width - (descriptionLabel.Width + MaxValueLabelWidth());
-                descriptionLabel.Location = new Point(0, 0);
-                valueLabel.Location = new Point(descriptionLabel.Width + trackBar.Width, 0);
+                int w = descriptionLabel.Width
+                      + valueLabel.EstimateRequiredWidth(MathHelper.GetIntegerDigits(Maximum))
+                      + MIN_TRACKBAR_SIZE;
+                return new Size(w, CONSTRAINT_SIZE);
             }
             else
             {
-                descriptionLabel.Visible = false;
-                valueLabel.Location = new Point(0, Height - valueLabel.Height);
-                trackBar.Location = new Point(0, 0);
-                trackBar.Height = Height - valueLabel.Height;
+                int h = MIN_TRACKBAR_SIZE + valueLabel.Height;
+                return new Size(CONSTRAINT_SIZE, h);
             }
         }
 
-        /*private int MaxValueLabelWidth()
+        private void ApplyOrientationConstraints()
         {
-            valueLabel.Text = $"{Maximum:F2}{ValueSuffix}";
-            int max = valueLabel.Width;
-            valueLabel.Text = $"{Minimum:F2}{ValueSuffix}";
-            int min = valueLabel.Width;
-            valueLabel.Text = $"{Value:F2}{ValueSuffix}";
-            return Math.Max(min, max);
-        }*/
+            int mainLength = Orientation == Orientation.Horizontal ? Width : Height;
+            Size preferredSize = GetPreferredSize(Size);
+
+            if (Orientation == Orientation.Horizontal)
+            {
+                Size = new Size(mainLength, CONSTRAINT_SIZE);
+                MinimumSize = new Size(preferredSize.Width, CONSTRAINT_SIZE);
+                MaximumSize = new Size(int.MaxValue, CONSTRAINT_SIZE);
+            }
+            else
+            {
+                Size = new Size(CONSTRAINT_SIZE, mainLength);
+                MinimumSize = new Size(CONSTRAINT_SIZE, preferredSize.Height);
+                MaximumSize = new Size(CONSTRAINT_SIZE, int.MaxValue);
+            }
+        }
+
+        private void AdjustUI()
+        {
+            int valueLabelWidth = valueLabel.EstimateRequiredWidth(MathHelper.GetIntegerDigits(Maximum), apply: true);
+            int labelsWidth = descriptionLabel.Width + valueLabelWidth;
+
+            if (Orientation == Orientation.Horizontal)
+            {
+                trackBar.Location = new Point(descriptionLabel.Width, 0);
+                trackBar.Size = new Size(Width - labelsWidth, CONSTRAINT_SIZE);
+                trackBar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+
+                descriptionLabel.Location = new Point(0, Y_LBL_OFFSET);
+                descriptionLabel.Anchor = AnchorStyles.Left;
+                descriptionLabel.Visible = true;
+
+                valueLabel.Location = new Point(descriptionLabel.Width + trackBar.Width, Y_LBL_OFFSET);
+                valueLabel.Anchor = AnchorStyles.Right;
+            }
+            else
+            {
+                trackBar.Location = new Point(0, 0);
+                trackBar.Size = new Size(CONSTRAINT_SIZE, Height - valueLabel.Height);
+                trackBar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+
+                descriptionLabel.Visible = false;
+
+                valueLabel.Location = new Point(0, trackBar.Bottom + Y_LBL_OFFSET);
+                valueLabel.Anchor = AnchorStyles.Bottom;
+            }
+        }
+
+        protected override void UpdateValueFromUI()
+        {
+            if (isUpdatingValue)
+                return;
+
+            isUpdatingValue = true;
+            try
+            {
+                Value = ScaleMapper.ToRealValue(trackBar.Value);
+            }
+            finally
+            {
+                isUpdatingValue = false;
+            }
+        }
+
+        protected override void UpdateUIFromValue(double value)
+        {
+            if (isUpdatingValue)
+                return;
+
+            isUpdatingValue = true;
+            try
+            {
+                trackBar.Value = ScaleMapper.ToControlUnits(value);
+            }
+            finally
+            {
+                isUpdatingValue = false;
+            }
+        }
+
+        private void UpdateTrackbarSettings()
+        {
+            trackBar.ApplySettings(TrackBarHelper.GetTrackBarSettings(ScaleMapper));
+        }
     }
 }

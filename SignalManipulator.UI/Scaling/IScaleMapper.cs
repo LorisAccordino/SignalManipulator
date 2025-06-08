@@ -1,8 +1,8 @@
-﻿namespace SignalManipulator.UI.Helpers.Scaling
+﻿namespace SignalManipulator.UI.Scaling
 {
     public interface IScaleMapper
     {
-        void Configure(double realMin, double realMax, double precision);
+        //void SetCurve(INonLinearCurve curve);
         int ToControlUnits(double realValue);
         double ToRealValue(int controlUnits);
     }

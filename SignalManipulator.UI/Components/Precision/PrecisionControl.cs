@@ -1,70 +1,115 @@
 ﻿using System.ComponentModel;
 using System;
 using System.Windows.Forms;
-using SignalManipulator.UI.Helpers.Scaling;
+using SignalManipulator.UI.Scaling;
+using SignalManipulator.UI.Scaling.Curves;
+using SignalManipulator.UI.Helpers;
 
 namespace SignalManipulator.UI.Components.Precision
 {
+    public enum PrecisionScale
+    {
+        Linear,
+        Logarithmic,
+        Exponential
+    }
+
     public class PrecisionControl : Control
     {
         // Events
         public event EventHandler<double> ValueChanged;
+        public event EventHandler RangeChanged;
+        public event EventHandler PrecisionChanged;
+        public event EventHandler ScaleChanged;
+        public event EventHandler PrecisionSettingsChanged;
 
         // Precision properties
         private double precision = 0.01;
-        private double minimum = 0;
-        private double value = 2.5;
-        private double maximum = 10;
+        private double minimum = 0.0;
+        private double value = 0.0;
+        private double maximum = 10.0;
+        private double curvature = 1.0;
         private PrecisionScale precisionScale = PrecisionScale.Linear;
+        private NonLinearScaleMapper scaleMapper;
 
 
-        [DefaultValue(0.01f)]
-        public double Precision
+        [DefaultValue(0.0)]
+        public virtual double Minimum
+        {
+            get => minimum;
+            set
+            {
+                if (minimum != value)
+                {
+                    minimum = value;
+
+                    // Ensure range is valid
+                    if (minimum > maximum)
+                        maximum = minimum;
+
+                    Value = value;
+                    RangeChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        [DefaultValue(10.0)]
+        public virtual double Maximum
+        {
+            get => maximum;
+            set
+            {
+                if (maximum != value)
+                {
+                    maximum = value;
+
+                    // Ensure range is valid
+                    if (maximum < minimum)
+                        minimum = maximum;
+
+                    Value = value;
+                    RangeChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        [DefaultValue(0.0)]
+        public virtual double Value
+        {
+            get => value;
+            set
+            {
+                double clampled = MathHelper.Clamp(value, Minimum, Maximum);
+                if (this.value != clampled)
+                {
+                    this.value = clampled;
+                    ValueChanged?.Invoke(this, clampled);
+                }
+            }
+        }
+
+        [DefaultValue(0.01)]
+        public virtual double Precision
         {
             get => precision;
             set
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException(nameof(Precision));
                 precision = value;
-                OnPrecisionChanged();
+                PrecisionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        [DefaultValue(0)]
-        public double Minimum
+        [DefaultValue(1.0)]
+        public double Curvature
         {
-            get => minimum;
+            get => curvature;
             set
             {
-                minimum = value;
-                OnRangeChanged();
-            }
-        }
-
-        [DefaultValue(2.5)]
-        public virtual double Value
-        {
-            get => value;
-            set
-            {
-                double clampled = Math.Min(Math.Max(value, Minimum), Maximum);
-                if (this.value != clampled)
-                {
-                    this.value = clampled;
-                    OnValueChanged(this, clampled);
-                    UpdateUIFromValue(clampled);
-                }
-            }
-        }
-
-        [DefaultValue(10)]
-        public double Maximum
-        {
-            get => maximum;
-            set
-            {
-                maximum = value;
-                OnRangeChanged();
+                new ExpCurve(value); // Test the curve
+                curvature = value;
+                PrecisionSettingsChanged?.Invoke(this, EventArgs.Empty);
+                UpdateUIFromValue(Value);
             }
         }
 
@@ -75,39 +120,45 @@ namespace SignalManipulator.UI.Components.Precision
             set
             {
                 precisionScale = value;
-                OnScaleChanged();
+                ScaleChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        protected IScaleMapper ScaleMapper
+        protected NonLinearScaleMapper ScaleMapper
         {
             get
             {
+                scaleMapper = new NonLinearScaleMapper(Minimum, Maximum, Precision);
+
                 switch (PrecisionScale)
                 {
-                    case PrecisionScale.Logarithmic:
-                        return new LogScaleMapper(Minimum, Maximum, Precision);
+                    case PrecisionScale.Logarithmic: 
+                        scaleMapper.SetCurve(new LogCurve(curvature));
+                        break;
                     case PrecisionScale.Exponential:
-                        return new ExpScaleMapper(Minimum, Maximum, Precision);
+                        scaleMapper.SetCurve(new ExpCurve(curvature));
+                        break;
                     default:
-                        return new LinearScaleMapper(Minimum, Maximum, Precision);
+                        scaleMapper.SetCurve(new LinearCurve());
+                        break;
                 }
+
+                return scaleMapper;
             }
         }
 
-
-        protected virtual void OnValueChanged(object sender, double e)
+        public PrecisionControl()
         {
-            ValueChanged?.Invoke(this, e);
+            ValueChanged += (s, e) => UpdateUIFromValue(Value);
+
+            RangeChanged += (s, e) => PrecisionSettingsChanged(s, e);
+            PrecisionChanged += (s, e) => PrecisionSettingsChanged(s, e);
+            ScaleChanged += (s, e) => PrecisionSettingsChanged(s, e);
+
+            PrecisionSettingsChanged += (s, e) => UpdateUIFromValue(Value);
         }
 
-        protected virtual void OnRangeChanged() => UpdateUIFromValue(Value);
-        protected virtual void OnPrecisionChanged() => UpdateUIFromValue(Value);
-        protected virtual void OnScaleChanged() => UpdateUIFromValue(Value);
-
-
         protected virtual void UpdateUIFromValue(double value) { }
-        protected virtual void UpdateValueFromUI(double value) { }
-
+        protected virtual void UpdateValueFromUI() { }
     }
 }

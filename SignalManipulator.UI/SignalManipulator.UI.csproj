@@ -102,10 +102,7 @@
     <Compile Include="Components\Precision\PrecisionControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\Precision\PrecisionScale.cs" />
-    <Compile Include="Components\Precision\PrecisionSlider.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Components\Precision\PrecisionSlider.cs" />
     <Compile Include="Components\Precision\ValueLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -150,12 +147,17 @@
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DesignModeHelper.cs" />
-    <Compile Include="Helpers\Scaling\BaseScaleMapper.cs" />
-    <Compile Include="Helpers\Scaling\ExpScaleMapper.cs" />
-    <Compile Include="Helpers\Scaling\IScaleMapper.cs" />
-    <Compile Include="Helpers\Scaling\LinearScaleMapper.cs" />
-    <Compile Include="Helpers\Scaling\LogScaleMapper.cs" />
+    <Compile Include="Helpers\MathHelper.cs" />
+    <Compile Include="Helpers\TrackBarHelper.cs" />
+    <Compile Include="Scaling\BaseScaleMapper.cs" />
+    <Compile Include="Scaling\Curves\ExpCurve.cs" />
+    <Compile Include="Scaling\Curves\INonLinearCurve.cs" />
+    <Compile Include="Scaling\Curves\LinearCurve.cs" />
+    <Compile Include="Scaling\Curves\LogCurve.cs" />
+    <Compile Include="Scaling\Curves\PowCurve.cs" />
+    <Compile Include="Scaling\IScaleMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scaling\NonLinearScaleMapper.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>

@@ -1,107 +1,157 @@
-﻿using SignalManipulator.UI.Helpers.Scaling;
+﻿using SignalManipulator.UI.Helpers;
+using SignalManipulator.UI.Scaling;
+using SignalManipulator.UI.Scaling.Curves;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace SignalManipulator.Tests.UI
 {
-    public class LinearScaleMapperTests
+    [ExcludeFromCodeCoverage]
+    public class NonLinearScaleMapperTests
     {
         [Theory]
-        [InlineData(0, 10, 0.1, 0.0)]
-        [InlineData(0, 10, 0.1, 5.0)]
-        [InlineData(0, 10, 0.1, 10.0)]
-        [InlineData(-5, 5, 0.5, -2.5)]
-        [InlineData(-5, 5, 0.5, 0.0)]
-        [InlineData(-5, 5, 0.5, 2.5)]
-        public void RealValueToControlUnitsAndBack_ShouldBeAccurate(double realMin, double realMax, double precision, double input)
+        [InlineData(0.0, 1.0, 0.01)]
+        [InlineData(1.0, 10.0, 0.05)]
+        [InlineData(0.1, 100.0, 0.1)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Linear(double realMin, double realMax, double precision)
         {
-            // Arrange
-            var mapper = new LinearScaleMapper(realMin, realMax, precision);
-
-            // Act
-            int controlUnits = mapper.ToControlUnits(input);
-            double output = mapper.ToRealValue(controlUnits);
-
-            // Assert
-            double tolerance = precision / 2;
-            Assert.True(Math.Abs(input - output) <= tolerance,
-                $"Expected {input}, got {output}, difference {Math.Abs(input - output)} is greater than tolerance {tolerance}");
+            TestMapper(realMin, realMax, precision, new LinearCurve());
         }
 
-        [Fact]
-        public void ControlUnitsToRealValue_ShouldMapCorrectly()
+        [Theory]
+        [InlineData(-1.0, 1.0, 0.01)]
+        [InlineData(-10.0, 0.0, 0.05)]
+        [InlineData(-100.0, 100.0, 1.0)]
+        [InlineData(-0.1, 0.1, 0.01)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Linear_Negative(double realMin, double realMax, double precision)
         {
-            // Arrange
-            var mapper = new LinearScaleMapper(0, 100, 1);
-
-            // Act & Assert
-            Assert.Equal(0.0, mapper.ToRealValue(0));
-            Assert.Equal(10.0, mapper.ToRealValue(10));
-            Assert.Equal(100.0, mapper.ToRealValue(100));
+            TestMapper(realMin, realMax, precision, new LinearCurve());
         }
 
-        [Fact]
-        public void ToControlUnits_ShouldRoundCorrectly()
+        [Theory]
+        [InlineData(0.0001, 1.0, 0.0001)]
+        [InlineData(1.0, 10.0, 0.01)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Exp(double realMin, double realMax, double precision)
         {
-            // Arrange
-            var mapper = new LinearScaleMapper(0, 10, 0.1);
+            TestMapper(realMin, realMax, precision, new ExpCurve());
+        }
 
-            // Act
-            int control1 = mapper.ToControlUnits(0.055); // Should round to 1
-            int control2 = mapper.ToControlUnits(0.045); // Should round to 0
+        [Theory]
+        [InlineData(-10.0, 10.0, 0.1)]
+        [InlineData(-1.0, 1.0, 0.01)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Exp_Negative(double realMin, double realMax, double precision)
+        {
+            TestMapper(realMin, realMax, precision, new ExpCurve());
+        }
 
-            // Assert
-            Assert.Equal(1, control1);
-            Assert.Equal(0, control2);
+
+        [Theory]
+        [InlineData(0.0001, 1.0, 0.0001)]
+        [InlineData(1.0, 10.0, 0.01)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Log(double realMin, double realMax, double precision)
+        {
+            TestMapper(realMin, realMax, precision, new LogCurve());
+        }
+
+        [Theory]
+        [InlineData(-10.0, 10.0, 0.1)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Log_Negative(double realMin, double realMax, double precision)
+        {
+            TestMapper(realMin, realMax, precision, new LogCurve());
+        }
+
+        [Theory]
+        [InlineData(0.0, 1.0, 0.01, 2.0)]
+        [InlineData(0.0, 1.0, 0.01, 0.5)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_Pow(double realMin, double realMax, double precision, double exponent)
+        {
+            TestMapper(realMin, realMax, precision, new PowCurve(exponent));
+        }
+
+        [Theory]
+        [InlineData(0.0, 1.0, 0.01, 2.0)]
+        [InlineData(0.0, 1.0, 0.01, 1.5)]
+        [InlineData(0.0, 1.0, 0.01, 1.2)]
+        [InlineData(0.0, 1.0, 0.01, 2.7)]
+        public void Mapper_ShouldRespectBounds_AndBeDual_WithVariousCurvatures(double realMin, double realMax, double precision, double curvature)
+        {
+            TestMapper(realMin, realMax, precision, new ExpCurve(curvature));
+            TestMapper(realMin, realMax, precision, new LogCurve(curvature));
+        }
+
+        private void TestMapper(double realMin, double realMax, double precision, INonLinearCurve curve)
+        {
+            var mapper = new NonLinearScaleMapper(realMin, realMax, precision);
+            mapper.SetCurve(curve);
+            int resolution = (int)Math.Round((realMax - realMin) / precision);
+
+            // Check the mapped bounds
+            int minCU = mapper.ToControlUnits(realMin);
+            int maxCU = mapper.ToControlUnits(realMax);
+
+            Assert.InRange(minCU, 0, resolution);
+            Assert.InRange(maxCU, 0, resolution);
+            Assert.True(minCU <= maxCU);
+
+            // Duality tests of several points
+            for (int i = 0; i <= 10; i++)
+            {
+                double realValue = realMin + i * (realMax - realMin) / 10.0;
+                int cu = mapper.ToControlUnits(realValue);
+                double back = mapper.ToRealValue(cu);
+
+                // The rounding can cause a slight difference, tollerance proportionally to the precision
+                Assert.InRange(back, realValue - precision * 1.5, realValue + precision * 1.5);
+            }
+
+            // Perfect duality with real values generates from CU
+            for (int cu = 0; cu <= resolution; cu += Math.Max(1, resolution / 10))
+            {
+                double realValue = mapper.ToRealValue(cu);
+                int cu2 = mapper.ToControlUnits(realValue);
+
+                // Must be equal or at most differ by 1
+                Assert.InRange(Math.Abs(cu2 - cu), 0, 1);
+            }
         }
     }
 
-    public class LogScaleMapperTests
+    [ExcludeFromCodeCoverage]
+    public class TrackBarHelperTests
     {
         [Theory]
-        [InlineData(1, 1000, 0.1, 1.0)]
-        [InlineData(1, 1000, 0.1, 10.0)]
-        [InlineData(1, 1000, 0.1, 100.0)]
-        public void RealValueToControlUnitsAndBack_ShouldBeAccurate(double realMin, double realMax, double precision, double input)
+        [InlineData("linear", 0.0, 100.0, 0.1)]
+        [InlineData("linear", 1.0, 5.0, 0.01)]
+
+        [InlineData("exp", 1.0, 10.0, 0.01)]
+        [InlineData("exp", 0.01, 100.0, 0.1)]
+
+        [InlineData("log", 0.0001, 1.0, 0.0001)]
+        [InlineData("log", 0.01, 100.0, 0.1)]
+        public void TrackBarSettings_ShouldBeCorrect(string curveType, double realMin, double realMax, double precision)
         {
-            // Arrange
-            var mapper = new LogScaleMapper(realMin, realMax, precision);
+            NonLinearScaleMapper mapper = new NonLinearScaleMapper(realMin, realMax, precision);
+            INonLinearCurve curve = curveType switch
+            {
+                "linear" => new LinearCurve(),
+                "exp" => new ExpCurve(),
+                "log" => new LogCurve(),
+                _ => throw new ArgumentException($"Invalid curve type: {curveType}")
+            };
+            mapper.SetCurve(curve);
+            var settings = TrackBarHelper.GetTrackBarSettings(mapper);
 
-            // Act
-            int controlUnits = mapper.ToControlUnits(input);
-            double output = mapper.ToRealValue(controlUnits);
+            int expectedMin = mapper.ToControlUnits(realMin);
+            int expectedMax = mapper.ToControlUnits(realMax);
+            int range = expectedMax - expectedMin;
 
-            // Assert
-            double tolerance = input * 0.05; // tolleranza relativa al 5%
-            Assert.True(Math.Abs(input - output) <= tolerance,
-                $"Expected {input}, got {output}, difference {Math.Abs(input - output)} exceeds tolerance {tolerance}");
-        }
+            Assert.Equal(expectedMin, settings.Minimum);
+            Assert.Equal(expectedMax, settings.Maximum);
+            Assert.True(settings.Minimum < settings.Maximum);
 
-        [Fact]
-        public void ToControlUnits_ShouldHandleBoundaries()
-        {
-            var mapper = new LogScaleMapper(1, 1000, 0.1);
-
-            Assert.Equal(0, mapper.ToControlUnits(1));
-            Assert.True(mapper.ToControlUnits(10) > 0);
-        }
-    }
-
-    public class ExpScaleMapperTests
-    {
-        [Theory]
-        [InlineData(0, 5, 0.1, 0.0)]
-        [InlineData(0, 5, 0.1, 1.0)]
-        [InlineData(0, 5, 0.1, 2.0)]
-        public void RealValueToControlUnitsAndBack_ShouldBeAccurate(double realMin, double realMax, double precision, double input)
-        {
-            var mapper = new ExpScaleMapper(realMin, realMax, precision);
-
-            int controlUnits = mapper.ToControlUnits(input);
-            double output = mapper.ToRealValue(controlUnits);
-
-            double tolerance = 0.05;
-            Assert.True(Math.Abs(input - output) <= tolerance,
-                $"Expected {input}, got {output}");
+            Assert.InRange(settings.TickFrequency, 1, range);
+            Assert.InRange(settings.SmallChange, 1, range);
+            Assert.InRange(settings.LargeChange, 1, range);
         }
     }
 }
