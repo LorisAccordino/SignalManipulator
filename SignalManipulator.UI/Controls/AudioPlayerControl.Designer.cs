@@ -34,15 +34,12 @@
             this.playBtn = new System.Windows.Forms.Button();
             this.timeInfoLbl = new System.Windows.Forms.Label();
             this.timeLbl = new System.Windows.Forms.Label();
-            this.speedInfoLbl = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.speedLbl = new System.Windows.Forms.Label();
             this.pitchCheckBox = new System.Windows.Forms.CheckBox();
             this.pauseBtn = new System.Windows.Forms.Button();
             this.wvFmtInfoLbl = new System.Windows.Forms.Label();
             this.wvFmtLbl = new System.Windows.Forms.Label();
             this.timeBar = new System.Windows.Forms.TrackBar();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.playbackSpeedSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
             ((System.ComponentModel.ISupportInitialize)(this.timeBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,9 +47,10 @@
             // 
             this.playingAudioInfoLbl.AutoSize = true;
             this.playingAudioInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playingAudioInfoLbl.Location = new System.Drawing.Point(12, 11);
+            this.playingAudioInfoLbl.Location = new System.Drawing.Point(9, 9);
+            this.playingAudioInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.playingAudioInfoLbl.Name = "playingAudioInfoLbl";
-            this.playingAudioInfoLbl.Size = new System.Drawing.Size(113, 20);
+            this.playingAudioInfoLbl.Size = new System.Drawing.Size(92, 16);
             this.playingAudioInfoLbl.TabIndex = 0;
             this.playingAudioInfoLbl.Text = "Audio playing:";
             // 
@@ -60,19 +58,20 @@
             // 
             this.playingAudioLbl.AutoSize = true;
             this.playingAudioLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playingAudioLbl.Location = new System.Drawing.Point(135, 11);
+            this.playingAudioLbl.Location = new System.Drawing.Point(101, 9);
+            this.playingAudioLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.playingAudioLbl.Name = "playingAudioLbl";
-            this.playingAudioLbl.Size = new System.Drawing.Size(15, 22);
+            this.playingAudioLbl.Size = new System.Drawing.Size(12, 18);
             this.playingAudioLbl.TabIndex = 1;
             this.playingAudioLbl.Text = " ";
             // 
             // stopBtn
             // 
             this.stopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.stopBtn.Location = new System.Drawing.Point(99, 149);
-            this.stopBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.stopBtn.Location = new System.Drawing.Point(74, 121);
+            this.stopBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.stopBtn.Name = "stopBtn";
-            this.stopBtn.Size = new System.Drawing.Size(80, 25);
+            this.stopBtn.Size = new System.Drawing.Size(60, 20);
             this.stopBtn.TabIndex = 2;
             this.stopBtn.Text = "Stop";
             this.stopBtn.UseVisualStyleBackColor = true;
@@ -81,10 +80,10 @@
             // playBtn
             // 
             this.playBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.playBtn.Location = new System.Drawing.Point(13, 149);
-            this.playBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.playBtn.Location = new System.Drawing.Point(10, 121);
+            this.playBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.playBtn.Name = "playBtn";
-            this.playBtn.Size = new System.Drawing.Size(80, 25);
+            this.playBtn.Size = new System.Drawing.Size(60, 20);
             this.playBtn.TabIndex = 3;
             this.playBtn.Text = "Play";
             this.playBtn.UseVisualStyleBackColor = true;
@@ -94,9 +93,10 @@
             // 
             this.timeInfoLbl.AutoSize = true;
             this.timeInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeInfoLbl.Location = new System.Drawing.Point(12, 34);
+            this.timeInfoLbl.Location = new System.Drawing.Point(9, 28);
+            this.timeInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.timeInfoLbl.Name = "timeInfoLbl";
-            this.timeInfoLbl.Size = new System.Drawing.Size(118, 20);
+            this.timeInfoLbl.Size = new System.Drawing.Size(95, 16);
             this.timeInfoLbl.TabIndex = 4;
             this.timeInfoLbl.Text = "Playback time:";
             // 
@@ -104,59 +104,20 @@
             // 
             this.timeLbl.AutoSize = true;
             this.timeLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeLbl.Location = new System.Drawing.Point(133, 36);
+            this.timeLbl.Location = new System.Drawing.Point(100, 29);
+            this.timeLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.timeLbl.Name = "timeLbl";
-            this.timeLbl.Size = new System.Drawing.Size(81, 20);
+            this.timeLbl.Size = new System.Drawing.Size(62, 16);
             this.timeLbl.TabIndex = 5;
             this.timeLbl.Text = "00:00.000";
-            // 
-            // speedInfoLbl
-            // 
-            this.speedInfoLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.speedInfoLbl.AutoSize = true;
-            this.speedInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.speedInfoLbl.Location = new System.Drawing.Point(12, 118);
-            this.speedInfoLbl.Name = "speedInfoLbl";
-            this.speedInfoLbl.Size = new System.Drawing.Size(131, 20);
-            this.speedInfoLbl.TabIndex = 6;
-            this.speedInfoLbl.Text = "Playback speed:";
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(149, 117);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.trackBar1.Maximum = 250;
-            this.trackBar1.Minimum = 10;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(232, 28);
-            this.trackBar1.SmallChange = 5;
-            this.trackBar1.TabIndex = 7;
-            this.trackBar1.TickFrequency = 0;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.Value = 100;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
-            // speedLbl
-            // 
-            this.speedLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.speedLbl.AutoSize = true;
-            this.speedLbl.Location = new System.Drawing.Point(379, 122);
-            this.speedLbl.Name = "speedLbl";
-            this.speedLbl.Size = new System.Drawing.Size(20, 16);
-            this.speedLbl.TabIndex = 8;
-            this.speedLbl.Text = "1x";
             // 
             // pitchCheckBox
             // 
             this.pitchCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pitchCheckBox.AutoSize = true;
-            this.pitchCheckBox.Location = new System.Drawing.Point(203, 152);
-            this.pitchCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pitchCheckBox.Location = new System.Drawing.Point(152, 123);
             this.pitchCheckBox.Name = "pitchCheckBox";
-            this.pitchCheckBox.Size = new System.Drawing.Size(115, 20);
+            this.pitchCheckBox.Size = new System.Drawing.Size(94, 17);
             this.pitchCheckBox.TabIndex = 9;
             this.pitchCheckBox.Text = "Preserve pitch";
             this.pitchCheckBox.UseVisualStyleBackColor = true;
@@ -165,10 +126,10 @@
             // pauseBtn
             // 
             this.pauseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pauseBtn.Location = new System.Drawing.Point(13, 149);
-            this.pauseBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pauseBtn.Location = new System.Drawing.Point(10, 121);
+            this.pauseBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pauseBtn.Name = "pauseBtn";
-            this.pauseBtn.Size = new System.Drawing.Size(80, 25);
+            this.pauseBtn.Size = new System.Drawing.Size(60, 20);
             this.pauseBtn.TabIndex = 10;
             this.pauseBtn.Text = "Pause";
             this.pauseBtn.UseVisualStyleBackColor = true;
@@ -179,10 +140,9 @@
             // 
             this.wvFmtInfoLbl.AutoSize = true;
             this.wvFmtInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wvFmtInfoLbl.Location = new System.Drawing.Point(13, 62);
-            this.wvFmtInfoLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.wvFmtInfoLbl.Location = new System.Drawing.Point(10, 50);
             this.wvFmtInfoLbl.Name = "wvFmtInfoLbl";
-            this.wvFmtInfoLbl.Size = new System.Drawing.Size(109, 20);
+            this.wvFmtInfoLbl.Size = new System.Drawing.Size(86, 16);
             this.wvFmtInfoLbl.TabIndex = 11;
             this.wvFmtInfoLbl.Text = "Wave format:";
             // 
@@ -190,10 +150,9 @@
             // 
             this.wvFmtLbl.AutoSize = true;
             this.wvFmtLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wvFmtLbl.Location = new System.Drawing.Point(133, 63);
-            this.wvFmtLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.wvFmtLbl.Location = new System.Drawing.Point(100, 51);
             this.wvFmtLbl.Name = "wvFmtLbl";
-            this.wvFmtLbl.Size = new System.Drawing.Size(14, 20);
+            this.wvFmtLbl.Size = new System.Drawing.Size(10, 16);
             this.wvFmtLbl.TabIndex = 12;
             this.wvFmtLbl.Text = " ";
             // 
@@ -202,26 +161,39 @@
             this.timeBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.timeBar.AutoSize = false;
-            this.timeBar.Location = new System.Drawing.Point(217, 33);
-            this.timeBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.timeBar.Location = new System.Drawing.Point(163, 27);
             this.timeBar.Name = "timeBar";
-            this.timeBar.Size = new System.Drawing.Size(195, 32);
+            this.timeBar.Size = new System.Drawing.Size(146, 26);
             this.timeBar.TabIndex = 13;
             this.timeBar.TickFrequency = 0;
             this.timeBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.timeBar.Scroll += new System.EventHandler(this.timeBar_Scroll);
             // 
+            // playbackSpeedSlider
+            // 
+            this.playbackSpeedSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.playbackSpeedSlider.Curvature = 2.5D;
+            this.playbackSpeedSlider.Description = "Playback speed:";
+            this.playbackSpeedSlider.Location = new System.Drawing.Point(10, 85);
+            this.playbackSpeedSlider.Maximum = 3D;
+            this.playbackSpeedSlider.Minimum = 0.01D;
+            this.playbackSpeedSlider.Name = "playbackSpeedSlider";
+            this.playbackSpeedSlider.PrecisionScale = SignalManipulator.UI.Components.Precision.PrecisionScale.Logarithmic;
+            this.playbackSpeedSlider.Size = new System.Drawing.Size(306, 30);
+            this.playbackSpeedSlider.Suffix = "x";
+            this.playbackSpeedSlider.TabIndex = 14;
+            this.playbackSpeedSlider.TickFrequency = 29;
+            this.playbackSpeedSlider.Value = 1D;
+            // 
             // AudioPlayerControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.playbackSpeedSlider);
             this.Controls.Add(this.timeBar);
             this.Controls.Add(this.wvFmtLbl);
             this.Controls.Add(this.wvFmtInfoLbl);
             this.Controls.Add(this.pitchCheckBox);
-            this.Controls.Add(this.speedLbl);
-            this.Controls.Add(this.trackBar1);
-            this.Controls.Add(this.speedInfoLbl);
             this.Controls.Add(this.timeLbl);
             this.Controls.Add(this.timeInfoLbl);
             this.Controls.Add(this.playBtn);
@@ -229,11 +201,10 @@
             this.Controls.Add(this.playingAudioLbl);
             this.Controls.Add(this.playingAudioInfoLbl);
             this.Controls.Add(this.pauseBtn);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(349, 135);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(262, 110);
             this.Name = "AudioPlayerControl";
-            this.Size = new System.Drawing.Size(421, 181);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.Size = new System.Drawing.Size(316, 147);
             ((System.ComponentModel.ISupportInitialize)(this.timeBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -248,13 +219,11 @@
         private System.Windows.Forms.Button playBtn;
         private System.Windows.Forms.Label timeInfoLbl;
         private System.Windows.Forms.Label timeLbl;
-        private System.Windows.Forms.Label speedInfoLbl;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Label speedLbl;
         private System.Windows.Forms.CheckBox pitchCheckBox;
         private System.Windows.Forms.Button pauseBtn;
         private System.Windows.Forms.Label wvFmtInfoLbl;
         private System.Windows.Forms.Label wvFmtLbl;
         private System.Windows.Forms.TrackBar timeBar;
+        private Components.Precision.PrecisionSlider playbackSpeedSlider;
     }
 }

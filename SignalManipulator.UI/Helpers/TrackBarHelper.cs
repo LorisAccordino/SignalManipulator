@@ -22,7 +22,8 @@ namespace SignalManipulator.UI.Helpers
 
             int range = max - min;
             int tickFrequency = Math.Max(1, range / 10);
-            int smallChange = Math.Max(1, range / 100);
+            //int smallChange = Math.Max(1, range / 100);
+            int smallChange = 1;
             int largeChange = Math.Max(1, range / 5);
 
             return new TrackBarSettings

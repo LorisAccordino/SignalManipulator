@@ -159,6 +159,9 @@ namespace SignalManipulator.UI.Components.Precision
         }
 
         protected virtual void UpdateUIFromValue(double value) { }
-        protected virtual void UpdateValueFromUI() { }
+        protected virtual void UpdateValueFromUI(double value)
+        {
+            ValueChanged?.Invoke(this, value);
+        }
     }
 }

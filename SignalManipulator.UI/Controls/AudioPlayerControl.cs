@@ -33,6 +33,8 @@ namespace SignalManipulator.UI.Controls
                 timeBar.Value = (int)playback.Info.CurrentTime.TotalSeconds;
             });
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
+
+            playbackSpeedSlider.ValueChanged += (s, value) => playback.PlaybackSpeed = value;
         }
 
 
@@ -52,11 +54,6 @@ namespace SignalManipulator.UI.Controls
 
         private void stopBtn_Click(object sender, EventArgs e) => playback.Stop();
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            playback.PlaybackSpeed = trackBar1.Value / 100f;
-            speedLbl.Text = playback.PlaybackSpeed + "x";
-        }
 
         private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
