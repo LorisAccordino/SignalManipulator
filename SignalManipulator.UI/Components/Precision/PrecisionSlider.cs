@@ -21,9 +21,27 @@ namespace SignalManipulator.UI.Components.Precision
 
         private bool isUpdatingValue = false;
 
+
+        /*** HIDDEN PROPERTIES ***/
+
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override string Text { get => base.Text; set => base.Text = value; }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Size MinimumSize { get => base.MinimumSize; set => base.MinimumSize = value; }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Size MaximumSize { get => base.MaximumSize; set => base.MaximumSize = value; }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override bool AutoSize { get => base.AutoSize; set => base.AutoSize = value; }
+
+        /*************************/
+
 
         [DefaultValue("Value:")]
         public string Description
