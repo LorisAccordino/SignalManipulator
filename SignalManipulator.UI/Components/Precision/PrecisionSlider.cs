@@ -30,7 +30,7 @@ namespace SignalManipulator.UI.Components.Precision
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override string Text { get => base.Text; set => base.Text = value; }
+        public override string Text { get => ""; set => base.Text = ""; }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

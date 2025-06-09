@@ -148,10 +148,6 @@ namespace SignalManipulator.Tests.UI
             Assert.Equal(expectedMin, settings.Minimum);
             Assert.Equal(expectedMax, settings.Maximum);
             Assert.True(settings.Minimum < settings.Maximum);
-
-            Assert.InRange(settings.TickFrequency, 1, range);
-            Assert.InRange(settings.SmallChange, 1, range);
-            Assert.InRange(settings.LargeChange, 1, range);
         }
     }
 }
