@@ -117,13 +117,29 @@ namespace SignalManipulator.UI.Components.Precision
             }
         }
 
+        public override ValueUpdateMode UpdateMode
+        {
+            get => base.UpdateMode;
+            set
+            {
+                if (base.UpdateMode != value)
+                {
+                    base.UpdateMode = value;
+                    trackBar.Enabled = UpdateMode != ValueUpdateMode.ProgrammaticOnly;
+                }
+            }
+        }
+
         public override double Value 
         { 
             get => base.Value;
             set
             {
-                base.Value = value;
-                valueLabel.Value = base.Value;
+                if (base.Value != value)
+                {
+                    base.Value = value;
+                    valueLabel.Value = base.Value;
+                }
             }
         }
 
@@ -153,6 +169,8 @@ namespace SignalManipulator.UI.Components.Precision
             }
         }
 
+        public TickStyle TickStyle { get => trackBar.TickStyle; set => trackBar.TickStyle = value; }
+
         public int TickFrequency { get => trackBar.TickFrequency; set => trackBar.TickFrequency = value; }
 
 
@@ -168,12 +186,12 @@ namespace SignalManipulator.UI.Components.Precision
             Controls.Add(valueLabel);
 
             // Register events
-            trackBar.ValueChanged += (s, e) => UpdateValueFromUI(Value);
+            trackBar.ValueChanged += (s, e) => UpdateValueFromUI();
             PrecisionSettingsChanged += (s, e) => UpdateTrackbarSettings();
 
             // Initialize some default properties
             Description = "Value:";
-            Width = DEFAULT_SIZE;
+            //Width = DEFAULT_SIZE;
         }
 
         protected override void OnCreateControl()
@@ -212,19 +230,20 @@ namespace SignalManipulator.UI.Components.Precision
 
         private void ApplyOrientationConstraints()
         {
+            int longSide = Math.Max(Width, Height);
             Size preferred = GetPreferredSize(Size);
 
             if (Orientation == Orientation.Horizontal)
             {
-                Size = new Size(Math.Max(Width, preferred.Width), CONSTRAINT_SIZE);
                 MinimumSize = new Size(preferred.Width, CONSTRAINT_SIZE);
-                MaximumSize = new Size(int.MaxValue, CONSTRAINT_SIZE);
+                MaximumSize = new Size(preferred.Width * 4, CONSTRAINT_SIZE);
+                Size = new Size(longSide, CONSTRAINT_SIZE);
             }
-            else
+            else // Vertical
             {
-                Size = new Size(CONSTRAINT_SIZE, Math.Max(Height, preferred.Height));
                 MinimumSize = new Size(CONSTRAINT_SIZE, preferred.Height);
-                MaximumSize = new Size(CONSTRAINT_SIZE, int.MaxValue);
+                MaximumSize = new Size(CONSTRAINT_SIZE, preferred.Height * 4);
+                Size = new Size(CONSTRAINT_SIZE, longSide);
             }
         }
 
@@ -236,42 +255,48 @@ namespace SignalManipulator.UI.Components.Precision
             int descWidth = GetDescriptionLabelWidth();
             int labelsWidth = descWidth + valueWidth;
 
-            descriptionLabel.Visible = showDescription && !(Orientation == Orientation.Vertical);
+            bool isHorizontal = Orientation == Orientation.Horizontal;
+
+            descriptionLabel.Visible = showDescription && isHorizontal;
             valueLabel.Visible = showValue;
 
-            if (Orientation == Orientation.Horizontal)
+            // Trackbar
+            Point trackLocation = isHorizontal ? new Point(descWidth, 0) : new Point(0, 0);
+            Size trackSize = isHorizontal
+                ? new Size(Width - labelsWidth, CONSTRAINT_SIZE)
+                : new Size(CONSTRAINT_SIZE, Height - valueHeight);
+            AnchorStyles trackAnchor = isHorizontal
+                ? AnchorStyles.Left | AnchorStyles.Right
+                : AnchorStyles.Top | AnchorStyles.Bottom;
+
+            trackBar.Location = trackLocation;
+            trackBar.Size = trackSize;
+            trackBar.Anchor = trackAnchor;
+
+            // Description label (only horizontal)
+            if (showDescription && isHorizontal)
             {
-                trackBar.Location = new Point(descWidth, 0);
-                trackBar.Size = new Size(Width - labelsWidth, CONSTRAINT_SIZE);
-                trackBar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-
-                if (showDescription)
-                {
-                    descriptionLabel.Location = new Point(0, Y_LBL_OFFSET);
-                    descriptionLabel.Anchor = AnchorStyles.Left;
-                }
-
-                if (showValue)
-                {
-                    valueLabel.Location = new Point(descWidth + trackBar.Width, Y_LBL_OFFSET);
-                    valueLabel.Anchor = AnchorStyles.Right;
-                }
+                descriptionLabel.Location = new Point(0, Y_LBL_OFFSET);
+                descriptionLabel.Anchor = AnchorStyles.Left;
             }
-            else // Vertical
-            {
-                trackBar.Location = new Point(0, 0);
-                trackBar.Size = new Size(CONSTRAINT_SIZE, Height - valueHeight);
-                trackBar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
 
-                if (showValue)
-                {
-                    valueLabel.Location = new Point(0, trackBar.Bottom + Y_LBL_OFFSET);
-                    valueLabel.Anchor = AnchorStyles.Bottom;
-                }
+            // Value label
+            if (showValue)
+            {
+                Point valueLocation = isHorizontal
+                    ? new Point(descWidth + trackSize.Width, Y_LBL_OFFSET)
+                    : new Point(0, trackSize.Height + Y_LBL_OFFSET);
+
+                AnchorStyles valueAnchor = isHorizontal
+                    ? AnchorStyles.Right
+                    : AnchorStyles.Bottom;
+
+                valueLabel.Location = valueLocation;
+                valueLabel.Anchor = valueAnchor;
             }
         }
 
-        protected override void UpdateValueFromUI(double value)
+        protected override void UpdateValueFromUI()
         {
             if (isUpdatingValue)
                 return;
@@ -279,8 +304,7 @@ namespace SignalManipulator.UI.Components.Precision
             isUpdatingValue = true;
             try
             {
-                Value = ScaleMapper.ToRealValue(trackBar.Value);
-                base.UpdateValueFromUI(Value);
+                SetValue(ScaleMapper.ToRealValue(trackBar.Value), true);
             }
             finally
             {

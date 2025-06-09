@@ -30,11 +30,17 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.OnUpdate += (s, e) => timeLbl.SafeInvoke(() =>
             {
                 timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
-                timeBar.Value = (int)playback.Info.CurrentTime.TotalSeconds;
+
+                // Update without firing event!
+                timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;
             });
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
 
             playbackSpeedSlider.ValueChanged += (s, value) => playback.PlaybackSpeed = value;
+            timeSlider.ValueChanged += (s, value) =>
+            {
+                playback.Seek(TimeSpan.FromSeconds(timeSlider.Value));
+            };
         }
 
 
@@ -45,7 +51,7 @@ namespace SignalManipulator.UI.Controls
             // Update UI
             playingAudioLbl.Text = playback.Info.FileName;
             wvFmtLbl.Text = playback.Info.WaveFormatDescription;
-            timeBar.Maximum = (int)playback.Info.TotalTime.TotalSeconds;
+            timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
         }
 
         private void playBtn_Click(object sender, EventArgs e) => playback.Play();
@@ -58,11 +64,6 @@ namespace SignalManipulator.UI.Controls
         private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             playback.PreservePitch = pitchCheckBox.Checked;
-        }
-
-        private void timeBar_Scroll(object sender, EventArgs e)
-        {
-            playback.Seek(TimeSpan.FromSeconds(timeBar.Value));
         }
     }
 }

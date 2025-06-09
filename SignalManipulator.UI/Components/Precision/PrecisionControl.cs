@@ -14,6 +14,14 @@ namespace SignalManipulator.UI.Components.Precision
         Exponential
     }
 
+    public enum ValueUpdateMode
+    {
+        None,              // It doesn't fire events
+        UserOnly,          // Only when the user changes the value
+        ProgrammaticOnly,  // Only when the code changes the value
+        Both               // It always fire events
+    }
+
     public class PrecisionControl : Control
     {
         // Events
@@ -47,7 +55,10 @@ namespace SignalManipulator.UI.Components.Precision
                     if (minimum > maximum)
                         maximum = minimum;
 
-                    Value = value;
+                    // Refresh value
+                    SetValue(Value, false);
+
+                    // Fire event
                     RangeChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -67,25 +78,48 @@ namespace SignalManipulator.UI.Components.Precision
                     if (maximum < minimum)
                         minimum = maximum;
 
-                    Value = value;
+                    // Refresh value
+                    SetValue(Value, false);
+
+                    // Fire event
                     RangeChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
 
+        [DefaultValue(ValueUpdateMode.Both)]
+        public virtual ValueUpdateMode UpdateMode { get; set; } = ValueUpdateMode.Both;
+
         [DefaultValue(0.0)]
         public virtual double Value
         {
             get => value;
-            set
-            {
-                double clampled = MathHelper.Clamp(value, Minimum, Maximum);
-                if (this.value != clampled)
-                {
-                    this.value = clampled;
-                    ValueChanged?.Invoke(this, clampled);
-                }
-            }
+            set => SetValue(value, fromUser: false); // Normal behaviour
+        }
+
+        protected void SetValue(double newValue, bool fromUser)
+        {
+            double clamped = MathHelper.Clamp(newValue, Minimum, Maximum);
+
+            if (value == clamped)
+                return;
+
+            value = clamped;
+
+            UpdateUIFromValue(value);
+
+            bool shouldFire = false;
+
+            if (UpdateMode == ValueUpdateMode.Both)
+                shouldFire = true;
+            else if (UpdateMode == ValueUpdateMode.UserOnly && fromUser)
+                shouldFire = true;
+            else if (UpdateMode == ValueUpdateMode.ProgrammaticOnly && !fromUser)
+                shouldFire = true;
+            // ValueUpdateMode.None → shouldFire remains false
+
+            if (shouldFire)
+                ValueChanged?.Invoke(this, clamped);
         }
 
         [DefaultValue(0.01)]
@@ -106,10 +140,12 @@ namespace SignalManipulator.UI.Components.Precision
             get => curvature;
             set
             {
-                new ExpCurve(value); // Test the curve
-                curvature = value;
-                PrecisionSettingsChanged?.Invoke(this, EventArgs.Empty);
-                UpdateUIFromValue(Value);
+                if (curvature != value)
+                {
+                    new ExpCurve(value); // Test the curve
+                    curvature = value;
+                    PrecisionSettingsChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -119,8 +155,11 @@ namespace SignalManipulator.UI.Components.Precision
             get => precisionScale;
             set
             {
-                precisionScale = value;
-                ScaleChanged?.Invoke(this, EventArgs.Empty);
+                if (precisionScale != value)
+                {
+                    precisionScale = value;
+                    ScaleChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -149,8 +188,6 @@ namespace SignalManipulator.UI.Components.Precision
 
         public PrecisionControl()
         {
-            ValueChanged += (s, e) => UpdateUIFromValue(Value);
-
             RangeChanged += (s, e) => PrecisionSettingsChanged(s, e);
             PrecisionChanged += (s, e) => PrecisionSettingsChanged(s, e);
             ScaleChanged += (s, e) => PrecisionSettingsChanged(s, e);
@@ -159,9 +196,6 @@ namespace SignalManipulator.UI.Components.Precision
         }
 
         protected virtual void UpdateUIFromValue(double value) { }
-        protected virtual void UpdateValueFromUI(double value)
-        {
-            ValueChanged?.Invoke(this, value);
-        }
+        protected virtual void UpdateValueFromUI() { }
     }
 }
