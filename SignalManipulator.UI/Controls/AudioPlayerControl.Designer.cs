@@ -68,7 +68,7 @@
             // 
             this.stopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.stopBtn.Location = new System.Drawing.Point(74, 121);
-            this.stopBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.stopBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.stopBtn.Name = "stopBtn";
             this.stopBtn.Size = new System.Drawing.Size(60, 20);
             this.stopBtn.TabIndex = 2;
@@ -80,7 +80,7 @@
             // 
             this.playBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.playBtn.Location = new System.Drawing.Point(10, 121);
-            this.playBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.playBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.playBtn.Name = "playBtn";
             this.playBtn.Size = new System.Drawing.Size(60, 20);
             this.playBtn.TabIndex = 3;
@@ -126,7 +126,7 @@
             // 
             this.pauseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pauseBtn.Location = new System.Drawing.Point(10, 121);
-            this.pauseBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.pauseBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pauseBtn.Name = "pauseBtn";
             this.pauseBtn.Size = new System.Drawing.Size(60, 20);
             this.pauseBtn.TabIndex = 10;
@@ -163,7 +163,7 @@
             this.timeSlider.Name = "timeSlider";
             this.timeSlider.ShowDescription = false;
             this.timeSlider.ShowValue = false;
-            this.timeSlider.Size = new System.Drawing.Size(155, 30);
+            this.timeSlider.Size = new System.Drawing.Size(155, 24);
             this.timeSlider.TabIndex = 17;
             this.timeSlider.TickFrequency = 1;
             this.timeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
@@ -171,9 +171,11 @@
             // 
             // playbackSpeedSlider
             // 
-            this.playbackSpeedSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.playbackSpeedSlider.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.playbackSpeedSlider.Curvature = 2.5D;
             this.playbackSpeedSlider.Description = "Playback speed:";
+            this.playbackSpeedSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.playbackSpeedSlider.Location = new System.Drawing.Point(10, 86);
             this.playbackSpeedSlider.Maximum = 3D;
             this.playbackSpeedSlider.Minimum = 0.01D;
@@ -201,7 +203,7 @@
             this.Controls.Add(this.playingAudioLbl);
             this.Controls.Add(this.playingAudioInfoLbl);
             this.Controls.Add(this.pauseBtn);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MinimumSize = new System.Drawing.Size(262, 110);
             this.Name = "AudioPlayerControl";
             this.Size = new System.Drawing.Size(316, 147);

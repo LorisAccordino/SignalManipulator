@@ -12,7 +12,6 @@ namespace SignalManipulator.UI.Components.Precision
     public class PrecisionSlider : PrecisionControl
     {
         private const int CONSTRAINT_SIZE = 30;
-        private const int DEFAULT_SIZE = 200;
         private const int MIN_TRACKBAR_SIZE = 100;
         private const int Y_LBL_OFFSET = 4;
 
@@ -56,7 +55,6 @@ namespace SignalManipulator.UI.Components.Precision
                 {
                     showDescription = value;
                     ApplyOrientationConstraints();
-                    AdjustUI();
                 }
             }
         }
@@ -71,8 +69,18 @@ namespace SignalManipulator.UI.Components.Precision
                 {
                     showValue = value;
                     ApplyOrientationConstraints();
-                    AdjustUI();
                 }
+            }
+        }
+
+        public override Font Font
+        {
+            get => base.Font; set
+            {
+                base.Font = value;
+                descriptionLabel.Font = value;
+                valueLabel.Font = value;
+                AdjustUI();
             }
         }
 
@@ -130,7 +138,7 @@ namespace SignalManipulator.UI.Components.Precision
             }
         }
 
-        public override double Value 
+        /*public override double Value 
         { 
             get => base.Value;
             set
@@ -141,6 +149,12 @@ namespace SignalManipulator.UI.Components.Precision
                     valueLabel.Value = base.Value;
                 }
             }
+        }*/
+
+        protected override void SetValue(double newValue, bool fromUser)
+        {
+            base.SetValue(newValue, fromUser);
+            valueLabel.Value = Value;
         }
 
         public override double Precision
@@ -164,7 +178,6 @@ namespace SignalManipulator.UI.Components.Precision
                 {
                     trackBar.Orientation = value;
                     ApplyOrientationConstraints();
-                    AdjustUI();
                 }
             }
         }
@@ -200,7 +213,6 @@ namespace SignalManipulator.UI.Components.Precision
 
             UpdateTrackbarSettings();
             ApplyOrientationConstraints();
-            AdjustUI();
         }
 
         private int GetValueLabelWidth() =>
@@ -245,6 +257,9 @@ namespace SignalManipulator.UI.Components.Precision
                 MaximumSize = new Size(CONSTRAINT_SIZE, preferred.Height * 4);
                 Size = new Size(CONSTRAINT_SIZE, longSide);
             }
+
+            // Adjust UI after applying constraints
+            AdjustUI();
         }
 
 

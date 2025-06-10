@@ -22,7 +22,7 @@ namespace SignalManipulator.UI.Components.Precision
         Both               // It always fire events
     }
 
-    public class PrecisionControl : Control
+    public abstract class PrecisionControl : Control
     {
         // Events
         public event EventHandler<double> ValueChanged;
@@ -97,7 +97,7 @@ namespace SignalManipulator.UI.Components.Precision
             set => SetValue(value, fromUser: false); // Normal behaviour
         }
 
-        protected void SetValue(double newValue, bool fromUser)
+        protected virtual void SetValue(double newValue, bool fromUser)
         {
             double clamped = MathHelper.Clamp(newValue, Minimum, Maximum);
 
@@ -195,7 +195,7 @@ namespace SignalManipulator.UI.Components.Precision
             PrecisionSettingsChanged += (s, e) => UpdateUIFromValue(Value);
         }
 
-        protected virtual void UpdateUIFromValue(double value) { }
-        protected virtual void UpdateValueFromUI() { }
+        protected abstract void UpdateUIFromValue(double value);
+        protected abstract void UpdateValueFromUI();
     }
 }
