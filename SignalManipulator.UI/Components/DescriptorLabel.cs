@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Components
 {
+    [ExcludeFromCodeCoverage]
     public partial class DescriptorLabel : Label
     {
         private string description = "Description";
@@ -10,6 +12,7 @@ namespace SignalManipulator.UI.Components
         private string value = "value";
 
         [DefaultValue("Description")]
+        [ExcludeFromCodeCoverage]
         public string Description
         {
             get => description;

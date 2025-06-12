@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using SignalManipulator.UI.Scaling;
 using SignalManipulator.UI.Scaling.Curves;
 using SignalManipulator.UI.Helpers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Components.Precision
 {
@@ -22,6 +23,7 @@ namespace SignalManipulator.UI.Components.Precision
         Both               // It always fire events
     }
 
+    [ExcludeFromCodeCoverage]
     public abstract class PrecisionControl : Control
     {
         // Events

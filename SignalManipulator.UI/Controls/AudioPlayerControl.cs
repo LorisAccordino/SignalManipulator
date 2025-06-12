@@ -3,10 +3,12 @@ using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.UI.Helpers;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
+    [ExcludeFromCodeCoverage]
     public partial class AudioPlayerControl : UserControl
     {
         private IPlaybackController playback;

@@ -44,6 +44,17 @@ namespace SignalManipulator.Tests.UI
             TestMapper(realMin, realMax, precision, new ExpCurve());
         }
 
+        [Theory]
+        [InlineData(0.0)]
+        [InlineData(0.999)]
+        [InlineData(-1.0)]
+        [InlineData(3.0)]
+        [InlineData(100.0)]
+        public void ExpCurve_ShouldThrowException_ForInvalidCurvature(double invalidCurvature)
+        {
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new ExpCurve(invalidCurvature));
+            Assert.Equal("curvature", ex.ParamName);
+        }
 
         [Theory]
         [InlineData(0.0001, 1.0, 0.0001)]
@@ -143,7 +154,6 @@ namespace SignalManipulator.Tests.UI
 
             int expectedMin = mapper.ToControlUnits(realMin);
             int expectedMax = mapper.ToControlUnits(realMax);
-            int range = expectedMax - expectedMin;
 
             Assert.Equal(expectedMin, settings.Minimum);
             Assert.Equal(expectedMax, settings.Maximum);

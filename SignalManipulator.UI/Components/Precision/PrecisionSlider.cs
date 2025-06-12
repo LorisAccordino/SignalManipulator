@@ -1,6 +1,7 @@
 ﻿using SignalManipulator.UI.Helpers;
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,6 +10,7 @@ namespace SignalManipulator.UI.Components.Precision
     [DesignerCategory("Code")]
     [DefaultProperty("Value")]
     [DefaultEvent("ValueChanged")]
+    [ExcludeFromCodeCoverage]
     public class PrecisionSlider : PrecisionControl
     {
         private const int CONSTRAINT_SIZE = 30;

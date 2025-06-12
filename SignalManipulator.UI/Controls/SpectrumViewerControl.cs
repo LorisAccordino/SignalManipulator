@@ -5,11 +5,13 @@ using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
+    [ExcludeFromCodeCoverage]
     public partial class SpectrumViewerControl : UserControl
     {
         private IAudioEventDispatcher audioEventDispatcher;

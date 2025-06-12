@@ -5,10 +5,12 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
 {
+    [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : UserControl
     {
         private IAudioEventDispatcher audioEventDispatcher;

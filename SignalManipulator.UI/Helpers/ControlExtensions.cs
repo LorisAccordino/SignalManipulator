@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public static class ControlExtensions
     {
         public static void SafeInvoke(this Control control, Action action)

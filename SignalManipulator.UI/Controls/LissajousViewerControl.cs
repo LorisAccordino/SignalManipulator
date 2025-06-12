@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SignalManipulator.UI.Helpers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls
 {
+    [ExcludeFromCodeCoverage]
     public partial class LissajousViewerControl : UserControl
     {
         private IAudioEventDispatcher audioEventDispatcher;

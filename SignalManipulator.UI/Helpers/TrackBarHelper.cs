@@ -1,5 +1,5 @@
 ﻿using SignalManipulator.UI.Scaling;
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Helpers
@@ -20,6 +20,7 @@ namespace SignalManipulator.UI.Helpers
             return new TrackBarSettings { Minimum = min, Maximum = max};
         }
 
+        [ExcludeFromCodeCoverage]
         public static void ApplySettings(this TrackBar trackBar, TrackBarSettings settings)
         {
             trackBar.Minimum = settings.Minimum;
