@@ -1,6 +1,6 @@
-﻿namespace SignalManipulator.UI.Components.Precision
+﻿namespace SignalManipulator.UI.Components
 {
-    partial class ValueLabel
+    partial class DescriptorLabel
     {
         /// <summary>
         /// Variabile di progettazione necessaria.

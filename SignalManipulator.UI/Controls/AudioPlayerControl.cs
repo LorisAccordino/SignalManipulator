@@ -50,7 +50,7 @@ namespace SignalManipulator.UI.Controls
 
             // Update UI
             playingAudioLbl.Text = playback.Info.FileName;
-            wvFmtLbl.Text = playback.Info.WaveFormatDescription;
+            waveFmtLbl.Text = playback.Info.WaveFormatDescription;
             timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
         }
 

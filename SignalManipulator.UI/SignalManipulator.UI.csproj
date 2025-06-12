@@ -99,14 +99,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\DescriptorLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\DescriptorLabel.Designer.cs">
+      <DependentUpon>DescriptorLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\Precision\PrecisionControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\Precision\PrecisionSlider.cs" />
-    <Compile Include="Components\Precision\ValueLabel.cs">
+    <Compile Include="Components\ValueLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Components\Precision\ValueLabel.Designer.cs">
+    <Compile Include="Components\ValueLabel.Designer.cs">
       <DependentUpon>ValueLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\AudioRouterControl.cs">

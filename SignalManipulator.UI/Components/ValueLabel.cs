@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Components.Precision
+namespace SignalManipulator.UI.Components
 {
+    [ToolboxItem(false)]
     public partial class ValueLabel : Label
     {
         private double value;
