@@ -31,12 +31,10 @@
             this.formsPlot = new ScottPlot.WinForms.FormsPlot();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.zoomAmntLbl = new System.Windows.Forms.Label();
-            this.zoomSlider = new System.Windows.Forms.TrackBar();
             this.zoomLbl = new System.Windows.Forms.Label();
+            this.zoomSlider1 = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).BeginInit();
             this.SuspendLayout();
             // 
             // formsPlot
@@ -46,7 +44,7 @@
             this.formsPlot.Location = new System.Drawing.Point(2, 2);
             this.formsPlot.Margin = new System.Windows.Forms.Padding(2);
             this.formsPlot.Name = "formsPlot";
-            this.formsPlot.Size = new System.Drawing.Size(556, 275);
+            this.formsPlot.Size = new System.Drawing.Size(556, 279);
             this.formsPlot.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -60,54 +58,48 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 41F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(560, 324);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.zoomAmntLbl);
-            this.panel1.Controls.Add(this.zoomSlider);
+            this.panel1.Controls.Add(this.zoomSlider1);
             this.panel1.Controls.Add(this.zoomLbl);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 282);
+            this.panel1.Location = new System.Drawing.Point(3, 286);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(554, 39);
+            this.panel1.Size = new System.Drawing.Size(554, 35);
             this.panel1.TabIndex = 2;
-            // 
-            // zoomAmntLbl
-            // 
-            this.zoomAmntLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomAmntLbl.AutoSize = true;
-            this.zoomAmntLbl.Location = new System.Drawing.Point(508, 11);
-            this.zoomAmntLbl.Name = "zoomAmntLbl";
-            this.zoomAmntLbl.Size = new System.Drawing.Size(30, 13);
-            this.zoomAmntLbl.TabIndex = 3;
-            this.zoomAmntLbl.Text = "100x";
-            // 
-            // zoomSlider
-            // 
-            this.zoomSlider.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomSlider.AutoSize = false;
-            this.zoomSlider.Location = new System.Drawing.Point(54, 3);
-            this.zoomSlider.Maximum = 1000;
-            this.zoomSlider.Minimum = 1;
-            this.zoomSlider.Name = "zoomSlider";
-            this.zoomSlider.Size = new System.Drawing.Size(448, 36);
-            this.zoomSlider.TabIndex = 2;
-            this.zoomSlider.TickFrequency = 100;
-            this.zoomSlider.Value = 1;
-            this.zoomSlider.Scroll += new System.EventHandler(this.zoomSlider_Scroll);
             // 
             // zoomLbl
             // 
             this.zoomLbl.AutoSize = true;
             this.zoomLbl.Location = new System.Drawing.Point(12, 11);
             this.zoomLbl.Name = "zoomLbl";
-            this.zoomLbl.Size = new System.Drawing.Size(37, 13);
+            this.zoomLbl.Size = new System.Drawing.Size(0, 13);
             this.zoomLbl.TabIndex = 1;
-            this.zoomLbl.Text = "Zoom:";
+            // 
+            // zoomSlider1
+            // 
+            this.zoomSlider1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomSlider1.Curvature = 2.5D;
+            this.zoomSlider1.Description = "Zoom:";
+            this.zoomSlider1.Location = new System.Drawing.Point(0, 3);
+            this.zoomSlider1.Maximum = 100D;
+            this.zoomSlider1.Minimum = 1D;
+            this.zoomSlider1.Name = "zoomSlider1";
+            this.zoomSlider1.Precision = 0.1D;
+            this.zoomSlider1.PrecisionScale = SignalManipulator.UI.Components.Precision.PrecisionScale.Logarithmic;
+            this.zoomSlider1.Size = new System.Drawing.Size(557, 30);
+            this.zoomSlider1.Suffix = "x";
+            this.zoomSlider1.TabIndex = 4;
+            this.zoomSlider1.TickFrequency = 100;
+            this.zoomSlider1.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
+            this.zoomSlider1.UpdateMode = SignalManipulator.UI.Components.Precision.ValueUpdateMode.UserOnly;
+            this.zoomSlider1.Value = 1D;
             // 
             // WaveformViewerControl
             // 
@@ -120,7 +112,6 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomSlider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -131,7 +122,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label zoomLbl;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TrackBar zoomSlider;
-        private System.Windows.Forms.Label zoomAmntLbl;
+        private Components.Precision.PrecisionSlider zoomSlider1;
     }
 }

@@ -3,8 +3,7 @@ using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -14,13 +13,10 @@ namespace SignalManipulator.UI.Controls
     public partial class WaveformViewerControl : UserControl
     {
         private IAudioEventDispatcher audioEventDispatcher;
-        private DataStreamer wavePlot;
-        private List<WaveformFrame> frames = new List<WaveformFrame>();
-        private object lockObject = new object();
-
+        private DataStreamer waveformStream;
+        private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
-        private float zoomMultiplier => sampleRate / (AudioEngine.CHUNK_SIZE * 100f);
-        public float Zoom { get; set; } = 1.0f;
+        public double Zoom { get; set; } = 1.0;
 
         public WaveformViewerControl()
         {
@@ -29,7 +25,6 @@ namespace SignalManipulator.UI.Controls
             if (!DesignModeHelper.IsDesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
-
                 InitializeEvents();
                 InitializePlot();
             }
@@ -37,11 +32,12 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (s, info) => sampleRate = info.SampleRate;
-            audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
-            audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
-            audioEventDispatcher.OnUpdate += (s, e) => UpdatePlot();
-            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame);
+            audioEventDispatcher.OnLoad += (_, info) => HandleLoad(info.SampleRate);
+            audioEventDispatcher.OnStopped += (_, e) => HandleStop();
+            audioEventDispatcher.OnUpdate += (_, e) => UpdatePlot();
+            audioEventDispatcher.WaveformReady += (_, frame) => HandleWaveformReady(frame);
+
+            zoomSlider1.ValueChanged += ZoomChanged;
         }
 
         private void InitializePlot()
@@ -50,54 +46,58 @@ namespace SignalManipulator.UI.Controls
             formsPlot.Plot.XLabel("Time");
             formsPlot.Plot.YLabel("Amplitude");
             formsPlot.UserInputProcessor.Disable();
-            
-            ResetPlot();
+
+            ResetWaveform();
         }
 
-        private void ResetPlot()
+        private void HandleLoad(int newSampleRate)
         {
-            // Clear previous data
+            if (newSampleRate != sampleRate)
+            {
+                sampleRate = newSampleRate;
+                ResetWaveform();
+            }
+        }
+
+        private void HandleStop()
+        {
+            ResetWaveform();
+        }
+
+        private void HandleWaveformReady(WaveformFrame frame)
+        {
+            pendingFrames.Enqueue(frame);
+        }
+
+        private void ResetWaveform()
+        {
             formsPlot.Plot.Clear();
             formsPlot.Refresh();
-            lock (lockObject) frames.Clear();
-            //wavePlot.Clear();
+            while (pendingFrames.TryDequeue(out _)) ;
 
-            // Initialize
-            wavePlot = formsPlot.Plot.Add.DataStreamer(sampleRate);
+            waveformStream = formsPlot.Plot.Add.DataStreamer(sampleRate);
             formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
             formsPlot.Plot.Axes.SetLimitsY(-1, 1);
 
-            wavePlot.ViewScrollLeft();
-            wavePlot.ManageAxisLimits = false;
-        }
-
-        private void UpdatePlotData(WaveformFrame frame)
-        {
-            lock (lockObject) frames.Add(frame);
+            waveformStream.ViewScrollLeft();
+            waveformStream.ManageAxisLimits = false;
         }
 
         private void UpdatePlot()
         {
-            // Update waveform points
-            lock (lockObject)
-            {
-                for (int i = 0; i < frames.Count; i++)
-                    wavePlot.AddRange(frames[i].DoubleMono);   
+            while (pendingFrames.TryDequeue(out var frame))
+                waveformStream.AddRange(frame.DoubleMono);
 
-                frames.Clear();
-            }
-
-            // Update plot
             formsPlot.SafeInvoke(() => formsPlot.Refresh());
         }
 
-        private void zoomSlider_Scroll(object sender, EventArgs e)
+        private void ZoomChanged(object sender, double value)
         {
-            Zoom = (zoomSlider.Maximum + zoomSlider.Minimum - zoomSlider.Value) / 10.0f;
-            zoomAmntLbl.Text = Zoom + "x";
+            Zoom = value;
+            double visibleSamples = sampleRate / Zoom;
+            double start = sampleRate - visibleSamples;
 
-            float width = sampleRate - (AudioEngine.CHUNK_SIZE * (Zoom * zoomMultiplier));
-            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(width, sampleRate));
+            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
         }
     }
 }
