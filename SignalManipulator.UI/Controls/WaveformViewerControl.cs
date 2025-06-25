@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Collections;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
@@ -24,10 +25,14 @@ namespace SignalManipulator.UI.Controls
         private DataStreamer rightStream;
         */
 
-        // Circular buffer for the last windowSeconds of audio
+        // Buffers for the last one second of audio
+        private CircularBuffer<double> circularBuffer;
         private double[] stereoBuffer;
-        private Queue<double> stereoQueue;
-        private int capacity;
+
+
+        //private double[] stereoBuffer;
+        //private Queue<double> stereoQueue;
+        //private int capacity;
 
         /*private readonly int windowSeconds = 1;
         private int writeIndex = 0;*/
@@ -77,12 +82,17 @@ namespace SignalManipulator.UI.Controls
 
             // Allocate the circular buffer based on the sampleRate
             //stereoBuffer = new double[sampleRate * windowSeconds];
-            capacity = sampleRate;
-            stereoBuffer = new double[capacity];
-            stereoQueue = new Queue<double>(capacity);
+            //capacity = sampleRate;
+            //stereoBuffer = new double[capacity];
+            //stereoQueue = new Queue<double>(capacity);
 
-            // Add a Signal to the plot
+            circularBuffer = new CircularBuffer<double>(sampleRate);
+            stereoBuffer = new double[sampleRate];
+
+            // Add each signal
             stereoSignal = plt.Add.Signal(stereoBuffer);
+            stereoSignal.LegendText = "Stereo Mix";
+
             //stereoSignal = plt.Add.Signal(Generate.Sin(44100));
             //stereoSignal.Color = ScottPlot.Colors.Black;
 
@@ -135,11 +145,13 @@ namespace SignalManipulator.UI.Controls
 
         private void ClearAllStreams()
         {
-            // Clear data
+            // Clear pending data
             while (pendingFrames.TryDequeue(out _));
-            //stereoStream.Clear();
-            //leftStream.Clear();
-            //rightStream.Clear();
+
+            // Clear buffers
+            circularBuffer.Clear();
+            while (!circularBuffer.IsFull) circularBuffer.Add(0);
+            Array.Clear(stereoBuffer, 0, stereoBuffer.Length);
 
             // Back to the initial bounds
             formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
@@ -149,7 +161,7 @@ namespace SignalManipulator.UI.Controls
         private void ToggleStreamsVisibility()
         {
             bool mono = monoCheckBox.Checked;
-            //stereoStream.IsVisible = !mono;
+            stereoSignal.IsVisible = !mono;
             //leftStream.IsVisible = mono;
             //rightStream.IsVisible = mono;
             formsPlot.Refresh();
@@ -162,11 +174,9 @@ namespace SignalManipulator.UI.Controls
 
 
                 // 1) Copia i nuovi frame nel buffer circolare
-                foreach (double s in frame.DoubleMono)
+                foreach (double sample in frame.DoubleMono)
                 {
-                    stereoQueue.Enqueue(s);
-                    if (stereoQueue.Count > capacity)
-                        stereoQueue.Dequeue();
+                    circularBuffer.Add(sample);
                 }
                 /*
                 // 2) Ricostruisci l’array in ordine lineare (tail-to-head)
@@ -178,7 +188,7 @@ namespace SignalManipulator.UI.Controls
                 */
 
                 //stereoBuffer = stereoQueue.ToArray();
-                Array.Copy(stereoQueue.ToArray(), stereoBuffer, stereoQueue.Count);
+                Array.Copy(circularBuffer.ToArray(), stereoBuffer, Math.Min(circularBuffer.Count, stereoBuffer.Length));
 
                 // 3) Aggiorna il SignalPlot e renderizza
                 //stereoSignal.Update(display);
