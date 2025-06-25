@@ -15,6 +15,7 @@ namespace SignalManipulator.UI.Components.Precision
     {
         private const int CONSTRAINT_SIZE = 30;
         private const int MIN_TRACKBAR_SIZE = 100;
+        private const int MAX_SIZE_MULTIPLIER = 10;
         private const int Y_LBL_OFFSET = 4;
 
         private TrackBar trackBar;
@@ -193,7 +194,6 @@ namespace SignalManipulator.UI.Components.Precision
 
             // Initialize some default properties
             Description = "Value:";
-            //Width = DEFAULT_SIZE;
         }
 
         protected override void OnCreateControl()
@@ -237,13 +237,13 @@ namespace SignalManipulator.UI.Components.Precision
             if (Orientation == Orientation.Horizontal)
             {
                 MinimumSize = new Size(preferred.Width, CONSTRAINT_SIZE);
-                MaximumSize = new Size(preferred.Width * 4, CONSTRAINT_SIZE);
+                MaximumSize = new Size(preferred.Width * MAX_SIZE_MULTIPLIER, CONSTRAINT_SIZE);
                 Size = new Size(longSide, CONSTRAINT_SIZE);
             }
             else // Vertical
             {
                 MinimumSize = new Size(CONSTRAINT_SIZE, preferred.Height);
-                MaximumSize = new Size(CONSTRAINT_SIZE, preferred.Height * 4);
+                MaximumSize = new Size(CONSTRAINT_SIZE, preferred.Height * MAX_SIZE_MULTIPLIER);
                 Size = new Size(CONSTRAINT_SIZE, longSide);
             }
 

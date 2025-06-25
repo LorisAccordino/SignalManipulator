@@ -140,7 +140,7 @@ namespace SignalManipulator.UI.Controls
             Zoom = value;
             double visible = sampleRate / Zoom;
             double start = sampleRate - visible;
-            //formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
+            formsPlot.SafeInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
         }
     }
 }
