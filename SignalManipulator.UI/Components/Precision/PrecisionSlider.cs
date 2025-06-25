@@ -140,19 +140,6 @@ namespace SignalManipulator.UI.Components.Precision
             }
         }
 
-        /*public override double Value 
-        { 
-            get => base.Value;
-            set
-            {
-                if (base.Value != value)
-                {
-                    base.Value = value;
-                    valueLabel.Value = base.Value;
-                }
-            }
-        }*/
-
         protected override void SetValue(double newValue, bool fromUser)
         {
             base.SetValue(newValue, fromUser);

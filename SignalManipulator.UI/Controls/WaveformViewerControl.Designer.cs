@@ -31,8 +31,9 @@
             this.formsPlot = new ScottPlot.WinForms.FormsPlot();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.monoCheckBox = new System.Windows.Forms.CheckBox();
+            this.zoomSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
             this.zoomLbl = new System.Windows.Forms.Label();
-            this.zoomSlider1 = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -64,13 +65,46 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.zoomSlider1);
+            this.panel1.Controls.Add(this.monoCheckBox);
+            this.panel1.Controls.Add(this.zoomSlider);
             this.panel1.Controls.Add(this.zoomLbl);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 286);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(554, 35);
             this.panel1.TabIndex = 2;
+            // 
+            // monoCheckBox
+            // 
+            this.monoCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.monoCheckBox.AutoSize = true;
+            this.monoCheckBox.Location = new System.Drawing.Point(459, 7);
+            this.monoCheckBox.Name = "monoCheckBox";
+            this.monoCheckBox.Size = new System.Drawing.Size(92, 17);
+            this.monoCheckBox.TabIndex = 5;
+            this.monoCheckBox.Text = "Split channels";
+            this.monoCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // zoomSlider
+            // 
+            this.zoomSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomSlider.Curvature = 2.5D;
+            this.zoomSlider.Description = "Zoom:";
+            this.zoomSlider.Location = new System.Drawing.Point(0, 3);
+            this.zoomSlider.Maximum = 100D;
+            this.zoomSlider.Minimum = 1D;
+            this.zoomSlider.Name = "zoomSlider";
+            this.zoomSlider.Precision = 0.1D;
+            this.zoomSlider.PrecisionScale = SignalManipulator.UI.Components.Precision.PrecisionScale.Logarithmic;
+            this.zoomSlider.Size = new System.Drawing.Size(453, 30);
+            this.zoomSlider.Suffix = "x";
+            this.zoomSlider.TabIndex = 4;
+            this.zoomSlider.TickFrequency = 100;
+            this.zoomSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
+            this.zoomSlider.UpdateMode = SignalManipulator.UI.Components.Precision.ValueUpdateMode.UserOnly;
+            this.zoomSlider.Value = 1D;
             // 
             // zoomLbl
             // 
@@ -79,27 +113,6 @@
             this.zoomLbl.Name = "zoomLbl";
             this.zoomLbl.Size = new System.Drawing.Size(0, 13);
             this.zoomLbl.TabIndex = 1;
-            // 
-            // zoomSlider1
-            // 
-            this.zoomSlider1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomSlider1.Curvature = 2.5D;
-            this.zoomSlider1.Description = "Zoom:";
-            this.zoomSlider1.Location = new System.Drawing.Point(0, 3);
-            this.zoomSlider1.Maximum = 100D;
-            this.zoomSlider1.Minimum = 1D;
-            this.zoomSlider1.Name = "zoomSlider1";
-            this.zoomSlider1.Precision = 0.1D;
-            this.zoomSlider1.PrecisionScale = SignalManipulator.UI.Components.Precision.PrecisionScale.Logarithmic;
-            this.zoomSlider1.Size = new System.Drawing.Size(557, 30);
-            this.zoomSlider1.Suffix = "x";
-            this.zoomSlider1.TabIndex = 4;
-            this.zoomSlider1.TickFrequency = 100;
-            this.zoomSlider1.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
-            this.zoomSlider1.UpdateMode = SignalManipulator.UI.Components.Precision.ValueUpdateMode.UserOnly;
-            this.zoomSlider1.Value = 1D;
             // 
             // WaveformViewerControl
             // 
@@ -122,6 +135,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label zoomLbl;
         private System.Windows.Forms.Panel panel1;
-        private Components.Precision.PrecisionSlider zoomSlider1;
+        private Components.Precision.PrecisionSlider zoomSlider;
+        private System.Windows.Forms.CheckBox monoCheckBox;
     }
 }
