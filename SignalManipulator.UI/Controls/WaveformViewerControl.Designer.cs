@@ -43,7 +43,7 @@
             this.formsPlot.DisplayScale = 0F;
             this.formsPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.formsPlot.Location = new System.Drawing.Point(2, 2);
-            this.formsPlot.Margin = new System.Windows.Forms.Padding(2);
+            this.formsPlot.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.formsPlot.Name = "formsPlot";
             this.formsPlot.Size = new System.Drawing.Size(556, 279);
             this.formsPlot.TabIndex = 0;
@@ -98,7 +98,7 @@
             this.zoomSlider.Name = "zoomSlider";
             this.zoomSlider.Precision = 0.1D;
             this.zoomSlider.PrecisionScale = SignalManipulator.UI.Components.Precision.PrecisionScale.Logarithmic;
-            this.zoomSlider.Size = new System.Drawing.Size(453, 30);
+            this.zoomSlider.Size = new System.Drawing.Size(453, 24);
             this.zoomSlider.Suffix = "x";
             this.zoomSlider.TabIndex = 4;
             this.zoomSlider.TickFrequency = 100;
@@ -119,7 +119,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "WaveformViewerControl";
             this.Size = new System.Drawing.Size(560, 324);
             this.tableLayoutPanel1.ResumeLayout(false);

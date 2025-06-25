@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScottPlot.WinForms;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -11,6 +12,14 @@ namespace SignalManipulator.UI.Helpers
         {
             if (control.InvokeRequired)
                 control.Invoke(action);
+            else
+                action();
+        }
+
+        public static void SafeAsyncInvoke(this Control control, Action action)
+        {
+            if (control.InvokeRequired)
+                control.BeginInvoke(action);
             else
                 action();
         }
