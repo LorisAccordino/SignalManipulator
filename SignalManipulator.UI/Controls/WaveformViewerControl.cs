@@ -153,7 +153,6 @@ namespace SignalManipulator.UI.Controls
             }
 
             // Unique UI refresh
-            //formsPlot.SafeAsyncInvoke(() => formsPlot.Refresh());
             formsPlot.Refresh();
         }
 
@@ -162,7 +161,6 @@ namespace SignalManipulator.UI.Controls
             Zoom = value;
             double visible = sampleRate / Zoom;
             double start = sampleRate - visible;
-            //formsPlot.SafeAsyncInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
             UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
         }
     }

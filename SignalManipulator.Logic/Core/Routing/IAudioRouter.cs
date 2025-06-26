@@ -5,6 +5,8 @@ namespace SignalManipulator.Logic.Core.Routing
 {
     public interface IAudioRouter : IDisposable
     {
+        event EventHandler PlaybackStopped;
+
         WaveOutEvent CurrentDevice { get; }
 
         void InitOutputs(ISampleProvider outputProvider);

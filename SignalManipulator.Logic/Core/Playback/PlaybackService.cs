@@ -39,6 +39,8 @@ namespace SignalManipulator.Logic.Core.Playback
 
             this.effects.AddEffect<TimeStretchEffect>();
             timeStrech = effects.GetEffect<TimeStretchEffect>(0);
+
+            router.PlaybackStopped += (s, e) => Stop();
         }
 
         public void Load(string path)

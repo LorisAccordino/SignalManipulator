@@ -7,6 +7,8 @@ namespace SignalManipulator.Logic.Core.Routing
 {
     public class AudioRouter : IAudioRouter
     {
+        public event EventHandler PlaybackStopped;
+
         private Dictionary<int, WaveOutEvent> devices = new Dictionary<int, WaveOutEvent>();
         private int currentDeviceIndex = -1;
 
@@ -28,7 +30,10 @@ namespace SignalManipulator.Logic.Core.Routing
 
             // Dispose the older WaveOutEvent
             foreach (var w in devices.Values)
+            {
+                w.PlaybackStopped -= OnPlaybackStopped;
                 w.Dispose();
+            }
             devices.Clear();
 
             // Output
@@ -36,6 +41,7 @@ namespace SignalManipulator.Logic.Core.Routing
             {
                 devices[i] = new WaveOutEvent() { DesiredLatency = 150, NumberOfBuffers = 3, DeviceNumber = i };
                 devices[i].Init(outputProvider);
+                devices[i].PlaybackStopped += OnPlaybackStopped;
             }
 
             // Select as default the first one
@@ -59,6 +65,12 @@ namespace SignalManipulator.Logic.Core.Routing
                              .Select(i => $"{i}: {WaveOut.GetCapabilities(i).ProductName}")
                              .ToArray();
         }
+
+        private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            PlaybackStopped?.Invoke(sender, e);
+        }
+
 
         public void Dispose()
         {

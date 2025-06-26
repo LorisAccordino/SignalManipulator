@@ -85,7 +85,11 @@ namespace SignalManipulator.UI.Helpers
 
         public void Start() => timer.Start();
 
-        public void Stop() => timer.Stop();
+        public void Stop()
+        {
+            timer.Stop();
+            ForceUpdate();
+        }
 
         public void ForceUpdate() => Update();
     }
