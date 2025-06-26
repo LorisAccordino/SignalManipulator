@@ -155,6 +155,7 @@
     <Compile Include="Helpers\DesignModeHelper.cs" />
     <Compile Include="Helpers\MathHelper.cs" />
     <Compile Include="Helpers\TrackBarHelper.cs" />
+    <Compile Include="Helpers\UIUpdateService.cs" />
     <Compile Include="Scaling\BaseScaleMapper.cs" />
     <Compile Include="Scaling\Curves\ExpCurve.cs" />
     <Compile Include="Scaling\Curves\INonLinearCurve.cs" />

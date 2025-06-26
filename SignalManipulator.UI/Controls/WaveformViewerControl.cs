@@ -1,6 +1,5 @@
 ﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
-using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
@@ -8,7 +7,6 @@ using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -16,7 +14,7 @@ namespace SignalManipulator.UI.Controls
     [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : UserControl
     {
-        private readonly SynchronizationContext uiContext;
+        //private readonly SynchronizationContext uiContext;
 
         private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
@@ -36,7 +34,7 @@ namespace SignalManipulator.UI.Controls
             InitializeComponent();
 
             // Save the UI context
-            uiContext = SynchronizationContext.Current;
+            //uiContext = SynchronizationContext.Current;
 
             if (!DesignModeHelper.IsDesignMode)
             {
@@ -50,9 +48,9 @@ namespace SignalManipulator.UI.Controls
         {
             audioEventDispatcher.OnLoad += (_, info) => HandleLoad(info.SampleRate);
             audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
-            //audioEventDispatcher.OnUpdate += (_, e) => UpdatePlot();
-            audioEventDispatcher.OnUpdate += (s, e) => uiContext.Post(_ => UpdatePlot(), null);
             audioEventDispatcher.WaveformReady += (_, frame) => pendingFrames.Enqueue(frame);
+
+            UIUpdateService.Instance.Register(UpdatePlot);
 
             zoomSlider.ValueChanged += ZoomChanged;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
@@ -165,6 +163,7 @@ namespace SignalManipulator.UI.Controls
             double visible = sampleRate / Zoom;
             double start = sampleRate - visible;
             //formsPlot.SafeAsyncInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
+            UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
         }
     }
 }

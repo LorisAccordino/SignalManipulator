@@ -5,7 +5,6 @@ using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Providers;
 using System;
-using System.Timers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
@@ -16,7 +15,6 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
 
-        private readonly Timer updateTimer;
         private readonly TimeStretchEffect timeStrech;
 
         // Properties
@@ -31,7 +29,6 @@ namespace SignalManipulator.Logic.Core.Playback
         public event EventHandler OnPaused;
         public event EventHandler OnStopped;
         public event EventHandler<bool> OnPlaybackStateChanged; // bool: playing?
-        public event EventHandler OnUpdate;
 
         public PlaybackService(IAudioSource source, IAudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
         {
@@ -42,9 +39,6 @@ namespace SignalManipulator.Logic.Core.Playback
 
             this.effects.AddEffect<TimeStretchEffect>();
             timeStrech = effects.GetEffect<TimeStretchEffect>(0);
-
-            updateTimer = new Timer(1000.0 / AudioEngine.TARGET_FPS);
-            updateTimer.Elapsed += (s, e) => OnUpdate?.Invoke(this, e);
         }
 
         public void Load(string path)
@@ -58,7 +52,6 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public void Play()
         {
-            updateTimer.Start();
             router.CurrentDevice.Play();
             OnResume?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, true);
@@ -74,11 +67,8 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Stop()
         {
             router.CurrentDevice.Stop();
-            updateTimer.Stop();
             effects.ResetAll();
             source.Seek(TimeSpan.Zero);
-            updateTimer.Stop();
-            OnUpdate?.Invoke(this, EventArgs.Empty);
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
         }

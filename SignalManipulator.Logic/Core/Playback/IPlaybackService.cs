@@ -1,6 +1,5 @@
 ﻿using SignalManipulator.Logic.Models;
 using System;
-using System.Timers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
@@ -19,7 +18,6 @@ namespace SignalManipulator.Logic.Core.Playback
         event EventHandler OnPaused;
         event EventHandler OnStopped;
         event EventHandler<bool> OnPlaybackStateChanged;
-        event EventHandler OnUpdate;
 
         // Methods
         void Load(string path);

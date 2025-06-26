@@ -40,8 +40,9 @@ namespace SignalManipulator.UI.Controls
         {
             audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
             audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
-            audioEventDispatcher.OnUpdate += (s, e) => UpdatePlot();
             audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleStereo);
+
+            UIUpdateService.Instance.Register(UpdatePlot);
         }
 
         private void InitializePlot()

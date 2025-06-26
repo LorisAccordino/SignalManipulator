@@ -11,7 +11,6 @@ namespace SignalManipulator.Logic.Events
         event EventHandler OnStopped;
         event EventHandler<bool> OnPlaybackStateChanged; // bool: isPlaying?
 
-        event EventHandler OnUpdate;
         event EventHandler<WaveformFrame> WaveformReady;
         event EventHandler<FFTFrame> FFTReady;
     }

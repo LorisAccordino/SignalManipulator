@@ -29,13 +29,8 @@ namespace SignalManipulator.UI.Controls
         private void InitializePlaybackEvents()
         {
             Disposed += (s, e) => playback.Stop();
-            audioEventDispatcher.OnUpdate += (s, e) => timeLbl.SafeInvoke(() =>
-            {
-                timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
+            UIUpdateService.Instance.Register(OnUpdate);
 
-                // Update without firing event!
-                timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;
-            });
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
 
             playbackSpeedSlider.ValueChanged += (s, value) => playback.PlaybackSpeed = value;
@@ -43,6 +38,14 @@ namespace SignalManipulator.UI.Controls
             {
                 playback.Seek(TimeSpan.FromSeconds(timeSlider.Value));
             };
+        }
+
+        private void OnUpdate()
+        {
+            timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
+
+            // Update without firing event!
+            timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;
         }
 
 
@@ -56,11 +59,19 @@ namespace SignalManipulator.UI.Controls
             timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
         }
 
-        private void playBtn_Click(object sender, EventArgs e) => playback.Play();
+        private void playBtn_Click(object sender, EventArgs e)
+        {
+            UIUpdateService.Instance.Start();
+            playback.Play();
+        }
 
         private void pauseBtn_Click(object sender, EventArgs e) => playback.Pause();
 
-        private void stopBtn_Click(object sender, EventArgs e) => playback.Stop();
+        private void stopBtn_Click(object sender, EventArgs e)
+        {
+            playback.Stop();
+            UIUpdateService.Instance.Stop();
+        }
 
 
         private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)

@@ -13,7 +13,6 @@ namespace SignalManipulator.Logic.Events
         public event EventHandler OnStopped;
         public event EventHandler<bool> OnPlaybackStateChanged;
 
-        public event EventHandler OnUpdate;
         public event EventHandler<WaveformFrame> WaveformReady;
         public event EventHandler<FFTFrame> FFTReady;
 
@@ -29,7 +28,6 @@ namespace SignalManipulator.Logic.Events
             playbackService.OnPlaybackStateChanged += (s, playing) => OnPlaybackStateChanged?.Invoke(s, playing);
 
             // Frame & update
-            playbackService.OnUpdate += (s, e) => OnUpdate?.Invoke(s, e);
             dataProvider.WaveformReady += (s, frame) => WaveformReady?.Invoke(s, frame);
             dataProvider.FFTReady += (s, frame) => FFTReady?.Invoke(s, frame);
         }
