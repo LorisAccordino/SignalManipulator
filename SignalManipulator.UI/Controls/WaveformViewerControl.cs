@@ -6,7 +6,6 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -25,7 +24,11 @@ namespace SignalManipulator.UI.Controls
 
         private Signal stereoSig, leftSig, rightSig;
 
-        public double Zoom { get; set; } = 1.0;
+        // Zooming and panning parameteres
+        private double zoom = 1.0;
+        private double pan = 0.0;
+        private double startX = 0.0;
+        private double endX = 0.0;
 
         // Track whether a redraw is needed
         private volatile bool needsRender = false;
@@ -33,9 +36,6 @@ namespace SignalManipulator.UI.Controls
         public WaveformViewerControl()
         {
             InitializeComponent();
-
-            // Save the UI context
-            //uiContext = SynchronizationContext.Current;
 
             if (!DesignModeHelper.IsDesignMode)
             {
@@ -59,6 +59,7 @@ namespace SignalManipulator.UI.Controls
             UIUpdateService.Instance.Register(RenderPlot);
 
             zoomSlider.ValueChanged += ZoomChanged;
+            panSlider.ValueChanged += PanChanged;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
@@ -99,7 +100,7 @@ namespace SignalManipulator.UI.Controls
             if (newSampleRate == sampleRate) return;
             sampleRate = newSampleRate;
 
-            // Reset all the streamers with the new sample rate
+            // Reset all the plots with the new sample rate
             formsPlot.Plot.Clear();
             InitializePlot();
             formsPlot.Refresh();
@@ -169,10 +170,25 @@ namespace SignalManipulator.UI.Controls
 
         private void ZoomChanged(object sender, double value)
         {
-            Zoom = value;
-            double visible = sampleRate / Zoom;
-            double start = sampleRate - visible;
-            UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
+            zoom = value;
+            ViewerZoomingChanged();
+        }
+
+        private void PanChanged(object sender, double value)
+        {
+            pan = value;
+            ViewerZoomingChanged();
+        }
+
+        private void ViewerZoomingChanged()
+        {
+            double visible = sampleRate / zoom;
+            double center = (pan + 1) / 2 * (sampleRate - visible) + visible / 2;
+
+            startX = center - visible / 2;
+            endX = center + visible / 2;
+
+            UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(startX, endX));
             needsRender = true;
         }
     }

@@ -330,7 +330,6 @@
             this.waveformViewer.Name = "waveformViewer";
             this.waveformViewer.Size = new System.Drawing.Size(723, 349);
             this.waveformViewer.TabIndex = 0;
-            this.waveformViewer.Zoom = 1F;
             // 
             // spectrumViewer
             // 
