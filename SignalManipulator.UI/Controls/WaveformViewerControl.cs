@@ -134,6 +134,7 @@ namespace SignalManipulator.UI.Controls
             stereoSig.IsVisible = !mono;
             leftSig.IsVisible = mono;
             rightSig.IsVisible = mono;
+            needsRender = true;
         }
 
         private void ProcessPendingFrames()
@@ -144,16 +145,10 @@ namespace SignalManipulator.UI.Controls
             {
                 updated = true;
 
-                foreach (double sample in frame.DoubleMono)
-                    stereoBuf.Add(sample);
-
-                if (monoCheckBox.Checked)
-                {
-                    foreach (double sample in frame.DoubleSplitStereo.Left)
-                        leftBuf.Add(sample);
-                    foreach (double sample in frame.DoubleSplitStereo.Right)
-                        rightBuf.Add(sample);
-                }
+                // Add mono and stereo samples
+                foreach (double sample in frame.DoubleMono) stereoBuf.Add(sample);
+                foreach (double sample in frame.DoubleSplitStereo.Left) leftBuf.Add(sample);
+                foreach (double sample in frame.DoubleSplitStereo.Right) rightBuf.Add(sample);
             }
 
             if (updated)
@@ -178,6 +173,7 @@ namespace SignalManipulator.UI.Controls
             double visible = sampleRate / Zoom;
             double start = sampleRate - visible;
             UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
+            needsRender = true;
         }
     }
 }
