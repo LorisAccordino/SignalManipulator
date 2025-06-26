@@ -1,5 +1,4 @@
-﻿using ScottPlot;
-using ScottPlot.Collections;
+﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
@@ -8,7 +7,6 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -27,7 +25,9 @@ namespace SignalManipulator.UI.Controls
 
         // Buffers for the last one second of audio
         private CircularBuffer<double> circularBuffer;
-        private double[] stereoBuffer;
+        private double[] stereoArr;
+        private double[] leftBuffer;
+        private double[] rightBuffer;
 
 
         //private double[] stereoBuffer;
@@ -37,8 +37,10 @@ namespace SignalManipulator.UI.Controls
         /*private readonly int windowSeconds = 1;
         private int writeIndex = 0;*/
 
-        // The “signal” plot
-        private Signal stereoSignal;
+        // Signal plots
+        private Signal stereoSig;
+        private Signal leftSig;
+        private Signal rightSig;
 
 
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
@@ -86,12 +88,21 @@ namespace SignalManipulator.UI.Controls
             //stereoBuffer = new double[capacity];
             //stereoQueue = new Queue<double>(capacity);
 
+            // Init buffers
             circularBuffer = new CircularBuffer<double>(sampleRate);
-            stereoBuffer = new double[sampleRate];
+            stereoArr = new double[sampleRate];
+            leftBuffer = new double[sampleRate];
+            rightBuffer = new double[sampleRate];
 
             // Add each signal
-            stereoSignal = plt.Add.Signal(stereoBuffer);
-            stereoSignal.LegendText = "Stereo Mix";
+            stereoSig = plt.Add.Signal(stereoArr);
+            stereoSig.LegendText = "Stereo Mix";
+
+            leftSig = plt.Add.Signal(leftBuffer);
+            leftSig.LegendText = "Left";
+
+            rightSig = plt.Add.Signal(rightBuffer);
+            rightSig.LegendText = "Right";
 
             //stereoSignal = plt.Add.Signal(Generate.Sin(44100));
             //stereoSignal.Color = ScottPlot.Colors.Black;
@@ -151,7 +162,9 @@ namespace SignalManipulator.UI.Controls
             // Clear buffers
             circularBuffer.Clear();
             while (!circularBuffer.IsFull) circularBuffer.Add(0);
-            Array.Clear(stereoBuffer, 0, stereoBuffer.Length);
+            Array.Clear(stereoArr, 0, stereoArr.Length);
+            Array.Clear(leftBuffer, 0, leftBuffer.Length);
+            Array.Clear(rightBuffer, 0, rightBuffer.Length);
 
             // Back to the initial bounds
             formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
@@ -161,9 +174,9 @@ namespace SignalManipulator.UI.Controls
         private void ToggleStreamsVisibility()
         {
             bool mono = monoCheckBox.Checked;
-            stereoSignal.IsVisible = !mono;
-            //leftStream.IsVisible = mono;
-            //rightStream.IsVisible = mono;
+            stereoSig.IsVisible = !mono;
+            leftSig.IsVisible = mono;
+            rightSig.IsVisible = mono;
             formsPlot.Refresh();
         }
 
@@ -178,6 +191,7 @@ namespace SignalManipulator.UI.Controls
                 {
                     circularBuffer.Add(sample);
                 }
+
                 /*
                 // 2) Ricostruisci l’array in ordine lineare (tail-to-head)
                 double[] display = new double[stereoBuffer.Length];
@@ -187,8 +201,7 @@ namespace SignalManipulator.UI.Controls
                 Array.Copy(stereoBuffer, 0, display, part, tail);
                 */
 
-                //stereoBuffer = stereoQueue.ToArray();
-                Array.Copy(circularBuffer.ToArray(), stereoBuffer, Math.Min(circularBuffer.Count, stereoBuffer.Length));
+                circularBuffer.CopyTo(stereoArr, 0);
 
                 // 3) Aggiorna il SignalPlot e renderizza
                 //stereoSignal.Update(display);
@@ -209,6 +222,9 @@ namespace SignalManipulator.UI.Controls
                     int half = stereo.Length / 2;
                     double[] left = new double[half], right = new double[half];
                     stereo.SplitStereo(left, right);
+
+                    //Array.Copy(left, leftBuffer, Math.Min(left.Length, leftBuffer.Length));
+                    //Array.Copy(right, rightBuffer, Math.Min(right.Length, rightBuffer.Length));
 
                     //leftStream.AddRange(left);
                     //rightStream.AddRange(right);
