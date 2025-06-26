@@ -6,6 +6,7 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -14,8 +15,6 @@ namespace SignalManipulator.UI.Controls
     [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : UserControl
     {
-        //private readonly SynchronizationContext uiContext;
-
         private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
@@ -26,8 +25,10 @@ namespace SignalManipulator.UI.Controls
 
         private Signal stereoSig, leftSig, rightSig;
 
-
         public double Zoom { get; set; } = 1.0;
+
+        // Track whether a redraw is needed
+        private volatile bool needsRender = false;
 
         public WaveformViewerControl()
         {
@@ -48,9 +49,14 @@ namespace SignalManipulator.UI.Controls
         {
             audioEventDispatcher.OnLoad += (_, info) => HandleLoad(info.SampleRate);
             audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
-            audioEventDispatcher.WaveformReady += (_, frame) => pendingFrames.Enqueue(frame);
+            audioEventDispatcher.WaveformReady += (_, frame) =>
+            {
+                pendingFrames.Enqueue(frame);
+                ProcessPendingFrames(); // Process immediately
+                needsRender = true;
+            };
 
-            UIUpdateService.Instance.Register(UpdatePlot);
+            UIUpdateService.Instance.Register(RenderPlot);
 
             zoomSlider.ValueChanged += ZoomChanged;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
@@ -85,7 +91,7 @@ namespace SignalManipulator.UI.Controls
             plt.ShowLegend();
 
             ToggleStreams(); // Hide or show streams
-            ClearBuffers();         // Start from scratch
+            ClearBuffers();  // Start from scratch
         }
 
         private void HandleLoad(int newSampleRate)
@@ -128,32 +134,42 @@ namespace SignalManipulator.UI.Controls
             stereoSig.IsVisible = !mono;
             leftSig.IsVisible = mono;
             rightSig.IsVisible = mono;
-            //formsPlot.Refresh();
         }
 
-        private void UpdatePlot()
+        private void ProcessPendingFrames()
         {
+            bool updated = false;
+
             while (pendingFrames.TryDequeue(out var frame))
             {
-                // Add stereo samples
-                foreach (double sample in frame.DoubleMono) stereoBuf.Add(sample);
+                updated = true;
 
-                // Only mono: split and add samples
+                foreach (double sample in frame.DoubleMono)
+                    stereoBuf.Add(sample);
+
                 if (monoCheckBox.Checked)
                 {
-                    // Add split samples
-                    foreach (double sample in frame.DoubleSplitStereo.Left) leftBuf.Add(sample);
-                    foreach (double sample in frame.DoubleSplitStereo.Right) rightBuf.Add(sample);
+                    foreach (double sample in frame.DoubleSplitStereo.Left)
+                        leftBuf.Add(sample);
+                    foreach (double sample in frame.DoubleSplitStereo.Right)
+                        rightBuf.Add(sample);
                 }
+            }
 
-                // In place copy
+            if (updated)
+            {
                 stereoBuf.CopyTo(stereoArr, 0);
                 leftBuf.CopyTo(leftArr, 0);
                 rightBuf.CopyTo(rightArr, 0);
             }
+        }
 
-            // Unique UI refresh
+        private void RenderPlot()
+        {
+            if (!needsRender) return;
+
             formsPlot.Refresh();
+            needsRender = false;
         }
 
         private void ZoomChanged(object sender, double value)
