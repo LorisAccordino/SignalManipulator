@@ -4,24 +4,26 @@ namespace SignalManipulator.Logic.Models
 {
     public class WaveformFrame
     {
-        private readonly float[] floatStereo;
+        private readonly float[] stereo;
         private double[] cachedDoubleStereo;
         private float[] cachedMono;
         private double[] cachedDoubleMono;
+        private (float[] Left, float[] Right) cachedSplitStereo;
+        private (double[] Left, double[] Right) cachedDoubleSplitStereo;
 
         public WaveformFrame(float[] stereoSamples)
         {
-            floatStereo = stereoSamples;
+            stereo = stereoSamples;
         }
 
-        public float[] FloatStereo => floatStereo;
+        public float[] Stereo => stereo;
 
         public double[] DoubleStereo
         {
             get
             {
                 if (cachedDoubleStereo == null)
-                    cachedDoubleStereo = floatStereo.ToDouble();
+                    cachedDoubleStereo = stereo.ToDouble();
                 return cachedDoubleStereo;
             }
         }
@@ -31,7 +33,7 @@ namespace SignalManipulator.Logic.Models
             get
             {
                 if (cachedMono == null)
-                    cachedMono = floatStereo.ToMono();
+                    cachedMono = stereo.ToMono();
                 return cachedMono;
             }
         }
@@ -43,6 +45,36 @@ namespace SignalManipulator.Logic.Models
                 if (cachedDoubleMono == null)
                     cachedDoubleMono = Mono.ToDouble();
                 return cachedDoubleMono;
+            }
+        }
+
+        public (float[] Left, float[] Right) SplitStereo
+        {
+            get
+            {
+                if (cachedSplitStereo.Left == null || cachedSplitStereo.Right == null)
+                {
+                    // Array allocation
+                    int half = Stereo.Length / 2;
+                    cachedSplitStereo.Left = new float[half]; cachedSplitStereo.Right = new float[half];
+
+                    // Split operation
+                    Stereo.SplitStereo(cachedSplitStereo.Left, cachedSplitStereo.Right);
+                }
+                return cachedSplitStereo;
+            }
+        }
+
+        public (double[] Left, double[] Right) DoubleSplitStereo
+        {
+            get
+            {
+                if (cachedDoubleSplitStereo.Left == null || cachedDoubleSplitStereo.Right == null)
+                {
+                    cachedDoubleSplitStereo.Left = SplitStereo.Left.ToDouble();
+                    cachedDoubleSplitStereo.Right = SplitStereo.Right.ToDouble();
+                }
+                return cachedDoubleSplitStereo;
             }
         }
     }

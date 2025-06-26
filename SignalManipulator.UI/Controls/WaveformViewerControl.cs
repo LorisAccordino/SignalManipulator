@@ -8,6 +8,7 @@ using SignalManipulator.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -15,42 +16,27 @@ namespace SignalManipulator.UI.Controls
     [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : UserControl
     {
+        private readonly SynchronizationContext uiContext;
+
         private IAudioEventDispatcher audioEventDispatcher;
-
-        /*
-        private DataStreamer stereoStream;
-        private DataStreamer leftStream;
-        private DataStreamer rightStream;
-        */
-
-        // Buffers for the last one second of audio
-        private CircularBuffer<double> circularBuffer;
-        private double[] stereoArr;
-        private double[] leftBuffer;
-        private double[] rightBuffer;
-
-
-        //private double[] stereoBuffer;
-        //private Queue<double> stereoQueue;
-        //private int capacity;
-
-        /*private readonly int windowSeconds = 1;
-        private int writeIndex = 0;*/
-
-        // Signal plots
-        private Signal stereoSig;
-        private Signal leftSig;
-        private Signal rightSig;
-
-
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
+
+        // Circular buffers: one for each signal to plot
+        private CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
+        private double[] stereoArr, leftArr, rightArr;
+
+        private Signal stereoSig, leftSig, rightSig;
+
 
         public double Zoom { get; set; } = 1.0;
 
         public WaveformViewerControl()
         {
             InitializeComponent();
+
+            // Save the UI context
+            uiContext = SynchronizationContext.Current;
 
             if (!DesignModeHelper.IsDesignMode)
             {
@@ -63,12 +49,13 @@ namespace SignalManipulator.UI.Controls
         private void InitializeEvents()
         {
             audioEventDispatcher.OnLoad += (_, info) => HandleLoad(info.SampleRate);
-            audioEventDispatcher.OnStopped += (_, e) => ClearAllStreams();
-            audioEventDispatcher.OnUpdate += (_, e) => UpdatePlot();
+            audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
+            //audioEventDispatcher.OnUpdate += (_, e) => UpdatePlot();
+            audioEventDispatcher.OnUpdate += (s, e) => uiContext.Post(_ => UpdatePlot(), null);
             audioEventDispatcher.WaveformReady += (_, frame) => pendingFrames.Enqueue(frame);
 
             zoomSlider.ValueChanged += ZoomChanged;
-            monoCheckBox.CheckedChanged += (_, e) => ToggleStreamsVisibility();
+            monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
         private void InitializePlot()
@@ -78,69 +65,29 @@ namespace SignalManipulator.UI.Controls
             plt.XLabel("Time"); plt.YLabel("Amplitude");
             formsPlot.UserInputProcessor.Disable();
 
-
-
-
-
-            // Allocate the circular buffer based on the sampleRate
-            //stereoBuffer = new double[sampleRate * windowSeconds];
-            //capacity = sampleRate;
-            //stereoBuffer = new double[capacity];
-            //stereoQueue = new Queue<double>(capacity);
-
             // Init buffers
-            circularBuffer = new CircularBuffer<double>(sampleRate);
+            stereoBuf = new CircularBuffer<double>(sampleRate);
+            leftBuf = new CircularBuffer<double>(sampleRate);
+            rightBuf = new CircularBuffer<double>(sampleRate);
             stereoArr = new double[sampleRate];
-            leftBuffer = new double[sampleRate];
-            rightBuffer = new double[sampleRate];
+            leftArr = new double[sampleRate];
+            rightArr = new double[sampleRate];
 
-            // Add each signal
+            // Add each signal to the plot
             stereoSig = plt.Add.Signal(stereoArr);
-            stereoSig.LegendText = "Stereo Mix";
+            leftSig = plt.Add.Signal(leftArr);
+            rightSig = plt.Add.Signal(rightArr);
 
-            leftSig = plt.Add.Signal(leftBuffer);
-            leftSig.LegendText = "Left";
-
-            rightSig = plt.Add.Signal(rightBuffer);
-            rightSig.LegendText = "Right";
-
-            //stereoSignal = plt.Add.Signal(Generate.Sin(44100));
-            //stereoSignal.Color = ScottPlot.Colors.Black;
-
-            /*
-            // Set the axis: X from 0 to windowSeconds
-            plt.Axes.SetLimitsX(0, windowSeconds * sampleRate);
-            plt.Axes.SetLimitsY(-1, 1);
-            */
-
-
-
-
-
-            /*
-            // Create each streamer
-            stereoStream = plt.Add.DataStreamer(sampleRate);
-            stereoStream.LegendText = "Stereo";
-            stereoStream.ViewScrollLeft();
-            stereoStream.ManageAxisLimits = false;
-
-            leftStream = plt.Add.DataStreamer(sampleRate);
-            leftStream.LegendText = "Left";
-            leftStream.ViewScrollLeft();
-            leftStream.ManageAxisLimits = false;
-
-            rightStream = plt.Add.DataStreamer(sampleRate);
-            rightStream.LegendText = "Right";
-            rightStream.ViewScrollLeft();
-            rightStream.ManageAxisLimits = false;
-            */
+            // Legend setup
+            stereoSig.LegendText = "Stereo"; leftSig.LegendText = "Left"; rightSig.LegendText = "Right";
+            ToggleStreams();
 
             plt.Axes.SetLimitsX(0, sampleRate);
             plt.Axes.SetLimitsY(-1, 1);
             plt.ShowLegend();
 
-            ToggleStreamsVisibility(); // Hide or show streams
-            ClearAllStreams();         // Start from scratch
+            ToggleStreams(); // Hide or show streams
+            ClearBuffers();         // Start from scratch
         }
 
         private void HandleLoad(int newSampleRate)
@@ -154,85 +101,62 @@ namespace SignalManipulator.UI.Controls
             formsPlot.Refresh();
         }
 
-        private void ClearAllStreams()
+        private void ClearBuffers()
         {
             // Clear pending data
             while (pendingFrames.TryDequeue(out _));
 
             // Clear buffers
-            circularBuffer.Clear();
-            while (!circularBuffer.IsFull) circularBuffer.Add(0);
+            stereoBuf.Clear(); rightBuf.Clear(); leftBuf.Clear();
+
+            // Fill buffers with 0s
+            while (!stereoBuf.IsFull) stereoBuf.Add(0);
+            while (!rightBuf.IsFull) rightBuf.Add(0);
+            while (!leftBuf.IsFull) leftBuf.Add(0);
+
+            // Clear arrays (and fill them with 0s)
             Array.Clear(stereoArr, 0, stereoArr.Length);
-            Array.Clear(leftBuffer, 0, leftBuffer.Length);
-            Array.Clear(rightBuffer, 0, rightBuffer.Length);
+            Array.Clear(leftArr, 0, leftArr.Length);
+            Array.Clear(rightArr, 0, rightArr.Length);
 
             // Back to the initial bounds
             formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
             formsPlot.Refresh();
         }
 
-        private void ToggleStreamsVisibility()
+        private void ToggleStreams()
         {
             bool mono = monoCheckBox.Checked;
             stereoSig.IsVisible = !mono;
             leftSig.IsVisible = mono;
             rightSig.IsVisible = mono;
-            formsPlot.Refresh();
+            //formsPlot.Refresh();
         }
 
         private void UpdatePlot()
         {
             while (pendingFrames.TryDequeue(out var frame))
             {
-
-
-                // 1) Copia i nuovi frame nel buffer circolare
-                foreach (double sample in frame.DoubleMono)
-                {
-                    circularBuffer.Add(sample);
-                }
-
-                /*
-                // 2) Ricostruisci l’array in ordine lineare (tail-to-head)
-                double[] display = new double[stereoBuffer.Length];
-                int tail = writeIndex;
-                int part = stereoBuffer.Length - tail;
-                Array.Copy(stereoBuffer, tail, display, 0, part);
-                Array.Copy(stereoBuffer, 0, display, part, tail);
-                */
-
-                circularBuffer.CopyTo(stereoArr, 0);
-
-                // 3) Aggiorna il SignalPlot e renderizza
-                //stereoSignal.Update(display);
-                //formsPlot.Render();
-
-
-
-
-
-
-                // Add always to the stereo mix
-                //stereoStream.AddRange(frame.DoubleMono);
+                // Add stereo samples
+                foreach (double sample in frame.DoubleMono) stereoBuf.Add(sample);
 
                 // Only mono: split and add samples
                 if (monoCheckBox.Checked)
                 {
-                    double[] stereo = frame.DoubleStereo;
-                    int half = stereo.Length / 2;
-                    double[] left = new double[half], right = new double[half];
-                    stereo.SplitStereo(left, right);
-
-                    //Array.Copy(left, leftBuffer, Math.Min(left.Length, leftBuffer.Length));
-                    //Array.Copy(right, rightBuffer, Math.Min(right.Length, rightBuffer.Length));
-
-                    //leftStream.AddRange(left);
-                    //rightStream.AddRange(right);
+                    // Add split samples
+                    foreach (double sample in frame.DoubleSplitStereo.Left) leftBuf.Add(sample);
+                    foreach (double sample in frame.DoubleSplitStereo.Right) rightBuf.Add(sample);
                 }
+
+                // In place copy
+                stereoBuf.CopyTo(stereoArr, 0);
+                leftBuf.CopyTo(leftArr, 0);
+                rightBuf.CopyTo(rightArr, 0);
             }
 
             // Unique UI refresh
-            formsPlot.SafeAsyncInvoke(() => formsPlot.Refresh());
+            //formsPlot.SafeAsyncInvoke(() => formsPlot.Refresh());
+            formsPlot.Refresh();
         }
 
         private void ZoomChanged(object sender, double value)
@@ -240,7 +164,7 @@ namespace SignalManipulator.UI.Controls
             Zoom = value;
             double visible = sampleRate / Zoom;
             double start = sampleRate - visible;
-            formsPlot.SafeAsyncInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
+            //formsPlot.SafeAsyncInvoke(() => formsPlot.Plot.Axes.SetLimitsX(start, sampleRate));
         }
     }
 }
