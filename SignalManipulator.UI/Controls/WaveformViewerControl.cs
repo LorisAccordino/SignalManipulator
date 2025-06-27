@@ -1,4 +1,5 @@
 ﻿using ScottPlot.Collections;
+using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
@@ -16,7 +17,7 @@ namespace SignalManipulator.UI.Controls
     {
         private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
-        private int sampleRate = AudioEngine.SAMPLE_RATE;
+        private int sampleRate;
 
         // Circular buffers: one for each signal to plot
         private CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
@@ -47,7 +48,7 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (_, info) => HandleLoad(info.SampleRate);
+            audioEventDispatcher.OnLoad += (_, info) => ResizeBuffers(info.SampleRate);
             audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
             audioEventDispatcher.WaveformReady += (_, frame) =>
             {
@@ -58,21 +59,45 @@ namespace SignalManipulator.UI.Controls
 
             UIUpdateService.Instance.Register(RenderPlot);
 
-            //zoomSlider.ValueChanged += ZoomChanged;
-            //panSlider.ValueChanged += PanChanged;
-
+            // Binding control events
             zoomSlider.ValueChanged += (_, v) => { zoom = v; ViewerZoomingChanged(); };
             panSlider.ValueChanged += (_, v) => { pan = v; ViewerZoomingChanged(); };
-
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
         private void InitializePlot()
         {
+            // Init plot
             var plt = formsPlot.Plot;
             plt.Title("Signal Waveform");
             plt.XLabel("Time"); plt.YLabel("Amplitude");
             formsPlot.UserInputProcessor.Disable();
+
+            // Resize buffers
+            ResizeBuffers(AudioEngine.SAMPLE_RATE);
+
+            // Add each signal to the plot
+            stereoSig = plt.Add.Signal(stereoArr);
+            leftSig = plt.Add.Signal(leftArr);
+            rightSig = plt.Add.Signal(rightArr);
+
+            // Legend setup
+            stereoSig.LegendText = "Stereo"; leftSig.LegendText = "Left"; rightSig.LegendText = "Right";
+            plt.ShowLegend();
+
+            // Set bounds
+            plt.Axes.SetLimitsX(0, sampleRate);
+            plt.Axes.SetLimitsY(-1, 1);
+
+            // Final setups
+            ToggleStreams(); // Hide or show streams
+            ClearBuffers();  // Start from scratch
+        }
+
+        private void ResizeBuffers(int newSampleRate)
+        {
+            if (newSampleRate == sampleRate) return;
+            sampleRate = newSampleRate;
 
             // Init buffers
             stereoBuf = new CircularBuffer<double>(sampleRate);
@@ -82,32 +107,10 @@ namespace SignalManipulator.UI.Controls
             leftArr = new double[sampleRate];
             rightArr = new double[sampleRate];
 
-            // Add each signal to the plot
-            stereoSig = plt.Add.Signal(stereoArr);
-            leftSig = plt.Add.Signal(leftArr);
-            rightSig = plt.Add.Signal(rightArr);
-
-            // Legend setup
-            stereoSig.LegendText = "Stereo"; leftSig.LegendText = "Left"; rightSig.LegendText = "Right";
-            ToggleStreams();
-
-            plt.Axes.SetLimitsX(0, sampleRate);
-            plt.Axes.SetLimitsY(-1, 1);
-            plt.ShowLegend();
-
-            ToggleStreams(); // Hide or show streams
-            ClearBuffers();  // Start from scratch
-        }
-
-        private void HandleLoad(int newSampleRate)
-        {
-            if (newSampleRate == sampleRate) return;
-            sampleRate = newSampleRate;
-
-            // Reset all the plots with the new sample rate
-            formsPlot.Plot.Clear();
-            InitializePlot();
-            formsPlot.Refresh();
+            // Reallocate data sources
+            if (stereoSig != null) stereoSig.Data = new SignalSourceDouble(stereoArr, 1);
+            if (leftSig != null) leftSig.Data = new SignalSourceDouble(leftArr, 1);
+            if (rightSig != null) rightSig.Data = new SignalSourceDouble(rightArr, 1);
         }
 
         private void ClearBuffers()
