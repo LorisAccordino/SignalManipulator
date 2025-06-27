@@ -58,8 +58,12 @@ namespace SignalManipulator.UI.Controls
 
             UIUpdateService.Instance.Register(RenderPlot);
 
-            zoomSlider.ValueChanged += ZoomChanged;
-            panSlider.ValueChanged += PanChanged;
+            //zoomSlider.ValueChanged += ZoomChanged;
+            //panSlider.ValueChanged += PanChanged;
+
+            zoomSlider.ValueChanged += (_, v) => { zoom = v; ViewerZoomingChanged(); };
+            panSlider.ValueChanged += (_, v) => { pan = v; ViewerZoomingChanged(); };
+
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
@@ -125,8 +129,9 @@ namespace SignalManipulator.UI.Controls
             Array.Clear(rightArr, 0, rightArr.Length);
 
             // Back to the initial bounds
-            formsPlot.Plot.Axes.SetLimitsX(0, sampleRate);
-            formsPlot.Refresh();
+            startX = 0;
+            endX = sampleRate;
+            needsRender = true;
         }
 
         private void ToggleStreams()
@@ -164,31 +169,17 @@ namespace SignalManipulator.UI.Controls
         {
             if (!needsRender) return;
 
+            formsPlot.Plot.Axes.SetLimitsX(startX, endX);
             formsPlot.Refresh();
             needsRender = false;
         }
 
-        private void ZoomChanged(object sender, double value)
-        {
-            zoom = value;
-            ViewerZoomingChanged();
-        }
-
-        private void PanChanged(object sender, double value)
-        {
-            pan = value;
-            ViewerZoomingChanged();
-        }
-
         private void ViewerZoomingChanged()
         {
-            double visible = sampleRate / zoom;
-            double center = (pan + 1) / 2 * (sampleRate - visible) + visible / 2;
-
-            startX = center - visible / 2;
-            endX = center + visible / 2;
-
-            UIUpdateService.Instance.Enqueue(() => formsPlot.Plot.Axes.SetLimitsX(startX, endX));
+            double vis = sampleRate / zoom;
+            double ctr = ((pan + 1) / 2) * (sampleRate - vis) + vis / 2;
+            startX = ctr - vis / 2;
+            endX = ctr + vis / 2;
             needsRender = true;
         }
     }

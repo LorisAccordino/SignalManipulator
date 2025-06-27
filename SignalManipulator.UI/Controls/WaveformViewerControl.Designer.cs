@@ -46,7 +46,7 @@
             this.formsPlot.Location = new System.Drawing.Point(2, 2);
             this.formsPlot.Margin = new System.Windows.Forms.Padding(2);
             this.formsPlot.Name = "formsPlot";
-            this.formsPlot.Size = new System.Drawing.Size(556, 226);
+            this.formsPlot.Size = new System.Drawing.Size(556, 255);
             this.formsPlot.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -60,7 +60,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(560, 324);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
@@ -71,9 +71,9 @@
             this.panel1.Controls.Add(this.zoomSlider);
             this.panel1.Controls.Add(this.zoomLbl);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 233);
+            this.panel1.Location = new System.Drawing.Point(3, 262);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(554, 88);
+            this.panel1.Size = new System.Drawing.Size(554, 59);
             this.panel1.TabIndex = 2;
             // 
             // monoCheckBox
@@ -122,11 +122,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panSlider.Description = "Pan:   ";
-            this.panSlider.Location = new System.Drawing.Point(-1, 28);
+            this.panSlider.Location = new System.Drawing.Point(0, 28);
             this.panSlider.Maximum = 1D;
             this.panSlider.Minimum = -1D;
             this.panSlider.Name = "panSlider";
-            this.panSlider.Size = new System.Drawing.Size(443, 30);
+            this.panSlider.Size = new System.Drawing.Size(453, 30);
+            this.panSlider.Suffix = "   ";
             this.panSlider.TabIndex = 6;
             this.panSlider.TickFrequency = 0;
             this.panSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
