@@ -3,11 +3,11 @@ using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.AudioMath;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SignalManipulator.UI.Helpers;
 using System.Diagnostics.CodeAnalysis;
+using ScottPlot.Collections;
 
 namespace SignalManipulator.UI.Controls
 {
@@ -15,13 +15,15 @@ namespace SignalManipulator.UI.Controls
     public partial class LissajousViewerControl : UserControl
     {
         private IAudioEventDispatcher audioEventDispatcher;
-        private Scatter xyPlot;
-        private List<double> waveformBuffer = new List<double>();
         private object lockObject = new object();
 
         private const int MAX_SAMPLES = 1024;
-        private double[] left = new double[MAX_SAMPLES];
-        private double[] right = new double[MAX_SAMPLES];
+        private readonly double[] left = new double[MAX_SAMPLES];
+        private readonly double[] right = new double[MAX_SAMPLES];
+        private CircularBuffer<double> interleavedBuffer = new CircularBuffer<double>(MAX_SAMPLES * 2);
+
+        // Track whether a redraw is needed
+        private volatile bool needsRender = false;
 
         public LissajousViewerControl()
         {
@@ -38,67 +40,68 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
-            audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
-            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleStereo);
+            audioEventDispatcher.OnStopped += (s, e) => ClearBuffers();
+            audioEventDispatcher.WaveformReady += (s, frame) =>
+            {
+                UpdatePlotData(frame.DoubleStereo);
+                needsRender = true;
+            };
 
-            UIUpdateService.Instance.Register(UpdatePlot);
+            UIUpdateService.Instance.Register(RenderPlot);
         }
 
         private void InitializePlot()
         {
-            formsPlot.Plot.Title("XY Stereo Oscilloscope");
-            formsPlot.Plot.XLabel("Left");
-            formsPlot.Plot.YLabel("Right");
-            formsPlot.Plot.Axes.SquareUnits();
+            // Init plot
+            var plt = formsPlot.Plot;
+            plt.Title("XY Stereo Oscilloscope");
+            plt.XLabel("Left"); plt.YLabel("Right");
+            plt.Axes.SquareUnits();
             formsPlot.UserInputProcessor.Disable();
 
-            ResetPlot();
+            // Setup scatter plot
+            plt.Add.Scatter(left, right);
+            plt.Axes.SetLimits(-1, 1, -1, 1);
+
+            ClearBuffers();
         }
 
-        private void ResetPlot()
+        private void ClearBuffers()
         {
-            // Clear previous data
-            formsPlot.Plot.Clear();
-            lock (lockObject) waveformBuffer.Clear();
+            // Clear buffers
+            lock (lockObject) interleavedBuffer.Clear();
+            Array.Clear(left, 0, left.Length);
+            Array.Clear(right, 0, right.Length);
 
-            // Initialize
-            xyPlot = formsPlot.Plot.Add.Scatter(left, right);
-            formsPlot.Plot.Axes.SetLimits(-1, 1, -1, 1);
+            // Force render
+            needsRender = true;
         }
 
         private void UpdatePlotData(double[] waveform)
         {
             lock (lockObject)
             {
-                waveformBuffer.AddRange(waveform);
+                foreach (var sample in waveform)
+                    interleavedBuffer.Add(sample);
 
-                // If too many samples, remove the older ones
-                if (waveformBuffer.Count > MAX_SAMPLES)
-                {
-                    int excess = waveformBuffer.Count - MAX_SAMPLES;
-                    waveformBuffer.RemoveRange(0, excess);
-                }
+                if (interleavedBuffer.Count < MAX_SAMPLES * 2) return;
+                interleavedBuffer.ToArray().SplitStereo(left, right);
             }
         }
 
-        private void UpdatePlot()
+        private void RenderPlot()
         {
-            lock (lockObject)
-            {
-                if (waveformBuffer.Count < MAX_SAMPLES) return;
-                waveformBuffer.ToArray().SplitStereo(left, right);
-                waveformBuffer.Clear();
-            }
+            if (!needsRender) return;
 
-            // Update plot
-            formsPlot.SafeInvoke(() => formsPlot.Refresh());
+            formsPlot.Refresh();
+            needsRender = false;
         }
 
         private void formsPlot_Resize(object sender, EventArgs e)
         {
             formsPlot.Size = new Size(formsPlot.Height, formsPlot.Height);
             formsPlot.Location = new Point((Width - formsPlot.Width) / 2, (Height - formsPlot.Height) / 2);
+            needsRender = true;
         }
     }
 }
