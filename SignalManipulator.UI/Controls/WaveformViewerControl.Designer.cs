@@ -31,12 +31,15 @@
             this.formsPlot = new ScottPlot.WinForms.FormsPlot();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.monoCheckBox = new System.Windows.Forms.CheckBox();
-            this.zoomLbl = new System.Windows.Forms.Label();
-            this.zoomSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
             this.panSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
+            this.monoCheckBox = new System.Windows.Forms.CheckBox();
+            this.zoomSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
+            this.zoomLbl = new System.Windows.Forms.Label();
+            this.secNum = new System.Windows.Forms.NumericUpDown();
+            this.secLbl = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.secNum)).BeginInit();
             this.SuspendLayout();
             // 
             // formsPlot
@@ -66,6 +69,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.secLbl);
+            this.panel1.Controls.Add(this.secNum);
             this.panel1.Controls.Add(this.panSlider);
             this.panel1.Controls.Add(this.monoCheckBox);
             this.panel1.Controls.Add(this.zoomSlider);
@@ -75,6 +80,22 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(554, 59);
             this.panel1.TabIndex = 2;
+            // 
+            // panSlider
+            // 
+            this.panSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panSlider.Description = "Pan:   ";
+            this.panSlider.Location = new System.Drawing.Point(0, 28);
+            this.panSlider.Maximum = 1D;
+            this.panSlider.Minimum = -1D;
+            this.panSlider.Name = "panSlider";
+            this.panSlider.Size = new System.Drawing.Size(453, 30);
+            this.panSlider.Suffix = "   ";
+            this.panSlider.TabIndex = 6;
+            this.panSlider.TickFrequency = 0;
+            this.panSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
             // 
             // monoCheckBox
             // 
@@ -86,14 +107,6 @@
             this.monoCheckBox.TabIndex = 5;
             this.monoCheckBox.Text = "Split channels";
             this.monoCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // zoomLbl
-            // 
-            this.zoomLbl.AutoSize = true;
-            this.zoomLbl.Location = new System.Drawing.Point(12, 11);
-            this.zoomLbl.Name = "zoomLbl";
-            this.zoomLbl.Size = new System.Drawing.Size(0, 13);
-            this.zoomLbl.TabIndex = 1;
             // 
             // zoomSlider
             // 
@@ -116,21 +129,46 @@
             this.zoomSlider.UpdateMode = SignalManipulator.UI.Components.Precision.ValueUpdateMode.UserOnly;
             this.zoomSlider.Value = 1D;
             // 
-            // panSlider
+            // zoomLbl
             // 
-            this.panSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panSlider.Description = "Pan:   ";
-            this.panSlider.Location = new System.Drawing.Point(0, 28);
-            this.panSlider.Maximum = 1D;
-            this.panSlider.Minimum = -1D;
-            this.panSlider.Name = "panSlider";
-            this.panSlider.Size = new System.Drawing.Size(453, 30);
-            this.panSlider.Suffix = "   ";
-            this.panSlider.TabIndex = 6;
-            this.panSlider.TickFrequency = 0;
-            this.panSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
+            this.zoomLbl.AutoSize = true;
+            this.zoomLbl.Location = new System.Drawing.Point(12, 11);
+            this.zoomLbl.Name = "zoomLbl";
+            this.zoomLbl.Size = new System.Drawing.Size(0, 13);
+            this.zoomLbl.TabIndex = 1;
+            // 
+            // secNum
+            // 
+            this.secNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.secNum.Location = new System.Drawing.Point(507, 27);
+            this.secNum.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.secNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.secNum.Name = "secNum";
+            this.secNum.Size = new System.Drawing.Size(44, 20);
+            this.secNum.TabIndex = 7;
+            this.secNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // secLbl
+            // 
+            this.secLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.secLbl.AutoSize = true;
+            this.secLbl.Location = new System.Drawing.Point(455, 30);
+            this.secLbl.Name = "secLbl";
+            this.secLbl.Size = new System.Drawing.Size(52, 13);
+            this.secLbl.TabIndex = 8;
+            this.secLbl.Text = "Seconds:";
             // 
             // WaveformViewerControl
             // 
@@ -143,6 +181,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.secNum)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -156,5 +195,7 @@
         private Components.Precision.PrecisionSlider zoomSlider;
         private System.Windows.Forms.CheckBox monoCheckBox;
         private Components.Precision.PrecisionSlider panSlider;
+        private System.Windows.Forms.NumericUpDown secNum;
+        private System.Windows.Forms.Label secLbl;
     }
 }
