@@ -1,5 +1,4 @@
-﻿using ScottPlot.Plottables;
-using SignalManipulator.Logic.Core;
+﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.AudioMath;
 using System;
@@ -57,12 +56,15 @@ namespace SignalManipulator.UI.Controls
             plt.Title("XY Stereo Oscilloscope");
             plt.XLabel("Left"); plt.YLabel("Right");
             plt.Axes.SquareUnits();
+            plt.Axes.SetLimits(-1, 1, -1, 1);
             formsPlot.UserInputProcessor.Disable();
 
             // Setup scatter plot
-            plt.Add.Scatter(left, right);
-            plt.Axes.SetLimits(-1, 1, -1, 1);
-
+            var xyPlot = plt.Add.Scatter(left, right);
+            xyPlot.MarkerSize = 0; // Don't draw markers
+            xyPlot.LineWidth = 1; // Thick enough
+            
+            // Clear buffers
             ClearBuffers();
         }
 
