@@ -29,7 +29,6 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializePlaybackEvents()
         {
-            Disposed += (s, e) => playback.Stop();
             UIUpdateService.Instance.Register(OnUpdate);
 
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };

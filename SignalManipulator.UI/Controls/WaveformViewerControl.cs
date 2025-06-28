@@ -23,6 +23,7 @@ namespace SignalManipulator.UI.Controls
         private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
+        private readonly object lockObject = new object();
 
         // Buffers, arrays and signals
         private CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
@@ -118,10 +119,12 @@ namespace SignalManipulator.UI.Controls
             // Clear pending data
             while (pendingFrames.TryDequeue(out _));
 
-            // Fill buffers with 0s
-            while (!stereoBuf.IsFull) stereoBuf.Add(0);
-            while (!leftBuf.IsFull) leftBuf.Add(0);
-            while (!rightBuf.IsFull) rightBuf.Add(0);
+            lock (lockObject)
+            {
+                while (!stereoBuf.IsFull) stereoBuf.Add(0);
+                while (!leftBuf.IsFull) leftBuf.Add(0);
+                while (!rightBuf.IsFull) rightBuf.Add(0);
+            }
 
             needsRender = true;
         }
@@ -129,9 +132,14 @@ namespace SignalManipulator.UI.Controls
         private void ToggleStreams()
         {
             bool mono = monoCheckBox.Checked;
-            stereoSig.IsVisible = !mono;
-            leftSig.IsVisible = mono;
-            rightSig.IsVisible = mono;
+
+            lock (lockObject)
+            {
+                stereoSig.IsVisible = !mono;
+                leftSig.IsVisible = mono;
+                rightSig.IsVisible = mono;
+            }
+
             needsRender = true;
         }
 
@@ -143,18 +151,21 @@ namespace SignalManipulator.UI.Controls
             {
                 updated = true;
 
-                // Decimate samples for each channel/signal
-                DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
-                DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
-                DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
+                lock (lockObject)
+                {
+                    // Decimate samples for each channel/signal
+                    DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
+                    DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
+                    DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
+
+                    stereoBuf.CopyTo(stereoArr, 0);
+                    leftBuf.CopyTo(leftArr, 0);
+                    rightBuf.CopyTo(rightArr, 0);
+                }
             }
 
-            if (!updated) return;
-
-            stereoBuf.CopyTo(stereoArr, 0);
-            leftBuf.CopyTo(leftArr, 0);
-            rightBuf.CopyTo(rightArr, 0);
-            needsRender = true;
+            if (updated) 
+                needsRender = true;
         }
 
         private void DecimateSamples(double[] source, CircularBuffer<double> target, int step)
@@ -167,14 +178,18 @@ namespace SignalManipulator.UI.Controls
         {
             if (!needsRender) return;
 
-            var navigator = navigatorControl.Navigator;
-            if (navigator.NeedsUpdate)
+            lock (lockObject)
             {
-                navigator.Recalculate();
-                formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+                var navigator = navigatorControl.Navigator;
+                if (navigator.NeedsUpdate)
+                {
+                    navigator.Recalculate();
+                    formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+                }
+
+                formsPlot.Refresh();
             }
 
-            formsPlot.Refresh();
             needsRender = false;
         }
 

@@ -41,11 +41,7 @@ namespace SignalManipulator.UI.Controls
         private void InitializeEvents()
         {
             audioEventDispatcher.OnStopped += (s, e) => ClearBuffers();
-            audioEventDispatcher.WaveformReady += (s, frame) =>
-            {
-                UpdatePlotData(frame.DoubleStereo);
-                needsRender = true;
-            };
+            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleStereo);
 
             UIUpdateService.Instance.Register(RenderPlot);
         }
@@ -71,10 +67,12 @@ namespace SignalManipulator.UI.Controls
 
         private void ClearBuffers()
         {
-            // Clear buffers
-            lock (lockObject) interleavedBuffer.Clear();
-            Array.Clear(left, 0, left.Length);
-            Array.Clear(right, 0, right.Length);
+            lock (lockObject)
+            {
+                interleavedBuffer.Clear();
+                Array.Clear(left, 0, left.Length);
+                Array.Clear(right, 0, right.Length);
+            }
 
             // Force render
             needsRender = true;
@@ -87,16 +85,20 @@ namespace SignalManipulator.UI.Controls
                 foreach (var sample in waveform)
                     interleavedBuffer.Add(sample);
 
-                if (interleavedBuffer.Count < MAX_SAMPLES * 2) return;
+                if (interleavedBuffer.Count < MAX_SAMPLES * 2) 
+                    return;
+
                 interleavedBuffer.ToArray().SplitStereo(left, right);
             }
+
+            needsRender = true;
         }
 
         private void RenderPlot()
         {
             if (!needsRender) return;
 
-            formsPlot.Refresh();
+            lock (lockObject) formsPlot.Refresh();
             needsRender = false;
         }
 

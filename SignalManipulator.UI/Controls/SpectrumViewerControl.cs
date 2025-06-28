@@ -17,7 +17,7 @@ namespace SignalManipulator.UI.Controls
     public partial class SpectrumViewerControl : UserControl
     {
         // FFT configuration and visualization
-        private const int FFT_SIZE = 1024 * 8;                  // Must be power of 2
+        private const int FFT_SIZE = 8192;                  // Must be power of 2
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Audio & buffer
@@ -25,6 +25,8 @@ namespace SignalManipulator.UI.Controls
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private readonly CircularBuffer<double> audioBuffer = new CircularBuffer<double>(FFT_SIZE);
         private int sampleRate = AudioEngine.SAMPLE_RATE;
+        private readonly object lockObject = new object();
+
 
         // FFT data
         private SmootherSMA smootherSMA = new SmootherSMA(1);
@@ -77,6 +79,7 @@ namespace SignalManipulator.UI.Controls
 
             // Set the bounds
             plt.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
+            //plt.Axes.SetLimitsY(0, FFT_SIZE / 16);
             navigatorControl.Navigator.SetCapacity(MaxFrequency);
 
             // Force the update
@@ -89,13 +92,12 @@ namespace SignalManipulator.UI.Controls
 
         private void ClearBuffers()
         {
-            // Clear pending data
-            while (pendingFrames.TryDequeue(out _)) ;
-
-            // Fill buffers with 0s
-            while (!audioBuffer.IsFull) audioBuffer.Add(0);
-
-            Array.Clear(magnitudes, 0, magnitudes.Length);
+            lock (lockObject)
+            {
+                while (pendingFrames.TryDequeue(out _)) ;
+                while (!audioBuffer.IsFull) audioBuffer.Add(0);
+                Array.Clear(magnitudes, 0, magnitudes.Length);
+            }
 
             needsRender = true;
         }
@@ -104,23 +106,26 @@ namespace SignalManipulator.UI.Controls
         {
             bool updated = false;
 
-            while (pendingFrames.TryDequeue(out var frame))
+            lock (lockObject)
             {
-                updated = true;
+                while (pendingFrames.TryDequeue(out var frame))
+                {
+                    updated = true;
 
-                foreach (var sample in frame.DoubleMono)
-                    audioBuffer.Add(sample);
+                    foreach (var sample in frame.DoubleMono)
+                        audioBuffer.Add(sample);
+                }
+
+                if (!updated) return;
+
+                // Get magnitudes from FFT
+                var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);
+
+                // Smooth values
+                double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
+                double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
+                smaSmoothed.CopyTo(magnitudes, 0);
             }
-
-            if (!updated) return;
-
-            // Get magnitudes from FFT
-            var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);
-
-            // Smooth values
-            double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
-            double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
-            smaSmoothed.CopyTo(magnitudes, 0);
 
             needsRender = true;
         }
@@ -129,14 +134,18 @@ namespace SignalManipulator.UI.Controls
         {
             if (!needsRender) return;
 
-            var navigator = navigatorControl.Navigator;
-            if (navigator.NeedsUpdate)
+            lock (lockObject)
             {
-                navigator.Recalculate();
-                formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
-            }
+                var navigator = navigatorControl.Navigator;
+                if (navigator.NeedsUpdate)
+                {
+                    navigator.Recalculate();
+                    formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+                }
 
-            formsPlot.Refresh();
+                formsPlot.Refresh();
+            }
+            
             needsRender = false;
         }
 

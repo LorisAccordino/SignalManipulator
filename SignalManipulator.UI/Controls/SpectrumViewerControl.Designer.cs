@@ -166,7 +166,7 @@
             this.navigatorControl.Name = "navigatorControl";
             this.navigatorControl.Size = new System.Drawing.Size(407, 63);
             this.navigatorControl.TabIndex = 1;
-            this.navigatorControl.ZoomMax = 10D;
+            this.navigatorControl.ZoomMax = 20D;
             this.navigatorControl.ZoomMin = 1D;
             this.navigatorControl.ZoomPrecision = 0.01D;
             // 
