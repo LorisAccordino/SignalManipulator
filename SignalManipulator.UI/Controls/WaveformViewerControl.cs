@@ -180,7 +180,6 @@ namespace SignalManipulator.UI.Controls
                 target.Add(source[i]);
         }
 
-
         private void RenderPlot()
         {
             if (!needsRender) return;
