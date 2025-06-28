@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using SoundTouch.Net.NAudioSupport;
 using SoundTouch;
+using System.Diagnostics;
 
 namespace SignalManipulator.Logic.Effects
 {

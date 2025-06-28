@@ -5,7 +5,7 @@ using System;
 public class SmootherSMA : Smoother
 {
     private readonly Queue<double[]> history = new Queue<double[]>();
-    private readonly int maxHistory;
+    private int maxHistory;
 
     public SmootherSMA(int historyLength)
     {
@@ -15,10 +15,12 @@ public class SmootherSMA : Smoother
         maxHistory = historyLength;
     }
 
+    public void SetHistoryLength(int historyLength) => maxHistory = historyLength;
+
     public override double[] Smooth(double[] input)
     {
         history.Enqueue((double[])input.Clone());
-        if (history.Count > maxHistory)
+        while (history.Count > maxHistory)
             history.Dequeue();
 
         int length = input.Length;

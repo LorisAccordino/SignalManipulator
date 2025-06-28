@@ -4,7 +4,7 @@ namespace SignalManipulator.Logic.AudioMath
 {
     public class SmootherEMA : Smoother
     {
-        private readonly double alpha;
+        private double alpha;
         private double[] previous;
 
         public SmootherEMA(double alpha)
@@ -14,6 +14,8 @@ namespace SignalManipulator.Logic.AudioMath
 
             this.alpha = alpha;
         }
+
+        public void SetAlpha(double alpha) => this.alpha = alpha;
 
         public override double[] Smooth(double[] input)
         {

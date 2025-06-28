@@ -18,10 +18,7 @@ namespace SignalManipulator.UI.Controls
     {
         // FFT configuration and visualization
         private const int FFT_SIZE = 1024 * 8;                  // Must be power of 2
-        private const int SMA_HISTORY_SIZE = 1;
-        private const double EMA_FACTORY = 0.0;
         private const int MAX_MAGNITUDE_DB = 125;
-        private const double MAX_ZOOM = 10.0;
 
         // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;
@@ -30,8 +27,8 @@ namespace SignalManipulator.UI.Controls
         private int sampleRate = AudioEngine.SAMPLE_RATE;
 
         // FFT data
-        private Smoother smootherSMA = new SmootherSMA(SMA_HISTORY_SIZE);
-        private Smoother smootherEMA = new SmootherEMA(EMA_FACTORY);
+        private SmootherSMA smootherSMA = new SmootherSMA(1);
+        private SmootherEMA smootherEMA = new SmootherEMA(0.0);
         private double[] magnitudes = new double[FFT_SIZE];
 
         // Plotting
@@ -53,9 +50,6 @@ namespace SignalManipulator.UI.Controls
 
                 InitializeEvents();
                 InitializePlot();
-
-                navigatorControl.ZoomPrecision = 0.01;
-                navigatorControl.ZoomMax = MAX_ZOOM;
             }
         }
 
@@ -66,6 +60,9 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.WaveformReady += (s, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
 
             UIUpdateService.Instance.Register(RenderPlot);
+
+            smaNum.ValueChanged += (s, e) => { smootherSMA.SetHistoryLength((int)smaNum.Value); };
+            emaNum.ValueChanged += (s, e) => { smootherEMA.SetAlpha((double)emaNum.Value); };
         }
 
         private void InitializePlot()
