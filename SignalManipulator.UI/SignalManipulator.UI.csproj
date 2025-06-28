@@ -155,7 +155,14 @@
     <Compile Include="Helpers\DesignModeHelper.cs" />
     <Compile Include="Helpers\MathHelper.cs" />
     <Compile Include="Helpers\TrackBarHelper.cs" />
-    <Compile Include="Helpers\UIUpdateService.cs" />
+    <Compile Include="Misc\UIUpdateService.cs" />
+    <Compile Include="Misc\AxisNavigator.cs" />
+    <Compile Include="Misc\ZoomPanControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Misc\ZoomPanControl.Designer.cs">
+      <DependentUpon>ZoomPanControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Scaling\BaseScaleMapper.cs" />
     <Compile Include="Scaling\Curves\ExpCurve.cs" />
     <Compile Include="Scaling\Curves\INonLinearCurve.cs" />
@@ -185,6 +192,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\WaveformViewerControl.resx">
       <DependentUpon>WaveformViewerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Misc\ZoomPanControl.resx">
+      <DependentUpon>ZoomPanControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

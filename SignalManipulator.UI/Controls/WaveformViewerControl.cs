@@ -5,6 +5,7 @@ using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
+using SignalManipulator.UI.Misc;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
@@ -17,9 +18,6 @@ namespace SignalManipulator.UI.Controls
         // Window config
         private const int MAX_WINDOWS_SECONDS = 10;       // Maximum limit
         private int windowSeconds = 1;                   // Current shown seconds
-        private double zoom = 1.0, pan = 0.0;            // Pan and zoom
-        private double startX = 0.0;                     // Start X of window
-        private double endX = 0.0;                       // End X of window
 
         // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;
@@ -33,12 +31,6 @@ namespace SignalManipulator.UI.Controls
 
         // UI dirty flag
         private volatile bool needsRender = false;
-
-        // Total capacity of the window (fixed based on MAX_WINDOWS_SECONDS)
-        private int WindowCapacity => sampleRate * windowSeconds;
-
-        // Current number of samples to show = WindowCapacity / zoom
-        private int ViewCapacity => (int)(WindowCapacity / zoom);
 
         public WaveformViewerControl()
         {
@@ -60,9 +52,6 @@ namespace SignalManipulator.UI.Controls
 
             UIUpdateService.Instance.Register(RenderPlot);
 
-            // Binding viewing and scaling events
-            zoomSlider.ValueChanged += (_, v) => { zoom = v; UpdateWindowLimits(); };
-            panSlider.ValueChanged += (_, v) => { pan = v; UpdateWindowLimits(); };
             secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
             secNum.Maximum = MAX_WINDOWS_SECONDS;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
@@ -88,11 +77,13 @@ namespace SignalManipulator.UI.Controls
             stereoSig.LegendText = "Stereo"; leftSig.LegendText = "Left"; rightSig.LegendText = "Right";
             plt.ShowLegend();
 
-            // Set bounds
-            UpdateWindowLimits();
-            plt.Axes.SetLimitsX(startX, endX);
+            // Set the bounds
             plt.Axes.SetLimitsY(-1, 1);
-            formsPlot.Refresh();
+            navigatorControl.Navigator.SetCapacity(sampleRate);
+
+            // Force the update
+            needsRender = true;
+            RenderPlot();
 
             // Final setups
             ToggleStreams(); // Hide or show streams
@@ -176,22 +167,15 @@ namespace SignalManipulator.UI.Controls
         {
             if (!needsRender) return;
 
-            formsPlot.Plot.Axes.SetLimitsX(startX, endX);
+            var navigator = navigatorControl.Navigator;
+            if (navigator.NeedsUpdate)
+            {
+                navigator.Recalculate();
+                formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+            }
+
             formsPlot.Refresh();
             needsRender = false;
-        }
-
-        private void UpdateWindowLimits()
-        {
-            int capacity = WindowCapacity;   // Samples in the entire window
-            int view = ViewCapacity;         // Samples to show
-
-            // Normalized pan [–1,+1] → [0, capacity–view]
-            double panNorm = (pan + 1.0) / 2.0;
-            startX = panNorm * (capacity - view);
-            endX = startX + view;
-
-            needsRender = true;
         }
 
         private void UpdateDataPeriod()
@@ -200,8 +184,7 @@ namespace SignalManipulator.UI.Controls
             leftSig.Data.Period = windowSeconds;
             rightSig.Data.Period = windowSeconds;
 
-            // Update the bounds of the window
-            UpdateWindowLimits();
+            navigatorControl.Navigator.SetCapacity(sampleRate * windowSeconds);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using SignalManipulator.UI.Helpers;
 using System.Diagnostics.CodeAnalysis;
 using ScottPlot.Collections;
+using SignalManipulator.UI.Misc;
 
 namespace SignalManipulator.UI.Controls
 {

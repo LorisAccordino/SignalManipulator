@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.UI.Helpers;
+using SignalManipulator.UI.Misc;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;

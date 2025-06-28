@@ -5,6 +5,7 @@ using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
+using SignalManipulator.UI.Misc;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
@@ -16,10 +17,11 @@ namespace SignalManipulator.UI.Controls
     public partial class SpectrumViewerControl : UserControl
     {
         // FFT configuration and visualization
-        private const int FFT_SIZE = 1024;                  // Must be power of 2
+        private const int FFT_SIZE = 1024 * 8;                  // Must be power of 2
         private const int SMA_HISTORY_SIZE = 1;
         private const double EMA_FACTORY = 0.0;
         private const int MAX_MAGNITUDE_DB = 125;
+        private const double MAX_ZOOM = 10.0;
 
         // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;
@@ -40,11 +42,6 @@ namespace SignalManipulator.UI.Controls
         private double BinSize => (double)sampleRate / FFT_SIZE;
         private int MaxFrequency => sampleRate / 2;
 
-        // Window config
-        private double zoom = 1.0, pan = 0.0;            // Pan and zoom
-        private double startX = 0.0;                     // Start X of window
-        private double endX = 0.0;                       // End X of window
-
 
         public SpectrumViewerControl()
         {
@@ -56,6 +53,9 @@ namespace SignalManipulator.UI.Controls
 
                 InitializeEvents();
                 InitializePlot();
+
+                navigatorControl.ZoomPrecision = 0.01;
+                navigatorControl.ZoomMax = MAX_ZOOM;
             }
         }
 
@@ -78,11 +78,13 @@ namespace SignalManipulator.UI.Controls
             // Set plotting
             spectrumPlot = plt.Add.Signal(magnitudes);
 
-            // Set bounds
-            UpdateWindowLimits();
-            plt.Axes.SetLimitsX(startX, endX);
+            // Set the bounds
             plt.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
-            formsPlot.Refresh();
+            navigatorControl.Navigator.SetCapacity(MaxFrequency);
+
+            // Force the update
+            needsRender = true;
+            RenderPlot();
 
             // Clear buffers
             ClearBuffers();
@@ -130,30 +132,21 @@ namespace SignalManipulator.UI.Controls
         {
             if (!needsRender) return;
 
-            formsPlot.Plot.Axes.SetLimitsX(startX, endX);
+            var navigator = navigatorControl.Navigator;
+            if (navigator.NeedsUpdate)
+            {
+                navigator.Recalculate();
+                formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+            }
+
             formsPlot.Refresh();
             needsRender = false;
-        }
-
-        private void UpdateWindowLimits()
-        {
-            int capacity = MaxFrequency;   // Samples in the entire window
-            int view = (int)(MaxFrequency / zoom);         // Samples to show
-
-            // Normalized pan [–1,+1] → [0, capacity–view]
-            double panNorm = (pan + 1.0) / 2.0;
-            startX = panNorm * (capacity - view);
-            endX = startX + view;
-
-            needsRender = true;
         }
 
         private void UpdateDataPeriod()
         {
             spectrumPlot.Data.Period = BinSize;
-
-            // Update the bounds of the window
-            UpdateWindowLimits();
+            navigatorControl.Navigator.SetCapacity(MaxFrequency);
         }
     }
 }

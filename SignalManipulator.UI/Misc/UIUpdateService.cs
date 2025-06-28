@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Helpers
+namespace SignalManipulator.UI.Misc
 {
     public class UIUpdateService
     {
