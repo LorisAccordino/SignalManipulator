@@ -5,7 +5,6 @@ using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
-using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
@@ -27,13 +26,9 @@ namespace SignalManipulator.UI.Controls
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
 
-        // Circular buffer of capacity WindowCapacity = sampleRate * MaxWindowSeconds
-        CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
-
-        // Arrays on which the Signal draws: length = WindowCapacity
+        // Buffers, arrays and signals
+        private CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
         private double[] stereoArr, leftArr, rightArr;
-
-        // SignalPlot (created once)
         private Signal stereoSig, leftSig, rightSig;
 
         // UI dirty flag
@@ -42,8 +37,8 @@ namespace SignalManipulator.UI.Controls
         // Total capacity of the window (fixed based on MAX_WINDOWS_SECONDS)
         private int WindowCapacity => sampleRate * windowSeconds;
 
-        // Current number of samples to show = windowSeconds * sampleRate / zoom
-        private int ViewCapacity => (int)(windowSeconds * sampleRate / zoom);
+        // Current number of samples to show = WindowCapacity / zoom
+        private int ViewCapacity => (int)(WindowCapacity / zoom);
 
         public WaveformViewerControl()
         {
@@ -137,9 +132,6 @@ namespace SignalManipulator.UI.Controls
             while (!leftBuf.IsFull) leftBuf.Add(0);
             while (!rightBuf.IsFull) rightBuf.Add(0);
 
-            // Back to the initial bounds
-            startX = 0;
-            endX = sampleRate * windowSeconds;
             needsRender = true;
         }
 

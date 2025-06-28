@@ -1,12 +1,12 @@
-﻿using ScottPlot;
+﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
-using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls
@@ -14,21 +14,30 @@ namespace SignalManipulator.UI.Controls
     [ExcludeFromCodeCoverage]
     public partial class SpectrumViewerControl : UserControl
     {
+        // FFT configuration and visualization
+        private const int FFTSize = 1024;                  // Must be power of 2
+        private const int MAX_MAGNITUDE_DB = 125;
+
+        // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;
-        private DataLogger spectrumPlot;
-        private List<double> waveformBuffer = new List<double>();
-        //private List<FrequencySpectrum> spectrumBuffer = new List<FrequencySpectrum>();
-        private FFTFrame spectrum; // Spectrum: freqs, magnitudes
-        private object lockObject = new object();
+        private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
+        private readonly CircularBuffer<double> audioBuffer = new CircularBuffer<double>(FFTSize);
+        private int sampleRate = AudioEngine.SAMPLE_RATE;
 
-        private const int MAX_HZ = 20000;
-        private const int MAX_DB = 125;
+        // Plotting
+        private Signal spectrumPlot;
+        private double[] magnitudes = new double[FFTSize];
+        private volatile bool needsRender = false;
 
-        private int sampleRate;
+        // FFT properties
+        private double BinSize => (double)sampleRate / FFTSize;
+        private int MaxFrequency => sampleRate / 2;
 
-        private double[] smoothedMagnitudes;
-        private double[] lastFrequencies;
-        private const double SMOOTHING_FACTOR = 0.85; // from 0 to 1 (higher = smoother)
+        // Window config
+        private double zoom = 1.0, pan = 0.0;            // Pan and zoom
+        private double startX = 0.0;                     // Start X of window
+        private double endX = 0.0;                       // End X of window
+
 
         public SpectrumViewerControl()
         {
@@ -45,106 +54,95 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (s, info) => sampleRate = info.SampleRate;
-            audioEventDispatcher.OnLoad += (s, e) => ResetPlot();
-            audioEventDispatcher.OnStopped += (s, e) => ResetPlot();
-            audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleMono);
+            audioEventDispatcher.OnLoad += (s, info) => { sampleRate = info.SampleRate; UpdateDataPeriod(); };
+            audioEventDispatcher.OnStopped += (s, e) => ClearBuffers();
+            audioEventDispatcher.WaveformReady += (s, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
 
-            UIUpdateService.Instance.Register(UpdatePlot);
+            UIUpdateService.Instance.Register(RenderPlot);
         }
 
         private void InitializePlot()
         {
-            formsPlot.Plot.Title("FFT Spectrum");
-            formsPlot.Plot.XLabel("Frequency (Hz)");
-            formsPlot.Plot.YLabel("Magnitude (dB)");
+            var plt = formsPlot.Plot;
+            plt.Title("FFT Spectrum");
+            plt.XLabel("Frequency (Hz)"); plt.YLabel("Magnitude (dB)");
             formsPlot.UserInputProcessor.Disable();
 
-            ResetPlot();
+            // Set plotting
+            spectrumPlot = plt.Add.Signal(magnitudes);
+
+            // Set bounds
+            UpdateWindowLimits();
+            plt.Axes.SetLimitsX(startX, endX);
+            plt.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
+            formsPlot.Refresh();
+
+            // Clear buffers
+            ClearBuffers();
         }
 
-        private void ResetPlot()
+        private void ClearBuffers()
         {
-            // Clear previous data
-            formsPlot.Plot.Clear();
-            lock (lockObject) spectrum = null;
-            //spectrumPlot.Clear();
+            // Clear pending data
+            while (pendingFrames.TryDequeue(out _)) ;
 
-            // Initialize
-            spectrumPlot = formsPlot.Plot.Add.DataLogger();
-            formsPlot.Plot.Axes.SetLimitsX(0, MAX_HZ);
-            formsPlot.Plot.Axes.SetLimitsY(0, MAX_DB);
+            // Fill buffers with 0s
+            while (!audioBuffer.IsFull) audioBuffer.Add(0);
 
-            spectrumPlot.ViewFull();
-            spectrumPlot.ManageAxisLimits = false;
+            Array.Clear(magnitudes, 0, magnitudes.Length);
+
+            needsRender = true;
         }
 
-        //private void UpdatePlotData(FrequencySpectrum spectrum)
-        private void UpdatePlotData(double[] monoWaveform)
+        private void ProcessPendingFrames()
         {
-            //lock (lockObject) this.spectrum = spectrum;
-            lock (lockObject) waveformBuffer.AddRange(monoWaveform);
-            //lock (lockObject) spectrumBuffer.Add(spectrum);
-        }
+            bool updated = false;
 
-        private void CalculateSmoothedFFT()
-        {
-            lock (lockObject)
+            while (pendingFrames.TryDequeue(out var frame))
             {
-                // Calculate FFT from waveform data
-                FFTFrame rawSpectrum = FFTFrame.FromFFT(waveformBuffer.ToArray(), sampleRate);
+                updated = true;
 
-                // Initialize if null
-                if (smoothedMagnitudes == null || smoothedMagnitudes.Length != rawSpectrum.Magnitudes.Length)
-                {
-                    smoothedMagnitudes = (double[])rawSpectrum.Magnitudes.Clone();
-                    lastFrequencies = rawSpectrum.Frequencies;
-                }
-                else
-                {
-                    // Apply EMA smoothing
-                    for (int i = 0; i < rawSpectrum.Magnitudes.Length; i++)
-                    {
-                        smoothedMagnitudes[i] =
-                            SMOOTHING_FACTOR * smoothedMagnitudes[i] +
-                            (1 - SMOOTHING_FACTOR) * rawSpectrum.Magnitudes[i];
-                    }
-                }
-
-                // Create the new spectrum
-                spectrum = new FFTFrame(lastFrequencies, smoothedMagnitudes.ToArray());
-            }
-        }
-
-
-        private void UpdatePlot()
-        {
-            // Clear previous if any
-            //spectrumPlot.Clear();
-            //waveformBuffer.Clear();
-
-            lock (lockObject)
-            {
-                //if (spectrum == null) return;
-                if (spectrum == null) CalculateSmoothedFFT();
-
-                for (int i = 0; i < spectrum.Frequencies.Length; i++)
-                {
-                    Coordinates coordinates = new Coordinates(spectrum.Frequencies[i], spectrum.Magnitudes[i]);
-
-                    if (spectrumPlot.Data.Coordinates.Count > i)
-                        spectrumPlot.Data.Coordinates[i] = coordinates;
-                    else
-                        spectrumPlot.Add(coordinates);
-                }
-
-                spectrum = null;
-                waveformBuffer.Clear();
-                //spectrumBuffer.Clear();
+                foreach (var sample in frame.DoubleMono)
+                    audioBuffer.Add(sample);
             }
 
-            // Update plot
-            formsPlot.SafeInvoke(() => formsPlot.Refresh());
+            if (!updated) return;
+
+            // Get magnitudes from FFT
+            var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);
+            fft.Magnitudes.CopyTo(magnitudes, 0);
+
+            needsRender = true;
+        }
+
+        private void RenderPlot()
+        {
+            if (!needsRender) return;
+
+            formsPlot.Plot.Axes.SetLimitsX(startX, endX);
+            formsPlot.Refresh();
+            needsRender = false;
+        }
+
+        private void UpdateWindowLimits()
+        {
+            int capacity = MaxFrequency;   // Samples in the entire window
+            int view = (int)(MaxFrequency / zoom);         // Samples to show
+
+            // Normalized pan [–1,+1] → [0, capacity–view]
+            double panNorm = (pan + 1.0) / 2.0;
+            startX = panNorm * (capacity - view);
+            endX = startX + view;
+
+            needsRender = true;
+        }
+
+        private void UpdateDataPeriod()
+        {
+            spectrumPlot.Data.Period = BinSize;
+
+            // Update the bounds of the window
+            UpdateWindowLimits();
         }
     }
 }
