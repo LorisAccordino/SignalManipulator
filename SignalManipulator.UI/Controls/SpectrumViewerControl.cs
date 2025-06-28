@@ -1,5 +1,6 @@
 ﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
+using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
@@ -15,22 +16,28 @@ namespace SignalManipulator.UI.Controls
     public partial class SpectrumViewerControl : UserControl
     {
         // FFT configuration and visualization
-        private const int FFTSize = 1024;                  // Must be power of 2
+        private const int FFT_SIZE = 1024;                  // Must be power of 2
+        private const int SMA_HISTORY_SIZE = 1;
+        private const double EMA_FACTORY = 0.0;
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
-        private readonly CircularBuffer<double> audioBuffer = new CircularBuffer<double>(FFTSize);
+        private readonly CircularBuffer<double> audioBuffer = new CircularBuffer<double>(FFT_SIZE);
         private int sampleRate = AudioEngine.SAMPLE_RATE;
+
+        // FFT data
+        private Smoother smootherSMA = new SmootherSMA(SMA_HISTORY_SIZE);
+        private Smoother smootherEMA = new SmootherEMA(EMA_FACTORY);
+        private double[] magnitudes = new double[FFT_SIZE];
 
         // Plotting
         private Signal spectrumPlot;
-        private double[] magnitudes = new double[FFTSize];
         private volatile bool needsRender = false;
 
         // FFT properties
-        private double BinSize => (double)sampleRate / FFTSize;
+        private double BinSize => (double)sampleRate / FFT_SIZE;
         private int MaxFrequency => sampleRate / 2;
 
         // Window config
@@ -110,7 +117,11 @@ namespace SignalManipulator.UI.Controls
 
             // Get magnitudes from FFT
             var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);
-            fft.Magnitudes.CopyTo(magnitudes, 0);
+
+            // Smooth values
+            double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
+            double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
+            smaSmoothed.CopyTo(magnitudes, 0);
 
             needsRender = true;
         }
