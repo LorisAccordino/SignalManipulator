@@ -96,6 +96,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioMath\Smoother.cs" />
+    <Compile Include="AudioMath\SmootherEMA.cs" />
+    <Compile Include="AudioMath\SmootherSMA.cs" />
     <Compile Include="Core\AudioEngine.cs" />
     <Compile Include="Core\Routing\IAudioRouter.cs" />
     <Compile Include="Models\AudioInfo.cs" />
