@@ -34,10 +34,11 @@ namespace SignalManipulator.UI.Controls
 
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
 
-            playbackSpeedSlider.ValueChanged += (s, value) => playback.PlaybackSpeed = value;
-            timeSlider.ValueChanged += (s, value) =>
+            playbackSpeedSlider.ValueChanged += (s, speed) => playback.PlaybackSpeed = speed;
+            volumeSlider.ValueChanged += (s, volume) => playback.Volume = volume;
+            timeSlider.ValueChanged += (s, time) =>
             {
-                playback.Seek(TimeSpan.FromSeconds(timeSlider.Value));
+                playback.Seek(TimeSpan.FromSeconds(time));
             };
         }
 

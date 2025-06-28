@@ -11,6 +11,7 @@ namespace SignalManipulator.Logic.Core.Playback
         // Parameters
         double Speed { get; set; }
         bool PreservePitch { get; set; }
+        double Volume { get; set; }
 
         // Events
         event EventHandler<AudioInfo> LoadCompleted;

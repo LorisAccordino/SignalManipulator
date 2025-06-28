@@ -17,7 +17,7 @@ namespace SignalManipulator.UI.Controls
     {
         // Window config
         private const int MAX_WINDOWS_SECONDS = 10;       // Maximum limit
-        private int windowSeconds = 1;                   // Current shown seconds
+        private int windowSeconds = 1;                    // Current shown seconds
 
         // Audio & buffer
         private IAudioEventDispatcher audioEventDispatcher;

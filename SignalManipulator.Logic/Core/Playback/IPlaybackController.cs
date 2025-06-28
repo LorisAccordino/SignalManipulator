@@ -23,5 +23,6 @@ namespace SignalManipulator.Logic.Core.Playback
         // Parameters
         double PlaybackSpeed { get; set; }
         bool PreservePitch { get; set; }
+        double Volume { get; set; }
     }
 }

@@ -101,6 +101,7 @@
     <Compile Include="AudioMath\SmootherSMA.cs" />
     <Compile Include="Core\AudioEngine.cs" />
     <Compile Include="Core\Routing\IAudioRouter.cs" />
+    <Compile Include="Effects\VolumeEffect.cs" />
     <Compile Include="Models\AudioInfo.cs" />
     <Compile Include="Models\WaveformFrame.cs" />
     <Compile Include="Events\AudioEventDispatcher.cs" />
