@@ -16,7 +16,7 @@ namespace SignalManipulator.UI.Controls
     public partial class WaveformViewerControl : UserControl
     {
         // Window config
-        private const int MAX_WINDOWS_SECONDS = 5;       // Maximum limit
+        private const int MAX_WINDOWS_SECONDS = 10;       // Maximum limit
         private int windowSeconds = 1;                   // Current shown seconds
         private double zoom = 1.0, pan = 0.0;            // Pan and zoom
         private double startX = 0.0;                     // Start X of window
@@ -30,7 +30,7 @@ namespace SignalManipulator.UI.Controls
         // Circular buffer of capacity WindowCapacity = sampleRate * MaxWindowSeconds
         CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
 
-       // Arrays on which the Signal draws: length = WindowCapacity
+        // Arrays on which the Signal draws: length = WindowCapacity
         private double[] stereoArr, leftArr, rightArr;
 
         // SignalPlot (created once)
@@ -39,12 +39,11 @@ namespace SignalManipulator.UI.Controls
         // UI dirty flag
         private volatile bool needsRender = false;
 
-        // Total capacity of the buffer and the window (fixed based on MAX_WINDOWS_SECONDS)
-        private int BufferCapacity => sampleRate * MAX_WINDOWS_SECONDS;
+        // Total capacity of the window (fixed based on MAX_WINDOWS_SECONDS)
         private int WindowCapacity => sampleRate * windowSeconds;
 
         // Current number of samples to show = windowSeconds * sampleRate / zoom
-        private int ViewSamples => (int)(windowSeconds * sampleRate / zoom);
+        private int ViewCapacity => (int)(windowSeconds * sampleRate / zoom);
 
         public WaveformViewerControl()
         {
@@ -60,16 +59,16 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (_, info) => { sampleRate = info.SampleRate; ResizeBuffers(); };
+            audioEventDispatcher.OnLoad += (_, info) => { sampleRate = info.SampleRate; ConfigureBuffers(); };
             audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
             audioEventDispatcher.WaveformReady += (_, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
 
             UIUpdateService.Instance.Register(RenderPlot);
 
             // Binding viewing and scaling events
-            zoomSlider.ValueChanged += (_, v) => { zoom = v; UpdateViewWindow(); };
-            panSlider.ValueChanged += (_, v) => { pan = v; UpdateViewWindow(); };
-            secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateViewWindow(); UpdateDataOffset(); };
+            zoomSlider.ValueChanged += (_, v) => { zoom = v; UpdateWindowLimits(); };
+            panSlider.ValueChanged += (_, v) => { pan = v; UpdateWindowLimits(); };
+            secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
             secNum.Maximum = MAX_WINDOWS_SECONDS;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
@@ -83,7 +82,7 @@ namespace SignalManipulator.UI.Controls
             formsPlot.UserInputProcessor.Disable();
 
             // Resize buffers
-            ResizeBuffers();
+            ConfigureBuffers();
 
             // Add each signal to the plot
             stereoSig = plt.Add.Signal(stereoArr);
@@ -95,7 +94,7 @@ namespace SignalManipulator.UI.Controls
             plt.ShowLegend();
 
             // Set bounds
-            UpdateViewWindow();
+            UpdateWindowLimits();
             plt.Axes.SetLimitsX(startX, endX);
             plt.Axes.SetLimitsY(-1, 1);
             formsPlot.Refresh();
@@ -105,32 +104,27 @@ namespace SignalManipulator.UI.Controls
             ClearBuffers();  // Start from scratch
         }
 
-        private void ResizeBuffers()
+        private void ConfigureBuffers()
         {
             // Init buffers
-            stereoBuf = new CircularBuffer<double>(BufferCapacity);
-            leftBuf = new CircularBuffer<double>(BufferCapacity);
-            rightBuf = new CircularBuffer<double>(BufferCapacity);
-            stereoArr = new double[BufferCapacity];
-            leftArr = new double[BufferCapacity];
-            rightArr = new double[BufferCapacity];
+            stereoBuf = new CircularBuffer<double>(sampleRate);
+            leftBuf = new CircularBuffer<double>(sampleRate);
+            rightBuf = new CircularBuffer<double>(sampleRate);
+            stereoArr = new double[sampleRate];
+            leftArr = new double[sampleRate];
+            rightArr = new double[sampleRate];
+
+            // Return if signals are null
+            if (stereoSig == null || leftSig == null || rightSig == null)
+                return;
 
             // Reallocate data sources
-            if (stereoSig != null) stereoSig.Data = new SignalSourceDouble(stereoArr, 1);
-            if (leftSig != null) leftSig.Data = new SignalSourceDouble(leftArr, 1);
-            if (rightSig != null) rightSig.Data = new SignalSourceDouble(rightArr, 1);
+            stereoSig.Data = new SignalSourceDouble(stereoArr, 1);
+            leftSig.Data = new SignalSourceDouble(leftArr, 1);
+            rightSig.Data = new SignalSourceDouble(rightArr, 1);
 
-            // Update data offset
-            UpdateDataOffset();
-        }
-
-        private void UpdateDataOffset()
-        {
-            int xOffset = -(MAX_WINDOWS_SECONDS - windowSeconds) * sampleRate;
-            if (stereoSig?.Data != null) stereoSig.Data.XOffset = xOffset;
-            if (leftSig?.Data != null) leftSig.Data.XOffset = xOffset;
-            if (rightSig?.Data != null) rightSig.Data.XOffset = xOffset;
-            needsRender = true;
+            // Update data period
+            UpdateDataPeriod();
         }
 
         private void ClearBuffers()
@@ -138,18 +132,10 @@ namespace SignalManipulator.UI.Controls
             // Clear pending data
             while (pendingFrames.TryDequeue(out _));
 
-            // Clear buffers
-            stereoBuf.Clear(); rightBuf.Clear(); leftBuf.Clear();
-
             // Fill buffers with 0s
             while (!stereoBuf.IsFull) stereoBuf.Add(0);
             while (!leftBuf.IsFull) leftBuf.Add(0);
             while (!rightBuf.IsFull) rightBuf.Add(0);
-
-            // Clear arrays (and fill them with 0s)
-            Array.Clear(stereoArr, 0, stereoArr.Length);
-            Array.Clear(leftArr, 0, leftArr.Length);
-            Array.Clear(rightArr, 0, rightArr.Length);
 
             // Back to the initial bounds
             startX = 0;
@@ -174,20 +160,26 @@ namespace SignalManipulator.UI.Controls
             {
                 updated = true;
 
-                // Add mono and stereo samples
-                foreach (double sample in frame.DoubleMono) stereoBuf.Add(sample);
-                foreach (double sample in frame.DoubleSplitStereo.Left) leftBuf.Add(sample);
-                foreach (double sample in frame.DoubleSplitStereo.Right) rightBuf.Add(sample);
+                // Decimate samples for each channel/signal
+                DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
+                DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
+                DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
             }
 
-            if (updated)
-            {
-                stereoBuf.CopyTo(stereoArr, 0);
-                leftBuf.CopyTo(leftArr, 0);
-                rightBuf.CopyTo(rightArr, 0);
-                needsRender = true;
-            }
+            if (!updated) return;
+
+            stereoBuf.CopyTo(stereoArr, 0);
+            leftBuf.CopyTo(leftArr, 0);
+            rightBuf.CopyTo(rightArr, 0);
+            needsRender = true;
         }
+
+        private void DecimateSamples(double[] source, CircularBuffer<double> target, int step)
+        {
+            for (int i = 0; i < source.Length; i += step)
+                target.Add(source[i]);
+        }
+
 
         private void RenderPlot()
         {
@@ -198,13 +190,27 @@ namespace SignalManipulator.UI.Controls
             needsRender = false;
         }
 
-        private void UpdateViewWindow()
+        private void UpdateWindowLimits()
         {
-            // Calculate the window to show
-            double center = ((pan + 1) / 2.0) * (WindowCapacity - ViewSamples) + ViewSamples / 2.0;
-            startX = center - ViewSamples / 2.0;
-            endX = center + ViewSamples / 2.0;
+            int capacity = WindowCapacity;   // Samples in the entire window
+            int view = ViewCapacity;         // Samples to show
+
+            // Normalized pan [–1,+1] → [0, capacity–view]
+            double panNorm = (pan + 1.0) / 2.0;
+            startX = panNorm * (capacity - view);
+            endX = startX + view;
+
             needsRender = true;
+        }
+
+        private void UpdateDataPeriod()
+        {
+            stereoSig.Data.Period = windowSeconds;
+            leftSig.Data.Period = windowSeconds;
+            rightSig.Data.Period = windowSeconds;
+
+            // Update the bounds of the window
+            UpdateWindowLimits();
         }
     }
 }
