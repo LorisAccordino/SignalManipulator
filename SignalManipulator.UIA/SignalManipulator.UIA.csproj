@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ScottPlot" Version="5.0.55" />
+    <PackageReference Include="ScottPlot.WinForms" Version="5.0.55" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignalManipulator.Logica\SignalManipulator.Logica.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Components\DescriptorLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\Precision\PrecisionControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\ValueLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\AudioPlayerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\AudioRouterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\EffectChainControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\LissajousViewerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\SpectrumViewerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\WaveformViewerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Misc\ZoomPanControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

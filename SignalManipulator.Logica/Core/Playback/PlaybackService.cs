@@ -4,7 +4,6 @@ using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Providers;
-using System;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
