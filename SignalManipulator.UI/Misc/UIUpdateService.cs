@@ -1,7 +1,5 @@
 ﻿using SignalManipulator.Logic.Core;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Misc
@@ -19,13 +17,13 @@ namespace SignalManipulator.UI.Misc
             }
         }
 
-        private readonly Timer timer;
+        private readonly System.Windows.Forms.Timer timer;
         private readonly List<Action> subscribers = new List<Action>();
         private readonly ConcurrentQueue<Action> oneShotQueue = new ConcurrentQueue<Action>();
 
         private UIUpdateService()
         {
-            timer = new Timer { Interval = AudioEngine.TARGET_FPS };
+            timer = new System.Windows.Forms.Timer { Interval = AudioEngine.TARGET_FPS };
             timer.Tick += (s, e) => Update();
         }
 

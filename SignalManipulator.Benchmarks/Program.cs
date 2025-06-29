@@ -1,8 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using System.Diagnostics;
-using System;
-using SignalManipulator.Logic.AudioMath;
-using System.Linq;
 
 namespace SignalManipulator.Benchmarks
 {

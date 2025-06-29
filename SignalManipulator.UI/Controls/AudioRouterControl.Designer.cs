@@ -28,45 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.devicesLbl = new System.Windows.Forms.Label();
-            this.devicesCmbx = new System.Windows.Forms.ComboBox();
-            this.SuspendLayout();
+            devicesLbl = new System.Windows.Forms.Label();
+            devicesCmbx = new System.Windows.Forms.ComboBox();
+            SuspendLayout();
             // 
             // devicesLbl
             // 
-            this.devicesLbl.AutoSize = true;
-            this.devicesLbl.Location = new System.Drawing.Point(16, 17);
-            this.devicesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.devicesLbl.Name = "devicesLbl";
-            this.devicesLbl.Size = new System.Drawing.Size(118, 16);
-            this.devicesLbl.TabIndex = 0;
-            this.devicesLbl.Text = "Avalaible devices:";
+            devicesLbl.AutoSize = true;
+            devicesLbl.Location = new System.Drawing.Point(14, 16);
+            devicesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            devicesLbl.Name = "devicesLbl";
+            devicesLbl.Size = new System.Drawing.Size(100, 15);
+            devicesLbl.TabIndex = 0;
+            devicesLbl.Text = "Avalaible devices:";
             // 
             // devicesCmbx
             // 
-            this.devicesCmbx.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.devicesCmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.devicesCmbx.FormattingEnabled = true;
-            this.devicesCmbx.Location = new System.Drawing.Point(148, 14);
-            this.devicesCmbx.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.devicesCmbx.Name = "devicesCmbx";
-            this.devicesCmbx.Size = new System.Drawing.Size(312, 24);
-            this.devicesCmbx.TabIndex = 1;
-            this.devicesCmbx.SelectedIndexChanged += new System.EventHandler(this.devicesCmbx_SelectedIndexChanged);
+            devicesCmbx.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            devicesCmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            devicesCmbx.FormattingEnabled = true;
+            devicesCmbx.Location = new System.Drawing.Point(130, 13);
+            devicesCmbx.Margin = new System.Windows.Forms.Padding(4);
+            devicesCmbx.Name = "devicesCmbx";
+            devicesCmbx.Size = new System.Drawing.Size(274, 23);
+            devicesCmbx.TabIndex = 1;
+            devicesCmbx.SelectedIndexChanged += devicesCmbx_SelectedIndexChanged;
             // 
             // AudioRouterControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.devicesCmbx);
-            this.Controls.Add(this.devicesLbl);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "AudioRouterControl";
-            this.Size = new System.Drawing.Size(471, 106);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(devicesCmbx);
+            Controls.Add(devicesLbl);
+            Margin = new System.Windows.Forms.Padding(4);
+            Name = "AudioRouterControl";
+            Size = new System.Drawing.Size(412, 99);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

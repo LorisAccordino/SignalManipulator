@@ -1,30 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-
-namespace SignalManipulator
+namespace SignalManipulatora
 {
     internal static class Program
     {
         /// <summary>
-        /// Punto di ingresso principale dell'applicazione.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new MainForm());
-
-            try
-            {
-                Application.Run(new MainForm());
-            }
-            catch (Exception ex)
-            {
-                File.WriteAllText("fatal_error.txt", ex.ToString());
-            }
-
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+            Application.Run(new MainForm());
         }
     }
 }

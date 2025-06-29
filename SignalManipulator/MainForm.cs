@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
-namespace SignalManipulator
+namespace SignalManipulatora
 {
     public partial class MainForm : Form
     {

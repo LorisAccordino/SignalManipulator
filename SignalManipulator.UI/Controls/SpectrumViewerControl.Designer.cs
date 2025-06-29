@@ -28,163 +28,153 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.formsPlot = new ScottPlot.WinForms.FormsPlot();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.smaLbl = new System.Windows.Forms.Label();
-            this.emaNum = new System.Windows.Forms.NumericUpDown();
-            this.emaLbl = new System.Windows.Forms.Label();
-            this.smaNum = new System.Windows.Forms.NumericUpDown();
-            this.navigatorControl = new SignalManipulator.UI.Misc.ZoomPanControl();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.emaNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.smaNum)).BeginInit();
-            this.SuspendLayout();
+            formsPlot = new ScottPlot.WinForms.FormsPlot();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            smaLbl = new System.Windows.Forms.Label();
+            emaNum = new System.Windows.Forms.NumericUpDown();
+            emaLbl = new System.Windows.Forms.Label();
+            smaNum = new System.Windows.Forms.NumericUpDown();
+            navigatorControl = new Misc.ZoomPanControl();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)emaNum).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smaNum).BeginInit();
+            SuspendLayout();
             // 
             // formsPlot
             // 
-            this.formsPlot.DisplayScale = 0F;
-            this.formsPlot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.formsPlot.Location = new System.Drawing.Point(3, 3);
-            this.formsPlot.Name = "formsPlot";
-            this.formsPlot.Size = new System.Drawing.Size(533, 223);
-            this.formsPlot.TabIndex = 0;
+            formsPlot.DisplayScale = 0F;
+            formsPlot.Dock = System.Windows.Forms.DockStyle.Fill;
+            formsPlot.Location = new System.Drawing.Point(4, 3);
+            formsPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            formsPlot.Name = "formsPlot";
+            formsPlot.Size = new System.Drawing.Size(621, 258);
+            formsPlot.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.formsPlot, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(539, 304);
-            this.tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(formsPlot, 0, 0);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(629, 351);
+            tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.48593F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.51407F));
-            this.tableLayoutPanel2.Controls.Add(this.groupBox2, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.navigatorControl, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 232);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(533, 69);
-            this.tableLayoutPanel2.TabIndex = 2;
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.77778F));
+            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.2222214F));
+            tableLayoutPanel2.Controls.Add(groupBox2, 1, 0);
+            tableLayoutPanel2.Controls.Add(navigatorControl, 0, 0);
+            tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel2.Location = new System.Drawing.Point(4, 267);
+            tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel2.Size = new System.Drawing.Size(621, 81);
+            tableLayoutPanel2.TabIndex = 2;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.smaLbl);
-            this.groupBox2.Controls.Add(this.emaNum);
-            this.groupBox2.Controls.Add(this.emaLbl);
-            this.groupBox2.Controls.Add(this.smaNum);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(416, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(114, 63);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Smoothing:";
+            groupBox2.Controls.Add(smaLbl);
+            groupBox2.Controls.Add(emaNum);
+            groupBox2.Controls.Add(emaLbl);
+            groupBox2.Controls.Add(smaNum);
+            groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            groupBox2.Location = new System.Drawing.Point(487, 3);
+            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(130, 75);
+            groupBox2.TabIndex = 5;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Smoothing:";
             // 
             // smaLbl
             // 
-            this.smaLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.smaLbl.AutoSize = true;
-            this.smaLbl.Location = new System.Drawing.Point(7, 17);
-            this.smaLbl.Name = "smaLbl";
-            this.smaLbl.Size = new System.Drawing.Size(50, 13);
-            this.smaLbl.TabIndex = 11;
-            this.smaLbl.Text = "SMA (N):";
+            smaLbl.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            smaLbl.AutoSize = true;
+            smaLbl.Location = new System.Drawing.Point(5, 20);
+            smaLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            smaLbl.Name = "smaLbl";
+            smaLbl.Size = new System.Drawing.Size(55, 15);
+            smaLbl.TabIndex = 11;
+            smaLbl.Text = "SMA (N):";
             // 
             // emaNum
             // 
-            this.emaNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.emaNum.DecimalPlaces = 2;
-            this.emaNum.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-            this.emaNum.Location = new System.Drawing.Point(63, 38);
-            this.emaNum.Maximum = new decimal(new int[] {
-            85,
-            0,
-            0,
-            131072});
-            this.emaNum.Name = "emaNum";
-            this.emaNum.Size = new System.Drawing.Size(48, 20);
-            this.emaNum.TabIndex = 9;
+            emaNum.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            emaNum.DecimalPlaces = 2;
+            emaNum.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
+            emaNum.Location = new System.Drawing.Point(71, 44);
+            emaNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            emaNum.Maximum = new decimal(new int[] { 85, 0, 0, 131072 });
+            emaNum.Name = "emaNum";
+            emaNum.Size = new System.Drawing.Size(56, 23);
+            emaNum.TabIndex = 9;
             // 
             // emaLbl
             // 
-            this.emaLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.emaLbl.AutoSize = true;
-            this.emaLbl.Location = new System.Drawing.Point(7, 41);
-            this.emaLbl.Name = "emaLbl";
-            this.emaLbl.Size = new System.Drawing.Size(48, 13);
-            this.emaLbl.TabIndex = 7;
-            this.emaLbl.Text = "EMA (F):";
+            emaLbl.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            emaLbl.AutoSize = true;
+            emaLbl.Location = new System.Drawing.Point(5, 47);
+            emaLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            emaLbl.Name = "emaLbl";
+            emaLbl.Size = new System.Drawing.Size(52, 15);
+            emaLbl.TabIndex = 7;
+            emaLbl.Text = "EMA (F):";
             // 
             // smaNum
             // 
-            this.smaNum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.smaNum.Location = new System.Drawing.Point(63, 14);
-            this.smaNum.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.smaNum.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.smaNum.Name = "smaNum";
-            this.smaNum.Size = new System.Drawing.Size(48, 20);
-            this.smaNum.TabIndex = 5;
-            this.smaNum.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            smaNum.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            smaNum.Location = new System.Drawing.Point(71, 16);
+            smaNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            smaNum.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            smaNum.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            smaNum.Name = "smaNum";
+            smaNum.Size = new System.Drawing.Size(56, 23);
+            smaNum.TabIndex = 5;
+            smaNum.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // navigatorControl
             // 
-            this.navigatorControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.navigatorControl.Location = new System.Drawing.Point(3, 3);
-            this.navigatorControl.Name = "navigatorControl";
-            this.navigatorControl.Size = new System.Drawing.Size(407, 63);
-            this.navigatorControl.TabIndex = 1;
-            this.navigatorControl.ZoomMax = 20D;
-            this.navigatorControl.ZoomMin = 1D;
-            this.navigatorControl.ZoomPrecision = 0.01D;
+            navigatorControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            navigatorControl.Location = new System.Drawing.Point(5, 3);
+            navigatorControl.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            navigatorControl.Name = "navigatorControl";
+            navigatorControl.Size = new System.Drawing.Size(473, 75);
+            navigatorControl.TabIndex = 1;
+            navigatorControl.ZoomMax = 20D;
+            navigatorControl.ZoomMin = 1D;
+            navigatorControl.ZoomPrecision = 0.01D;
             // 
             // SpectrumViewerControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "SpectrumViewerControl";
-            this.Size = new System.Drawing.Size(539, 304);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.emaNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.smaNum)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(tableLayoutPanel1);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "SpectrumViewerControl";
+            Size = new System.Drawing.Size(629, 351);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)emaNum).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smaNum).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

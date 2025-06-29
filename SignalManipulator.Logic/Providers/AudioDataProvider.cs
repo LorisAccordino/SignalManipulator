@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.AudioMath;
-using System;
+using RubberBandSharp;
 
 namespace SignalManipulator.Logic.Providers
 {
@@ -21,7 +21,21 @@ namespace SignalManipulator.Logic.Providers
         public AudioDataProvider(IWaveProvider source)
         {
             this.source = source;
+
+
+            int sampleRate = source.WaveFormat.SampleRate;
+
+            stretcher = new RubberBandStretcherStereo(sampleRate,
+        RubberBandStretcher.Options.ProcessRealTime |
+        RubberBandStretcher.Options.WindowShort |
+        RubberBandStretcher.Options.FormantPreserved |
+        RubberBandStretcher.Options.PitchHighConsistency);
+
+            //stretcher.SetPitchScale(0.5f); // Cambia il pitch di +20%
+            stretcher.SetTimeRatio(0.5);
         }
+
+        private RubberBandStretcherStereo stretcher;
 
         public int Read(byte[] buffer, int offset, int count)
         {
@@ -30,6 +44,56 @@ namespace SignalManipulator.Logic.Providers
 
             float[] samples = buffer.AsFloats();
             OnSamples?.Invoke(this, samples);
+
+
+
+
+            // --- PITCH SHIFT ---
+
+            int sampleCount = samples.Length;
+            int stereoSamples = sampleCount / 2;
+
+            // Ignora se non è stereo o dispari
+            if (sampleCount % 2 == 0)
+            {
+                Span<float> left = stackalloc float[stereoSamples];
+                Span<float> right = stackalloc float[stereoSamples];
+
+                // Split stereo
+                for (int i = 0, j = 0; i < stereoSamples; i++, j += 2)
+                {
+                    left[i] = samples[j];
+                    right[i] = samples[j + 1];
+                }
+
+                // Processa
+                stretcher.Process(left, right, (uint)stereoSamples, false);
+
+                // Retrieve pitch-shifted samples
+                int available = stretcher.Available();
+
+                if (available >= stereoSamples)
+                {
+                    Span<float> outLeft = stackalloc float[stereoSamples];
+                    Span<float> outRight = stackalloc float[stereoSamples];
+
+                    stretcher.Retrieve(outLeft, outRight, (uint)stereoSamples);
+
+                    // Ricompone in stereo
+                    for (int i = 0, j = 0; i < stereoSamples; i++, j += 2)
+                    {
+                        samples[j] = outLeft[i];
+                        samples[j + 1] = outRight[i];
+                    }
+
+                    // Ricompatta in byte[]
+                    byte[] outBytes = samples.AsBytes();
+                    Array.Copy(outBytes, 0, buffer, offset, read);
+                }
+            }
+
+
+
 
             WaveformFrame frame = new WaveformFrame(samples);
             WaveformReady?.Invoke(this, frame);
