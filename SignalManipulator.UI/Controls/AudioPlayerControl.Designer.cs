@@ -115,6 +115,8 @@
             // 
             pitchCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             pitchCheckBox.AutoSize = true;
+            pitchCheckBox.Checked = true;
+            pitchCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             pitchCheckBox.Location = new System.Drawing.Point(177, 161);
             pitchCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             pitchCheckBox.Name = "pitchCheckBox";
@@ -158,7 +160,7 @@
             timeSlider.Name = "timeSlider";
             timeSlider.ShowDescription = false;
             timeSlider.ShowValue = false;
-            timeSlider.Size = new System.Drawing.Size(243, 35);
+            timeSlider.Size = new System.Drawing.Size(243, 30);
             timeSlider.TabIndex = 17;
             timeSlider.TickFrequency = 1;
             timeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
@@ -175,7 +177,7 @@
             playbackSpeedSlider.Maximum = 3D;
             playbackSpeedSlider.Minimum = 0.01D;
             playbackSpeedSlider.Name = "playbackSpeedSlider";
-            playbackSpeedSlider.Size = new System.Drawing.Size(419, 35);
+            playbackSpeedSlider.Size = new System.Drawing.Size(419, 30);
             playbackSpeedSlider.Suffix = "x";
             playbackSpeedSlider.TabIndex = 15;
             playbackSpeedSlider.TickFrequency = 30;
@@ -194,7 +196,7 @@
             volumeSlider.Name = "volumeSlider";
             volumeSlider.Precision = 0.001D;
             volumeSlider.PrecisionScale = Components.Precision.PrecisionScale.Logarithmic;
-            volumeSlider.Size = new System.Drawing.Size(416, 35);
+            volumeSlider.Size = new System.Drawing.Size(416, 30);
             volumeSlider.TabIndex = 19;
             volumeSlider.TickFrequency = 150;
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;

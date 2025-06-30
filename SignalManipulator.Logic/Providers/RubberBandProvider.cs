@@ -3,7 +3,7 @@ using RubberBandSharp;
 
 namespace SignalManipulator.Logic.Providers
 {
-    public class RubberBandProvider
+    public class RubberBandProvider : ISampleProvider, IWaveProvider
     {
         private readonly ISampleProvider sourceProvider;
         private readonly WaveFormat waveFormat;

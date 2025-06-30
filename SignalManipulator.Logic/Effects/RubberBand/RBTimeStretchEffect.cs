@@ -10,11 +10,11 @@ namespace SignalManipulator.Logic.Effects.RubberBand
         
         public double Speed
         {
-            get => preservePitch ? rubberBandProvider.TimeRatio : variSpeed.Speed;
+            get => preservePitch ? 1.0 / rubberBandProvider.TimeRatio : variSpeed.Speed;
             set
             {
-                rubberBandProvider.TimeRatio = 1.0 / value;
-                variSpeed.Speed = value;
+                rubberBandProvider.TimeRatio = preservePitch ? 1.0 / value : 1.0;
+                variSpeed.Speed = !preservePitch ? value : 1.0;
             }
         }
 
@@ -36,20 +36,19 @@ namespace SignalManipulator.Logic.Effects.RubberBand
         public RBTimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
             variSpeed = new VariSpeedEffect(sourceProvider);
+            this.sourceProvider = variSpeed;
             Speed = 1.0f;
         }
 
         public override void SetSource(ISampleProvider newSourceProvider)
         {
-            base.SetSource(newSourceProvider);
-            variSpeed = new VariSpeedEffect(sourceProvider);
+            variSpeed = new VariSpeedEffect(newSourceProvider);
+            base.SetSource(variSpeed);
         }
 
         public override int Read(float[] samples, int offset, int count)
         {
-            return preservePitch ? 
-                rubberBandProvider.Read(samples, offset, count) : 
-                variSpeed.Read(samples, offset, count);
+            return rubberBandProvider.Read(samples, offset, count);
         }
     }
 }

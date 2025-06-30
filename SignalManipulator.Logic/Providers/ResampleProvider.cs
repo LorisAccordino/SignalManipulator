@@ -17,7 +17,7 @@ namespace SignalManipulator.Logic.Providers
         /// </summary>
         public double SpeedRatio
         {
-            get => speedRatio;
+            get => 1.0 / speedRatio;
             set
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException(nameof(SpeedRatio));
