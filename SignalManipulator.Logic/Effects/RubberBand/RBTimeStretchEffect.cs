@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using System.Diagnostics;
 
 namespace SignalManipulator.Logic.Effects.RubberBand
 {
@@ -7,14 +6,15 @@ namespace SignalManipulator.Logic.Effects.RubberBand
     {
         public override string Name => "[RubberBand] Time Strech";
 
-        /*
+        private VariSpeedEffect variSpeed;
+        
         public double Speed
         {
-            get => preservePitch ? Processor.Tempo : Processor.Rate;
+            get => preservePitch ? rubberBandProvider.TimeRatio : variSpeed.Speed;
             set
             {
-                Processor.Rate = preservePitch ? 1.0 : value;
-                Processor.Tempo = !preservePitch ? 1.0 : value;
+                rubberBandProvider.TimeRatio = 1.0 / value;
+                variSpeed.Speed = value;
             }
         }
 
@@ -32,17 +32,24 @@ namespace SignalManipulator.Logic.Effects.RubberBand
                 }
             }
         }
-        */
-
-        public double Speed
-        {
-            get => 1.0 / rubberBandProvider.TimeRatio;
-            set => rubberBandProvider.TimeRatio = 1.0 / value;
-        }
 
         public RBTimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
+            variSpeed = new VariSpeedEffect(sourceProvider);
             Speed = 1.0f;
+        }
+
+        public override void SetSource(ISampleProvider newSourceProvider)
+        {
+            base.SetSource(newSourceProvider);
+            variSpeed = new VariSpeedEffect(sourceProvider);
+        }
+
+        public override int Read(float[] samples, int offset, int count)
+        {
+            return preservePitch ? 
+                rubberBandProvider.Read(samples, offset, count) : 
+                variSpeed.Read(samples, offset, count);
         }
     }
 }
