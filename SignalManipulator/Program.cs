@@ -1,4 +1,4 @@
-namespace SignalManipulatora
+namespace SignalManipulator
 {
     internal static class Program
     {

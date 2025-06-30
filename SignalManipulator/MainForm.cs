@@ -1,6 +1,4 @@
-using System.Windows.Forms;
-
-namespace SignalManipulatora
+namespace SignalManipulator
 {
     public partial class MainForm : Form
     {
@@ -9,7 +7,7 @@ namespace SignalManipulatora
             InitializeComponent();
         }
 
-        private void openAudioToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void openAudioToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (audioOFD.ShowDialog() == DialogResult.OK)
             {

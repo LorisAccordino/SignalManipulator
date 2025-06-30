@@ -34,11 +34,9 @@ namespace SignalManipulator.UI.Controls
             audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
 
             playbackSpeedSlider.ValueChanged += (s, speed) => playback.PlaybackSpeed = speed;
+            timeSlider.ValueChanged += (s, time) => playback.Seek(TimeSpan.FromSeconds(time));
             volumeSlider.ValueChanged += (s, volume) => playback.Volume = volume;
-            timeSlider.ValueChanged += (s, time) =>
-            {
-                playback.Seek(TimeSpan.FromSeconds(time));
-            };
+            pitchCheckBox.CheckedChanged += (s, e) => playback.PreservePitch = pitchCheckBox.Checked;
         }
 
         private void OnUpdate()
@@ -72,12 +70,6 @@ namespace SignalManipulator.UI.Controls
         {
             playback.Stop();
             UIUpdateService.Instance.Stop();
-        }
-
-
-        private void pitchCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            playback.PreservePitch = pitchCheckBox.Checked;
         }
     }
 }

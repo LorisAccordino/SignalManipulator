@@ -1,4 +1,4 @@
-﻿namespace SignalManipulatora
+﻿namespace SignalManipulator
 {
     partial class MainForm
     {
@@ -33,26 +33,26 @@
             leftSideSplitContainer = new SplitContainer();
             importGroupBox = new GroupBox();
             effectsGroupBox = new GroupBox();
-            effectChain = new SignalManipulator.UI.Controls.EffectChainControl();
+            effectChain = new UI.Controls.EffectChainControl();
             rightSideSplitContainer = new SplitContainer();
             visualizationGroupBox = new GroupBox();
             tabControl1 = new TabControl();
             waveformPage = new TabPage();
-            waveformViewer = new SignalManipulator.UI.Controls.WaveformViewerControl();
+            waveformViewer = new UI.Controls.WaveformViewerControl();
             spectrumPage = new TabPage();
-            spectrumViewer = new SignalManipulator.UI.Controls.SpectrumViewerControl();
+            spectrumViewer = new UI.Controls.SpectrumViewerControl();
             stereoPage = new TabPage();
-            lissajousViewer = new SignalManipulator.UI.Controls.LissajousViewerControl();
+            lissajousViewer = new UI.Controls.LissajousViewerControl();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
+            audioPlayer = new UI.Controls.AudioPlayerControl();
             routingGroupBox = new GroupBox();
-            audioRouter = new SignalManipulator.UI.Controls.AudioRouterControl();
+            audioRouter = new UI.Controls.AudioRouterControl();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openAudioToolStripMenuItem = new ToolStripMenuItem();
             saveAudioToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
-            audioPlayer = new SignalManipulator.UI.Controls.AudioPlayerControl();
             ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
             mainSplitContainer.Panel1.SuspendLayout();
             mainSplitContainer.Panel2.SuspendLayout();
@@ -90,20 +90,21 @@
             // mainSplitContainer.Panel1
             // 
             mainSplitContainer.Panel1.Controls.Add(leftSideSplitContainer);
+            mainSplitContainer.Panel1.Padding = new Padding(5, 0, 0, 5);
             mainSplitContainer.Panel1MinSize = 300;
             // 
             // mainSplitContainer.Panel2
             // 
             mainSplitContainer.Panel2.Controls.Add(rightSideSplitContainer);
-            mainSplitContainer.Panel2MinSize = 700;
-            mainSplitContainer.Size = new Size(1298, 643);
-            mainSplitContainer.SplitterDistance = 430;
+            mainSplitContainer.Panel2MinSize = 800;
+            mainSplitContainer.Size = new Size(1284, 637);
+            mainSplitContainer.SplitterDistance = 425;
             mainSplitContainer.TabIndex = 1;
             // 
             // leftSideSplitContainer
             // 
             leftSideSplitContainer.Dock = DockStyle.Fill;
-            leftSideSplitContainer.Location = new Point(0, 0);
+            leftSideSplitContainer.Location = new Point(5, 0);
             leftSideSplitContainer.Margin = new Padding(2);
             leftSideSplitContainer.Name = "leftSideSplitContainer";
             leftSideSplitContainer.Orientation = Orientation.Horizontal;
@@ -118,7 +119,7 @@
             // 
             leftSideSplitContainer.Panel2.Controls.Add(effectsGroupBox);
             leftSideSplitContainer.Panel2MinSize = 300;
-            leftSideSplitContainer.Size = new Size(430, 643);
+            leftSideSplitContainer.Size = new Size(420, 632);
             leftSideSplitContainer.SplitterDistance = 460;
             leftSideSplitContainer.SplitterWidth = 3;
             leftSideSplitContainer.TabIndex = 0;
@@ -143,7 +144,7 @@
             effectsGroupBox.Margin = new Padding(2);
             effectsGroupBox.Name = "effectsGroupBox";
             effectsGroupBox.Padding = new Padding(2);
-            effectsGroupBox.Size = new Size(430, 643);
+            effectsGroupBox.Size = new Size(420, 632);
             effectsGroupBox.TabIndex = 1;
             effectsGroupBox.TabStop = false;
             effectsGroupBox.Text = "Effects chain:";
@@ -154,7 +155,7 @@
             effectChain.Location = new Point(2, 18);
             effectChain.Margin = new Padding(2);
             effectChain.Name = "effectChain";
-            effectChain.Size = new Size(426, 623);
+            effectChain.Size = new Size(416, 612);
             effectChain.TabIndex = 0;
             // 
             // rightSideSplitContainer
@@ -168,14 +169,15 @@
             // rightSideSplitContainer.Panel1
             // 
             rightSideSplitContainer.Panel1.Controls.Add(visualizationGroupBox);
-            rightSideSplitContainer.Panel1MinSize = 350;
+            rightSideSplitContainer.Panel1.Padding = new Padding(0, 0, 5, 0);
+            rightSideSplitContainer.Panel1MinSize = 400;
             // 
             // rightSideSplitContainer.Panel2
             // 
             rightSideSplitContainer.Panel2.Controls.Add(bottomSplitContainer);
-            rightSideSplitContainer.Panel2MinSize = 150;
-            rightSideSplitContainer.Size = new Size(864, 643);
-            rightSideSplitContainer.SplitterDistance = 430;
+            rightSideSplitContainer.Panel2MinSize = 200;
+            rightSideSplitContainer.Size = new Size(855, 637);
+            rightSideSplitContainer.SplitterDistance = 434;
             rightSideSplitContainer.SplitterWidth = 3;
             rightSideSplitContainer.TabIndex = 0;
             // 
@@ -187,7 +189,7 @@
             visualizationGroupBox.Margin = new Padding(2);
             visualizationGroupBox.Name = "visualizationGroupBox";
             visualizationGroupBox.Padding = new Padding(2);
-            visualizationGroupBox.Size = new Size(864, 430);
+            visualizationGroupBox.Size = new Size(850, 434);
             visualizationGroupBox.TabIndex = 0;
             visualizationGroupBox.TabStop = false;
             visualizationGroupBox.Text = "Visualization:";
@@ -202,7 +204,7 @@
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(860, 410);
+            tabControl1.Size = new Size(846, 414);
             tabControl1.TabIndex = 1;
             // 
             // waveformPage
@@ -213,7 +215,7 @@
             waveformPage.Margin = new Padding(4, 3, 4, 3);
             waveformPage.Name = "waveformPage";
             waveformPage.Padding = new Padding(4, 3, 4, 3);
-            waveformPage.Size = new Size(852, 382);
+            waveformPage.Size = new Size(838, 386);
             waveformPage.TabIndex = 0;
             waveformPage.Text = "Signal Waveform";
             // 
@@ -223,7 +225,7 @@
             waveformViewer.Location = new Point(4, 3);
             waveformViewer.Margin = new Padding(2);
             waveformViewer.Name = "waveformViewer";
-            waveformViewer.Size = new Size(844, 376);
+            waveformViewer.Size = new Size(830, 380);
             waveformViewer.TabIndex = 0;
             // 
             // spectrumPage
@@ -278,14 +280,16 @@
             // bottomSplitContainer.Panel1
             // 
             bottomSplitContainer.Panel1.Controls.Add(playbackGroupBox);
+            bottomSplitContainer.Panel1.Padding = new Padding(0, 0, 0, 5);
             bottomSplitContainer.Panel1MinSize = 400;
             // 
             // bottomSplitContainer.Panel2
             // 
             bottomSplitContainer.Panel2.Controls.Add(routingGroupBox);
+            bottomSplitContainer.Panel2.Padding = new Padding(0, 0, 5, 5);
             bottomSplitContainer.Panel2MinSize = 300;
-            bottomSplitContainer.Size = new Size(864, 210);
-            bottomSplitContainer.SplitterDistance = 466;
+            bottomSplitContainer.Size = new Size(855, 200);
+            bottomSplitContainer.SplitterDistance = 460;
             bottomSplitContainer.TabIndex = 0;
             // 
             // playbackGroupBox
@@ -296,10 +300,20 @@
             playbackGroupBox.Margin = new Padding(2);
             playbackGroupBox.Name = "playbackGroupBox";
             playbackGroupBox.Padding = new Padding(2);
-            playbackGroupBox.Size = new Size(466, 210);
+            playbackGroupBox.Size = new Size(460, 195);
             playbackGroupBox.TabIndex = 2;
             playbackGroupBox.TabStop = false;
             playbackGroupBox.Text = "Playback:";
+            // 
+            // audioPlayer
+            // 
+            audioPlayer.Dock = DockStyle.Fill;
+            audioPlayer.Location = new Point(2, 18);
+            audioPlayer.Margin = new Padding(2);
+            audioPlayer.MinimumSize = new Size(306, 170);
+            audioPlayer.Name = "audioPlayer";
+            audioPlayer.Size = new Size(456, 175);
+            audioPlayer.TabIndex = 0;
             // 
             // routingGroupBox
             // 
@@ -309,7 +323,7 @@
             routingGroupBox.Margin = new Padding(2);
             routingGroupBox.Name = "routingGroupBox";
             routingGroupBox.Padding = new Padding(2);
-            routingGroupBox.Size = new Size(394, 210);
+            routingGroupBox.Size = new Size(386, 195);
             routingGroupBox.TabIndex = 4;
             routingGroupBox.TabStop = false;
             routingGroupBox.Text = "Audio routing:";
@@ -320,7 +334,7 @@
             audioRouter.Location = new Point(2, 18);
             audioRouter.Margin = new Padding(5);
             audioRouter.Name = "audioRouter";
-            audioRouter.Size = new Size(390, 190);
+            audioRouter.Size = new Size(382, 175);
             audioRouter.TabIndex = 0;
             // 
             // menuStrip1
@@ -330,7 +344,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(1298, 24);
+            menuStrip1.Size = new Size(1284, 24);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -358,26 +372,16 @@
             // 
             audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
             // 
-            // audioPlayer
-            // 
-            audioPlayer.Dock = DockStyle.Fill;
-            audioPlayer.Location = new Point(2, 18);
-            audioPlayer.Margin = new Padding(2);
-            audioPlayer.MinimumSize = new Size(306, 170);
-            audioPlayer.Name = "audioPlayer";
-            audioPlayer.Size = new Size(462, 190);
-            audioPlayer.TabIndex = 0;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1298, 667);
+            ClientSize = new Size(1284, 661);
             Controls.Add(mainSplitContainer);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(2);
-            MinimumSize = new Size(1313, 701);
+            MinimumSize = new Size(1150, 700);
             Name = "MainForm";
             Text = "Signal Manipulator";
             mainSplitContainer.Panel1.ResumeLayout(false);
@@ -432,9 +436,9 @@
         private System.Windows.Forms.TabPage stereoPage;
         private SignalManipulator.UI.Controls.EffectChainControl effectChain;
         private SignalManipulator.UI.Controls.WaveformViewerControl waveformViewer;
-        private SignalManipulator.UI.Controls.SpectrumViewerControl spectrumViewer;
         private SignalManipulator.UI.Controls.LissajousViewerControl lissajousViewer;
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
-        private SignalManipulator.UI.Controls.AudioPlayerControl audioPlayer;
+        private UI.Controls.SpectrumViewerControl spectrumViewer;
+        private UI.Controls.AudioPlayerControl audioPlayer;
     }
 }

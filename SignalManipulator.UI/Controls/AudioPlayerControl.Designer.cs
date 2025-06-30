@@ -115,8 +115,6 @@
             // 
             pitchCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             pitchCheckBox.AutoSize = true;
-            pitchCheckBox.Checked = true;
-            pitchCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             pitchCheckBox.Location = new System.Drawing.Point(177, 161);
             pitchCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             pitchCheckBox.Name = "pitchCheckBox";
@@ -124,7 +122,6 @@
             pitchCheckBox.TabIndex = 9;
             pitchCheckBox.Text = "Preserve pitch";
             pitchCheckBox.UseVisualStyleBackColor = true;
-            pitchCheckBox.CheckedChanged += pitchCheckBox_CheckedChanged;
             // 
             // pauseBtn
             // 
