@@ -1,11 +1,13 @@
 ﻿using NAudio.Wave;
+using System.Diagnostics;
 
-namespace SignalManipulator.Logic.Effects
+namespace SignalManipulator.Logic.Effects.RubberBand
 {
-    public class TimeStretchEffect : SoundTouchEffect
+    public class RBTimeStretchEffect : RubberBandEffect
     {
-        public override string Name => "Time Strech";
+        public override string Name => "[RubberBand] Time Strech";
 
+        /*
         public double Speed
         {
             get => preservePitch ? Processor.Tempo : Processor.Rate;
@@ -30,8 +32,15 @@ namespace SignalManipulator.Logic.Effects
                 }
             }
         }
+        */
 
-        public TimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
+        public double Speed
+        {
+            get => 1.0 / rubberBandProvider.TimeRatio;
+            set => rubberBandProvider.TimeRatio = 1.0 / value;
+        }
+
+        public RBTimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
             Speed = 1.0f;
         }

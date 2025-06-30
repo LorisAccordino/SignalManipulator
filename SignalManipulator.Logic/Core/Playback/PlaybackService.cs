@@ -15,7 +15,7 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly AudioDataProvider audioDataProvider;
 
         // Playback "effects"
-        private readonly TimeStretchEffect timeStrech;
+        //private readonly TimeStretchEffect timeStrech;
         private readonly VolumeEffect volumeManager;
 
         // Properties
@@ -41,9 +41,10 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects = effects;
             this.audioDataProvider = audioDataProvider;
 
-            this.effects.AddEffect<TimeStretchEffect>();
+            //this.effects.AddEffect<TimeStretchEffect>();
+            this.effects.
             this.effects.AddEffect<VolumeEffect>();
-            timeStrech = effects.GetEffect<TimeStretchEffect>(0);
+            //timeStrech = effects.GetEffect<TimeStretchEffect>(0);
             //volumeManager = effects.GetEffect<VolumeEffect>(0);
             volumeManager = effects.GetEffect<VolumeEffect>(1);
 

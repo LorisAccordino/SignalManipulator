@@ -1,12 +1,12 @@
-﻿
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using SoundTouch.Net.NAudioSupport;
 using SoundTouch;
 
-namespace SignalManipulator.Logic.Effects
+namespace SignalManipulator.Logic.Effects.SoundTouch
 {
     public abstract class SoundTouchEffect : AudioEffect
     {
+        protected SoundTouchProcessor Processor => processor;
         private readonly SoundTouchProcessor processor;
         private SoundTouchWaveProvider soundTouchWaveProvider;
         private ISampleProvider processedProvider;
@@ -39,7 +39,5 @@ namespace SignalManipulator.Logic.Effects
         {
             soundTouchWaveProvider.Clear();
         }
-
-        protected SoundTouchProcessor Processor => processor;
     }
 }
