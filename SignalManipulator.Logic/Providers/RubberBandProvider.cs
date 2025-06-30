@@ -43,7 +43,7 @@ namespace SignalManipulator.Logic.Providers
 
             leftInput = new float[blockSize];
             rightInput = new float[blockSize];
-            sourceBuffer = new float[blockSize * 2]; // stereo
+            sourceBuffer = new float[blockSize * 2]; // Stereo
         }
 
         public int Read(float[] buffer, int offset, int count)
@@ -94,7 +94,7 @@ namespace SignalManipulator.Logic.Providers
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int samplesNeeded = count / 4; // float = 4 byte
+            int samplesNeeded = count / 4; // Float = 4 byte
             float[] temp = new float[samplesNeeded];
 
             int read = Read(temp, 0, samplesNeeded);
