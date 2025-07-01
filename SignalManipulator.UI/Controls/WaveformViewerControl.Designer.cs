@@ -31,7 +31,7 @@
             formsPlot = new ScottPlot.WinForms.FormsPlot();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel1 = new System.Windows.Forms.Panel();
-            navigatorControl = new Misc.ZoomPanControl();
+            navigator = new Misc.ZoomPanControl();
             secLbl = new System.Windows.Forms.Label();
             secNum = new System.Windows.Forms.NumericUpDown();
             monoCheckBox = new System.Windows.Forms.CheckBox();
@@ -70,7 +70,7 @@
             // panel1
             // 
             panel1.BackColor = System.Drawing.SystemColors.Control;
-            panel1.Controls.Add(navigatorControl);
+            panel1.Controls.Add(navigator);
             panel1.Controls.Add(secLbl);
             panel1.Controls.Add(secNum);
             panel1.Controls.Add(monoCheckBox);
@@ -84,16 +84,16 @@
             // 
             // navigatorControl
             // 
-            navigatorControl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            navigatorControl.BackColor = System.Drawing.SystemColors.Control;
-            navigatorControl.Location = new System.Drawing.Point(1, 5);
-            navigatorControl.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            navigatorControl.Name = "navigatorControl";
-            navigatorControl.Size = new System.Drawing.Size(532, 61);
-            navigatorControl.TabIndex = 10;
-            navigatorControl.ZoomMax = 100D;
-            navigatorControl.ZoomMin = 1D;
-            navigatorControl.ZoomPrecision = 0.1D;
+            navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            navigator.BackColor = System.Drawing.SystemColors.Control;
+            navigator.Location = new System.Drawing.Point(1, 5);
+            navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            navigator.Name = "navigatorControl";
+            navigator.Size = new System.Drawing.Size(532, 61);
+            navigator.TabIndex = 10;
+            navigator.ZoomMax = 100D;
+            navigator.ZoomMin = 1D;
+            navigator.ZoomPrecision = 0.1D;
             // 
             // secLbl
             // 
@@ -163,6 +163,6 @@
         private System.Windows.Forms.CheckBox monoCheckBox;
         private System.Windows.Forms.NumericUpDown secNum;
         private System.Windows.Forms.Label secLbl;
-        private Misc.ZoomPanControl navigatorControl;
+        private Misc.ZoomPanControl navigator;
     }
 }

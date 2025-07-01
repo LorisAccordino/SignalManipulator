@@ -89,7 +89,7 @@ namespace SignalManipulator.UI.Controls
 
             // Set the bounds
             plt.Axes.SetLimitsY(-1, 1);
-            navigatorControl.Navigator.SetCapacity(sampleRate);
+            navigator.Capacity = sampleRate;
 
             // Force the update
             needsRender = true;
@@ -107,8 +107,8 @@ namespace SignalManipulator.UI.Controls
             secNum.Value = 1;
 
             // Navigator
-            navigatorControl.Navigator.SetZoom(1);
-            navigatorControl.Navigator.SetPan(0);
+            navigator.Zoom = 1;
+            navigator.Pan = 0;
 
             // Disable UI
             EnableUI(false);
@@ -118,7 +118,7 @@ namespace SignalManipulator.UI.Controls
         {
             monoCheckBox.Enabled = enabled;
             secNum.Enabled = enabled;
-            navigatorControl.Enabled = enabled;
+            navigator.Enabled = enabled;
         }
 
         private void ConfigureBuffers()
@@ -206,7 +206,6 @@ namespace SignalManipulator.UI.Controls
         {
             lock (lockObject)
             {
-                var navigator = navigatorControl.Navigator;
                 if (navigator.NeedsUpdate)
                 {
                     navigator.Recalculate();
@@ -227,7 +226,7 @@ namespace SignalManipulator.UI.Controls
             leftSig.Data.Period = windowSeconds;
             rightSig.Data.Period = windowSeconds;
 
-            navigatorControl.Navigator.SetCapacity(sampleRate * windowSeconds);
+            navigator.Capacity = sampleRate * windowSeconds;
         }
     }
 }

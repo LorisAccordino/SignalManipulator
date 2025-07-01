@@ -4,8 +4,6 @@ namespace SignalManipulator.UI.Misc
 {
     public partial class ZoomPanControl : UserControl
     {
-        public AxisNavigator Navigator = new AxisNavigator(1);
-
         public double ZoomMin
         {
             get => zoomSlider.Minimum; set => zoomSlider.Minimum = value;
@@ -21,6 +19,21 @@ namespace SignalManipulator.UI.Misc
             get => zoomSlider.Maximum; set => zoomSlider.Maximum = value;
         }
 
+        // Wrapping Navigator properties
+        private AxisNavigator navigator = new AxisNavigator(1);
+
+        public double Zoom { get => navigator.Zoom; set => navigator.SetZoom(value); }
+        public double Pan { get => navigator.Pan; set => navigator.SetPan(value); }
+
+        public double Start => navigator.Start;
+        public double End => navigator.End;
+
+        public int Capacity { get => navigator.Capacity; set => navigator.SetCapacity(value); }
+        public bool NeedsUpdate => navigator.NeedsUpdate;
+
+        public void Recalculate() => navigator.Recalculate();
+
+
         public ZoomPanControl()
         {
             InitializeComponent();
@@ -29,8 +42,8 @@ namespace SignalManipulator.UI.Misc
 
         private void InitializeEvents()
         {
-            zoomSlider.ValueChanged += (_, v) => { Navigator.SetZoom(v); };
-            panSlider.ValueChanged += (_, v) => { Navigator.SetPan(v); };
+            zoomSlider.ValueChanged += (_, v) => { navigator.SetZoom(v); };
+            panSlider.ValueChanged += (_, v) => { navigator.SetPan(v); };
         }
     }
 }

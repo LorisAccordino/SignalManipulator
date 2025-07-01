@@ -79,8 +79,7 @@ namespace SignalManipulator.UI.Controls
 
             // Set the bounds
             plt.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
-            //plt.Axes.SetLimitsY(0, FFT_SIZE / 16);
-            navigatorControl.Navigator.SetCapacity(MaxFrequency);
+            navigator.Capacity = MaxFrequency;
 
             // Force the update
             needsRender = true;
@@ -139,7 +138,6 @@ namespace SignalManipulator.UI.Controls
         {
             lock (lockObject)
             {
-                var navigator = navigatorControl.Navigator;
                 if (navigator.NeedsUpdate)
                 {
                     navigator.Recalculate();
@@ -157,7 +155,7 @@ namespace SignalManipulator.UI.Controls
         private void UpdateDataPeriod()
         {
             spectrumPlot.Data.Period = BinSize;
-            navigatorControl.Navigator.SetCapacity(MaxFrequency);
+            navigator.Capacity = MaxFrequency;
         }
     }
 }

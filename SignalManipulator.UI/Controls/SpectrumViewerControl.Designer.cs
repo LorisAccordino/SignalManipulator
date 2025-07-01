@@ -36,7 +36,7 @@
             emaNum = new System.Windows.Forms.NumericUpDown();
             emaLbl = new System.Windows.Forms.Label();
             smaNum = new System.Windows.Forms.NumericUpDown();
-            navigatorControl = new Misc.ZoomPanControl();
+            navigator = new Misc.ZoomPanControl();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -76,7 +76,7 @@
             tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
             tableLayoutPanel2.Controls.Add(groupBox2, 1, 0);
-            tableLayoutPanel2.Controls.Add(navigatorControl, 0, 0);
+            tableLayoutPanel2.Controls.Add(navigator, 0, 0);
             tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel2.Location = new System.Drawing.Point(4, 267);
             tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -150,15 +150,15 @@
             // 
             // navigatorControl
             // 
-            navigatorControl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            navigatorControl.Location = new System.Drawing.Point(5, 17);
-            navigatorControl.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            navigatorControl.Name = "navigatorControl";
-            navigatorControl.Size = new System.Drawing.Size(675, 61);
-            navigatorControl.TabIndex = 1;
-            navigatorControl.ZoomMax = 20D;
-            navigatorControl.ZoomMin = 1D;
-            navigatorControl.ZoomPrecision = 0.01D;
+            navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            navigator.Location = new System.Drawing.Point(5, 17);
+            navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            navigator.Name = "navigatorControl";
+            navigator.Size = new System.Drawing.Size(675, 61);
+            navigator.TabIndex = 1;
+            navigator.ZoomMax = 20D;
+            navigator.ZoomMin = 1D;
+            navigator.ZoomPrecision = 0.01D;
             // 
             // SpectrumViewerControl
             // 
@@ -181,7 +181,7 @@
 
         private ScottPlot.WinForms.FormsPlot formsPlot;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private Misc.ZoomPanControl navigatorControl;
+        private Misc.ZoomPanControl navigator;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label smaLbl;
