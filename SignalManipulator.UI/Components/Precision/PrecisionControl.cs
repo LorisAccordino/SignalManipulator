@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System;
 using System.Windows.Forms;
 using SignalManipulator.UI.Scaling;
 using SignalManipulator.UI.Scaling.Curves;

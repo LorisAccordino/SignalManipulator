@@ -41,7 +41,7 @@ namespace SignalManipulator.UI.Controls
 
             // Other events
             playbackSpeedSlider.ValueChanged += (s, speed) => playback.PlaybackSpeed = speed;
-            timeSlider.ValueChanged += (s, time) => playback.Seek(time);
+            timeSlider.OnSeek += playback.Seek;
             volumeSlider.ValueChanged += (s, volume) => playback.Volume = volume;
             pitchCheckBox.CheckedChanged += (s, e) => playback.PreservePitch = pitchCheckBox.Checked;
         }
@@ -68,8 +68,7 @@ namespace SignalManipulator.UI.Controls
 
         private void OnUpdate()
         {
-            timeLbl.Time = playback.Info.CurrentTime;
-            timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;
+            timeSlider.SyncWith(playback.Info.CurrentTime);
         }
 
 
@@ -80,13 +79,21 @@ namespace SignalManipulator.UI.Controls
             // Update UI
             playingAudioLbl.Value = playback.Info.FileName;
             waveFmtLbl.Text = playback.Info.WaveFormatDescription;
-            timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
+            timeSlider.TotalTime = playback.Info.TotalTime;
         }
 
-        private void OnPlay(object sender, EventArgs e) => playback.Play();
+        private void OnPlay(object sender, EventArgs e)
+        {
+            UIUpdateService.Instance.Start();
+            playback.Play();
+        }
 
         private void OnPause(object sender, EventArgs e) => playback.Pause();
 
-        private void OnStop(object sender, EventArgs e) => playback.Stop();
+        private void OnStop(object sender, EventArgs e)
+        {
+            UIUpdateService.Instance.Stop();
+            playback.Stop();
+        }
     }
 }

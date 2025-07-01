@@ -61,12 +61,9 @@ namespace SignalManipulator.UI.Misc
                 oneShotQueue.Enqueue(oneShotAction);
         }
 
-
-        public void SetFPS(int fps)
-        {
-            timer.Interval = (int)(1000.0 / fps);
-        }
-
+        public void SetFPS(int fps) => timer.Interval = (int)(1000.0 / fps);
+        public void Start() => timer.Start();
+        public void Stop() => timer.Stop();
         public void ForceUpdate() => Update();
     }
 }
