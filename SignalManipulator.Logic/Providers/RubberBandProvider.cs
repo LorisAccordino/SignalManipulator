@@ -1,7 +1,6 @@
 ﻿using NAudio.Wave;
 using RubberBandSharp;
 using SignalManipulator.Logic.AudioMath;
-using System.Diagnostics;
 
 namespace SignalManipulator.Logic.Providers
 {
@@ -98,6 +97,18 @@ namespace SignalManipulator.Logic.Providers
             int read = Read(temp, 0, samplesNeeded);
             Buffer.BlockCopy(temp, 0, buffer, offset, read * 4);
             return read * 4;
+        }
+
+        public void ClearBuffers()
+        {
+            // Clear input buffers
+            Array.Clear(sourceBuffer);
+            Array.Clear(leftInput);
+            Array.Clear(rightInput);
+
+            // Clear output buffers
+            leftBuffer.Clear();
+            rightBuffer.Clear();
         }
     }
 }

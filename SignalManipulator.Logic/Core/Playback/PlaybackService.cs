@@ -16,15 +16,19 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly AudioDataProvider audioDataProvider;
 
         // Playback "effects"
-        private readonly RBTimeStretchEffect timeStretch;
-        private readonly VolumeEffect volumeManager;
+        //private readonly RBTimeStretchEffect timeStretch;
+        //private readonly VolumeEffect volumeManager;
 
         // Properties
         public AudioInfo Info => source.Info;
 
-        public double Speed { get => timeStretch.Speed; set => timeStretch.Speed = value; }
-        public bool PreservePitch { get => timeStretch.PreservePitch; set => timeStretch.PreservePitch = value; }
-        public double Volume { get => volumeManager.Volume; set => volumeManager.Volume = value; }
+        //public double Speed { get => timeStretch.Speed; set => timeStretch.Speed = value; }
+        //public bool PreservePitch { get => timeStretch.PreservePitch; set => timeStretch.PreservePitch = value; }
+        //public double Volume { get => volumeManager.Volume; set => volumeManager.Volume = value; }
+        public double Speed { get => 1; set => _ = value; }
+        public bool PreservePitch { get => true; set => _ = value; }
+        public double Volume { get => 1; set => _ = value; }
+        
 
         // Events
         public event EventHandler<AudioInfo> LoadCompleted;
@@ -40,12 +44,13 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects = effects;
             this.audioDataProvider = audioDataProvider;
 
-            this.effects.AddEffect<RBTimeStretchEffect>();
-            this.effects.AddEffect<VolumeEffect>();
-            timeStretch = effects.GetEffect<RBTimeStretchEffect>(0);
-            volumeManager = effects.GetEffect<VolumeEffect>(1);
+            //this.effects.AddEffect<RBTimeStretchEffect>();
+            //this.effects.AddEffect<VolumeEffect>();
+            //timeStretch = effects.GetEffect<RBTimeStretchEffect>(0);
+            //volumeManager = effects.GetEffect<VolumeEffect>(1);
+            //volumeManager = effects.GetEffect<VolumeEffect>(0);
 
-            router.PlaybackStopped += (s, e) => Stop();
+            router.PlaybackStopped += (s, e) => _Stop();
         }
 
         public void Load(string path)
@@ -74,10 +79,14 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Stop()
         {
             router.CurrentDevice.Stop();
-            effects.ResetAll();
+        }
+
+        public void _Stop()
+        {
             source.Seek(TimeSpan.Zero);
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
+            effects.ResetAll();
         }
 
         public void Seek(TimeSpan pos) => source.Seek(pos);

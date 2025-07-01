@@ -22,5 +22,10 @@ namespace SignalManipulator.Logic.Effects.RubberBand
         {
             return rubberBandProvider.Read(samples, offset, count);
         }
+
+        public override void Reset()
+        {
+            rubberBandProvider.ClearBuffers();
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace SignalManipulator.UI.Controls
         private void InitializeEvents()
         {
             audioEventDispatcher.OnLoad += (_, info) => { sampleRate = info.SampleRate; ConfigureBuffers(); };
-            audioEventDispatcher.OnStopped += (_, e) => ClearBuffers();
+            audioEventDispatcher.OnStopped += (_, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
             audioEventDispatcher.WaveformReady += (_, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
 
             UIUpdateService.Instance.Register(RenderPlot);
@@ -121,9 +121,15 @@ namespace SignalManipulator.UI.Controls
 
             lock (lockObject)
             {
+                stereoBuf.Clear(); leftBuf.Clear(); rightBuf.Clear();
+
                 while (!stereoBuf.IsFull) stereoBuf.Add(0);
                 while (!leftBuf.IsFull) leftBuf.Add(0);
                 while (!rightBuf.IsFull) rightBuf.Add(0);
+
+                Array.Clear(stereoArr);
+                Array.Clear(leftArr);
+                Array.Clear(rightArr);
             }
 
             needsRender = true;

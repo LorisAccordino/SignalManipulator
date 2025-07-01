@@ -34,10 +34,9 @@ namespace SignalManipulator.Logic.Providers
             RebuildResampler();
         }
 
-        private void RebuildResampler()
+        public void RebuildResampler()
         {
             int newRate = (int)(source.WaveFormat.SampleRate * speedRatio);
-            // ricrea il provider con il nuovo sample rate
             resampler = new WdlResamplingSampleProvider(source, newRate);
         }
 

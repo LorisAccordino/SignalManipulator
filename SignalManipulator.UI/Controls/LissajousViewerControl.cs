@@ -1,7 +1,6 @@
 ﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.AudioMath;
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 using SignalManipulator.UI.Helpers;
@@ -40,7 +39,7 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnStopped += (s, e) => ClearBuffers();
+            audioEventDispatcher.OnStopped += (s, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
             audioEventDispatcher.WaveformReady += (s, frame) => UpdatePlotData(frame.DoubleStereo);
 
             UIUpdateService.Instance.Register(RenderPlot);

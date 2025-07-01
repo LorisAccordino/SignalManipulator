@@ -31,5 +31,10 @@ namespace SignalManipulator.Logic.Effects
         {
             return resampleProvider.Read(samples, offset, count);
         }
+
+        public override void Reset()
+        {
+            resampleProvider.RebuildResampler();
+        }
     }
 }

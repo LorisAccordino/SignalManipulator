@@ -18,6 +18,9 @@ namespace SignalManipulator.UI.Misc
         }
 
         private readonly System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Timer? delayedStopTimer = null;
+        private bool isDelayedStopScheduled = false;
+
         private readonly List<Action> subscribers = new List<Action>();
         private readonly ConcurrentQueue<Action> oneShotQueue = new ConcurrentQueue<Action>();
 
@@ -87,6 +90,7 @@ namespace SignalManipulator.UI.Misc
         {
             timer.Stop();
             ForceUpdate();
+            isDelayedStopScheduled = false;
         }
 
         public void ForceUpdate() => Update();
