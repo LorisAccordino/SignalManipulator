@@ -102,6 +102,16 @@ namespace SignalManipulator.Logic.AudioMath
         }
 
 
+        public static float[] ToStereo(this (float[] Left, float[] Right) channels)
+        {
+            int length = Math.Min(channels.Left.Length, channels.Right.Length);
+            float[] stereo = new float[length * 2];
+            channels.CombineStereo(stereo);
+            return stereo;
+        }
+
+
+
         public static float ToDecibels(this float linear) => (float)ToDecibels((double)linear);
         public static double ToDecibels(this double linear)
         {
