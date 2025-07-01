@@ -20,19 +20,14 @@ namespace SignalManipulator
             mainSplitContainer.Panel1Collapsed = !effectsToolStripMenuItem.Checked;
         }
 
-        private void ShowHidePlots(object sender, EventArgs e)
+        private void ShowHidePlaybackAndRouting(object sender, EventArgs e)
         {
-            mainSplitContainer.Panel2Collapsed = !plotsToolStripMenuItem.Checked;
-        }
+            bool showPlayback = playbackToolStripMenuItem.Checked;
+            bool showRouting = routingToolStripMenuItem.Checked;
 
-        private void ShowHidePlayback(object sender, EventArgs e)
-        {
-            bottomSplitContainer.Panel1Collapsed = !playbackToolStripMenuItem.Checked;
-        }
-
-        private void ShowHideRouting(object sender, EventArgs e)
-        {
-            bottomSplitContainer.Panel2Collapsed = !routingToolStripMenuItem.Checked;
+            rightSideSplitContainer.Panel2Collapsed = !(showPlayback || showRouting);
+            bottomSplitContainer.Panel1Collapsed = !showPlayback;
+            bottomSplitContainer.Panel2Collapsed = !showRouting;
         }
     }
 }

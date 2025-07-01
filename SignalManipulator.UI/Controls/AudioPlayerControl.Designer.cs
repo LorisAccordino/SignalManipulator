@@ -110,10 +110,10 @@ namespace SignalManipulator.UI.Controls
             // 
             settingsPanel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             settingsPanel.Controls.Add(timeInfoLbl);
-            settingsPanel.Controls.Add(timeSlider);
             settingsPanel.Controls.Add(pitchCheckBox);
             settingsPanel.Controls.Add(playbackSpeedSlider);
             settingsPanel.Controls.Add(volumeSlider);
+            settingsPanel.Controls.Add(timeSlider);
             settingsPanel.Location = new System.Drawing.Point(0, 69);
             settingsPanel.Name = "settingsPanel";
             settingsPanel.Size = new System.Drawing.Size(431, 88);
@@ -124,7 +124,7 @@ namespace SignalManipulator.UI.Controls
             timeInfoLbl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             timeInfoLbl.AutoSize = true;
             timeInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            timeInfoLbl.Location = new System.Drawing.Point(3, 7);
+            timeInfoLbl.Location = new System.Drawing.Point(3, 6);
             timeInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             timeInfoLbl.Name = "timeInfoLbl";
             timeInfoLbl.Size = new System.Drawing.Size(95, 16);
@@ -136,7 +136,7 @@ namespace SignalManipulator.UI.Controls
             timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             timeSlider.AutoUpdate = true;
             timeSlider.CurrentTime = TimeSpan.Parse("00:00:00");
-            timeSlider.Location = new System.Drawing.Point(94, 5);
+            timeSlider.Location = new System.Drawing.Point(94, 4);
             timeSlider.Name = "timeSlider";
             timeSlider.Size = new System.Drawing.Size(342, 30);
             timeSlider.TabIndex = 24;

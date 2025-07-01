@@ -54,7 +54,6 @@
             saveAudioToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             effectsToolStripMenuItem = new ToolStripMenuItem();
-            plotsToolStripMenuItem = new ToolStripMenuItem();
             playbackToolStripMenuItem = new ToolStripMenuItem();
             routingToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
@@ -375,7 +374,7 @@
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { effectsToolStripMenuItem, plotsToolStripMenuItem, playbackToolStripMenuItem, routingToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { effectsToolStripMenuItem, playbackToolStripMenuItem, routingToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "View";
@@ -390,16 +389,6 @@
             effectsToolStripMenuItem.Text = "Effects";
             effectsToolStripMenuItem.Click += ShowHideEffects;
             // 
-            // plotsToolStripMenuItem
-            // 
-            plotsToolStripMenuItem.Checked = true;
-            plotsToolStripMenuItem.CheckOnClick = true;
-            plotsToolStripMenuItem.CheckState = CheckState.Checked;
-            plotsToolStripMenuItem.Name = "plotsToolStripMenuItem";
-            plotsToolStripMenuItem.Size = new Size(180, 22);
-            plotsToolStripMenuItem.Text = "Plots";
-            plotsToolStripMenuItem.Click += ShowHidePlots;
-            // 
             // playbackToolStripMenuItem
             // 
             playbackToolStripMenuItem.Checked = true;
@@ -408,7 +397,7 @@
             playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
             playbackToolStripMenuItem.Size = new Size(180, 22);
             playbackToolStripMenuItem.Text = "Playback";
-            playbackToolStripMenuItem.Click += ShowHidePlayback;
+            playbackToolStripMenuItem.Click += ShowHidePlaybackAndRouting;
             // 
             // routingToolStripMenuItem
             // 
@@ -418,7 +407,7 @@
             routingToolStripMenuItem.Name = "routingToolStripMenuItem";
             routingToolStripMenuItem.Size = new Size(180, 22);
             routingToolStripMenuItem.Text = "Routing";
-            routingToolStripMenuItem.Click += ShowHideRouting;
+            routingToolStripMenuItem.Click += ShowHidePlaybackAndRouting;
             // 
             // audioOFD
             // 
@@ -494,7 +483,6 @@
         private UI.Controls.AudioPlayerControl audioPlayer;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
-        private ToolStripMenuItem plotsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
     }
