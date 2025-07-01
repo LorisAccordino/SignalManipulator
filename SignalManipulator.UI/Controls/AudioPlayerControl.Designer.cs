@@ -1,4 +1,6 @@
-﻿namespace SignalManipulator.UI.Controls
+﻿using SignalManipulator.UI.Components.Labels;
+
+namespace SignalManipulator.UI.Controls
 {
     partial class AudioPlayerControl
     {
@@ -29,41 +31,18 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            playingAudioInfoLbl = new System.Windows.Forms.Label();
-            playingAudioLbl = new System.Windows.Forms.Label();
             stopBtn = new System.Windows.Forms.Button();
             playBtn = new System.Windows.Forms.Button();
             timeInfoLbl = new System.Windows.Forms.Label();
             pitchCheckBox = new System.Windows.Forms.CheckBox();
             pauseBtn = new System.Windows.Forms.Button();
-            waveFmtLbl = new Components.Labels.DescriptorLabel(components);
+            waveFmtLbl = new DescriptorLabel(components);
             timeSlider = new Components.Precision.PrecisionSlider();
             playbackSpeedSlider = new Components.Precision.PrecisionSlider();
             volumeSlider = new Components.Precision.PrecisionSlider();
-            timeLbl = new Components.Labels.TimeLabel(components);
+            timeLbl = new TimeLabel(components);
+            playingAudioLbl = new DescriptorLabel(components);
             SuspendLayout();
-            // 
-            // playingAudioInfoLbl
-            // 
-            playingAudioInfoLbl.AutoSize = true;
-            playingAudioInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            playingAudioInfoLbl.Location = new System.Drawing.Point(10, 10);
-            playingAudioInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            playingAudioInfoLbl.Name = "playingAudioInfoLbl";
-            playingAudioInfoLbl.Size = new System.Drawing.Size(92, 16);
-            playingAudioInfoLbl.TabIndex = 0;
-            playingAudioInfoLbl.Text = "Audio playing:";
-            // 
-            // playingAudioLbl
-            // 
-            playingAudioLbl.AutoSize = true;
-            playingAudioLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            playingAudioLbl.Location = new System.Drawing.Point(118, 10);
-            playingAudioLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            playingAudioLbl.Name = "playingAudioLbl";
-            playingAudioLbl.Size = new System.Drawing.Size(12, 18);
-            playingAudioLbl.TabIndex = 1;
-            playingAudioLbl.Text = " ";
             // 
             // stopBtn
             // 
@@ -91,9 +70,10 @@
             // 
             // timeInfoLbl
             // 
+            timeInfoLbl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             timeInfoLbl.AutoSize = true;
             timeInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            timeInfoLbl.Location = new System.Drawing.Point(10, 32);
+            timeInfoLbl.Location = new System.Drawing.Point(12, 77);
             timeInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             timeInfoLbl.Name = "timeInfoLbl";
             timeInfoLbl.Size = new System.Drawing.Size(95, 16);
@@ -130,7 +110,7 @@
             waveFmtLbl.AutoSize = true;
             waveFmtLbl.Description = "Wave format";
             waveFmtLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            waveFmtLbl.Location = new System.Drawing.Point(12, 53);
+            waveFmtLbl.Location = new System.Drawing.Point(10, 31);
             waveFmtLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             waveFmtLbl.Name = "waveFmtLbl";
             waveFmtLbl.Separator = ":  ";
@@ -140,8 +120,8 @@
             // 
             // timeSlider
             // 
-            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            timeSlider.Location = new System.Drawing.Point(188, 30);
+            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            timeSlider.Location = new System.Drawing.Point(111, 75);
             timeSlider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             timeSlider.Name = "timeSlider";
             timeSlider.ShowDescription = false;
@@ -158,7 +138,7 @@
             playbackSpeedSlider.Curvature = 2.5D;
             playbackSpeedSlider.Description = "Playback speed:";
             playbackSpeedSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            playbackSpeedSlider.Location = new System.Drawing.Point(12, 117);
+            playbackSpeedSlider.Location = new System.Drawing.Point(12, 126);
             playbackSpeedSlider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             playbackSpeedSlider.Maximum = 3D;
             playbackSpeedSlider.Minimum = 0.01D;
@@ -176,7 +156,7 @@
             volumeSlider.Curvature = 2D;
             volumeSlider.Description = "Volume:";
             volumeSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            volumeSlider.Location = new System.Drawing.Point(12, 88);
+            volumeSlider.Location = new System.Drawing.Point(12, 97);
             volumeSlider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             volumeSlider.Maximum = 3D;
             volumeSlider.Name = "volumeSlider";
@@ -190,18 +170,31 @@
             // 
             // timeLbl
             // 
+            timeLbl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             timeLbl.AutoSize = true;
             timeLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            timeLbl.Location = new System.Drawing.Point(122, 32);
+            timeLbl.Location = new System.Drawing.Point(361, 78);
             timeLbl.Name = "timeLbl";
             timeLbl.Size = new System.Drawing.Size(62, 16);
             timeLbl.TabIndex = 20;
             timeLbl.Time = TimeSpan.Parse("00:00:00");
             // 
+            // playingAudioLbl
+            // 
+            playingAudioLbl.AutoSize = true;
+            playingAudioLbl.Description = "Audio playing";
+            playingAudioLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+            playingAudioLbl.Location = new System.Drawing.Point(10, 10);
+            playingAudioLbl.Name = "playingAudioLbl";
+            playingAudioLbl.Size = new System.Drawing.Size(95, 16);
+            playingAudioLbl.TabIndex = 22;
+            playingAudioLbl.Value = "";
+            // 
             // AudioPlayerControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(playingAudioLbl);
             Controls.Add(timeLbl);
             Controls.Add(volumeSlider);
             Controls.Add(waveFmtLbl);
@@ -211,8 +204,6 @@
             Controls.Add(timeInfoLbl);
             Controls.Add(playBtn);
             Controls.Add(stopBtn);
-            Controls.Add(playingAudioLbl);
-            Controls.Add(playingAudioInfoLbl);
             Controls.Add(pauseBtn);
             Margin = new System.Windows.Forms.Padding(2);
             MinimumSize = new System.Drawing.Size(306, 170);
@@ -224,8 +215,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label playingAudioInfoLbl;
-        private System.Windows.Forms.Label playingAudioLbl;
         private System.Windows.Forms.Button stopBtn;
         private System.Windows.Forms.Button playBtn;
         private System.Windows.Forms.Label timeInfoLbl;
@@ -236,5 +225,6 @@
         private Components.Precision.PrecisionSlider timeSlider;
         private Components.Labels.DescriptorLabel waveFmtLbl;
         private Components.Precision.PrecisionSlider volumeSlider;
+        private Components.Labels.DescriptorLabel playingAudioLbl;
     }
 }
