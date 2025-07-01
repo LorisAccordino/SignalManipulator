@@ -1,5 +1,6 @@
 ﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
+using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
@@ -128,7 +129,6 @@ namespace SignalManipulator.UI.Controls
                 double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
 
                 // Clamp values
-
                 smaSmoothed.CopyTo(magnitudes, 0);
             }
 
