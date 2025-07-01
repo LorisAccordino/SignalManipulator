@@ -34,13 +34,13 @@
             stopBtn = new System.Windows.Forms.Button();
             playBtn = new System.Windows.Forms.Button();
             timeInfoLbl = new System.Windows.Forms.Label();
-            timeLbl = new System.Windows.Forms.Label();
             pitchCheckBox = new System.Windows.Forms.CheckBox();
             pauseBtn = new System.Windows.Forms.Button();
-            waveFmtLbl = new Components.DescriptorLabel(components);
+            waveFmtLbl = new Components.Labels.DescriptorLabel(components);
             timeSlider = new Components.Precision.PrecisionSlider();
             playbackSpeedSlider = new Components.Precision.PrecisionSlider();
             volumeSlider = new Components.Precision.PrecisionSlider();
+            timeLbl = new Components.Labels.TimeLabel(components);
             SuspendLayout();
             // 
             // playingAudioInfoLbl
@@ -99,17 +99,6 @@
             timeInfoLbl.Size = new System.Drawing.Size(95, 16);
             timeInfoLbl.TabIndex = 4;
             timeInfoLbl.Text = "Playback time:";
-            // 
-            // timeLbl
-            // 
-            timeLbl.AutoSize = true;
-            timeLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            timeLbl.Location = new System.Drawing.Point(117, 33);
-            timeLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            timeLbl.Name = "timeLbl";
-            timeLbl.Size = new System.Drawing.Size(62, 16);
-            timeLbl.TabIndex = 5;
-            timeLbl.Text = "00:00.000";
             // 
             // pitchCheckBox
             // 
@@ -199,16 +188,26 @@
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.BottomRight;
             volumeSlider.Value = 1D;
             // 
+            // timeLbl
+            // 
+            timeLbl.AutoSize = true;
+            timeLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+            timeLbl.Location = new System.Drawing.Point(122, 32);
+            timeLbl.Name = "timeLbl";
+            timeLbl.Size = new System.Drawing.Size(62, 16);
+            timeLbl.TabIndex = 20;
+            timeLbl.Time = TimeSpan.Parse("00:00:00");
+            // 
             // AudioPlayerControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(timeLbl);
             Controls.Add(volumeSlider);
             Controls.Add(waveFmtLbl);
             Controls.Add(timeSlider);
             Controls.Add(playbackSpeedSlider);
             Controls.Add(pitchCheckBox);
-            Controls.Add(timeLbl);
             Controls.Add(timeInfoLbl);
             Controls.Add(playBtn);
             Controls.Add(stopBtn);
@@ -230,12 +229,12 @@
         private System.Windows.Forms.Button stopBtn;
         private System.Windows.Forms.Button playBtn;
         private System.Windows.Forms.Label timeInfoLbl;
-        private System.Windows.Forms.Label timeLbl;
+        private Components.Labels.TimeLabel timeLbl;
         private System.Windows.Forms.CheckBox pitchCheckBox;
         private System.Windows.Forms.Button pauseBtn;
         private Components.Precision.PrecisionSlider playbackSpeedSlider;
         private Components.Precision.PrecisionSlider timeSlider;
-        private Components.DescriptorLabel waveFmtLbl;
+        private Components.Labels.DescriptorLabel waveFmtLbl;
         private Components.Precision.PrecisionSlider volumeSlider;
     }
 }

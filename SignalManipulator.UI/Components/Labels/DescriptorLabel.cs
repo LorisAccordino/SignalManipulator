@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Components
+namespace SignalManipulator.UI.Components.Labels
 {
     [ExcludeFromCodeCoverage]
     public partial class DescriptorLabel : Label
@@ -64,8 +64,6 @@ namespace SignalManipulator.UI.Components
 
         protected override void OnCreateControl()
         {
-            base.OnCreateControl();
-
             FormatText();
         }
 

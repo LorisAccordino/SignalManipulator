@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.UI.Components
+﻿namespace SignalManipulator.UI.Components.Labels
 {
     partial class DescriptorLabel
     {

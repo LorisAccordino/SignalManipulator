@@ -20,7 +20,7 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Load(string path) => playback.Load(path);
         public void Play() { if (!IsPlaying) playback.Play(); }
         public void Pause() { if (IsPlaying) playback.Pause(); }
-        public void Stop() { if (IsPlaying) playback.Stop(); }
+        public void Stop() => playback.Stop();
         public void Seek(double time) => Seek(TimeSpan.FromSeconds(time));
         public void Seek(TimeSpan pos) => playback.Seek(pos);
 

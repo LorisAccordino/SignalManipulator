@@ -41,7 +41,7 @@ namespace SignalManipulator.UI.Controls
 
         private void OnUpdate()
         {
-            timeLbl.Text = playback.Info.CurrentTime.ToString(@"mm\:ss\.fff");
+            timeLbl.Time = playback.Info.CurrentTime;
 
             // Update without firing event!
             timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;

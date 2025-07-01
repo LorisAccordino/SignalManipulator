@@ -18,13 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Components\DescriptorLabel.cs">
+    <Compile Update="Components\Labels\DescriptorLabel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Components\Precision\PrecisionControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Components\ValueLabel.cs">
+    <Compile Update="Components\Labels\ValueLabel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Controls\AudioPlayerControl.cs">

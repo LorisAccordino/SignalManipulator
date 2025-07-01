@@ -1,6 +1,6 @@
-﻿namespace SignalManipulator.UI.Components
+﻿namespace SignalManipulator.UI.Components.Labels
 {
-    partial class ValueLabel
+    partial class TimeLabel
     {
         /// <summary>
         /// Variabile di progettazione necessaria.

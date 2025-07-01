@@ -1,5 +1,5 @@
-﻿using SignalManipulator.UI.Helpers;
-using System;
+﻿using SignalManipulator.UI.Components.Labels;
+using SignalManipulator.UI.Helpers;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;

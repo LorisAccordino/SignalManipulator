@@ -1,11 +1,10 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace SignalManipulator.UI.Components
+namespace SignalManipulator.UI.Components.Labels
 {
     [ToolboxItem(false)]
     [ExcludeFromCodeCoverage]
@@ -91,6 +90,7 @@ namespace SignalManipulator.UI.Components
             container.Add(this);
             InitializeComponent();
             AutoSize = false;
+            UpdateText();
         }
     }
 }
