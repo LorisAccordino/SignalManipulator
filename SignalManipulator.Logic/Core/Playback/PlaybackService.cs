@@ -26,10 +26,6 @@ namespace SignalManipulator.Logic.Core.Playback
         public bool PreservePitch { get => timeStretch.PreservePitch; set => timeStretch.PreservePitch = value; }
         public double Volume { get => volumeManager.Volume; set => volumeManager.Volume = value; }
         
-        /*public double Speed { get => 1; set => _ = value; }
-        public bool PreservePitch { get => true; set => _ = value; }
-        public double Volume { get => 1; set => _ = value; }*/
-        
 
         // Events
         public event EventHandler<AudioInfo> LoadCompleted;
@@ -49,7 +45,6 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects.AddEffect<VolumeEffect>();
             timeStretch = effects.GetEffect<RBTimeStretchEffect>(0);
             volumeManager = effects.GetEffect<VolumeEffect>(1);
-            //volumeManager = effects.GetEffect<VolumeEffect>(0);
 
             router.PlaybackStopped += (s, e) => _Stop();
         }
