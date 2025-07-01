@@ -49,10 +49,7 @@ namespace SignalManipulator.UI.Controls
 
         public void OnStarted(object? sender, EventArgs e)
         {
-            timeSlider.Enabled = true;
-            playbackSpeedSlider.Enabled = true;
-            volumeSlider.Enabled = true;
-            pitchCheckBox.Enabled = true;
+            settingsPanel.Enabled = true;
         }
 
         public void OnStopped(object? sender, EventArgs e)
@@ -61,10 +58,7 @@ namespace SignalManipulator.UI.Controls
             playbackSpeedSlider.Value = 1.0;
             pitchCheckBox.CheckState = CheckState.Unchecked;
 
-            timeSlider.Enabled = false;
-            playbackSpeedSlider.Enabled = false;
-            volumeSlider.Enabled = false;
-            pitchCheckBox.Enabled = false;
+            settingsPanel.Enabled = false;
         }
 
         public void OnPlaybackStateChanged(object? sender, bool playing)
