@@ -71,13 +71,11 @@ namespace SignalManipulator.Logic.Providers
                     int read = sourceProvider.Read(sourceBuffer, 0, sourceBuffer.Length);
                     if (read == 0) return samplesWritten; // EOF
 
-                    int stereoFrames = read / 2;
-
-                    sourceBuffer.SplitStereo(leftInput, rightInput, stereoFrames);
+                    sourceBuffer.SplitStereo(leftInput, rightInput, read / 2);
 
                     stretcher.SetTimeRatio(TimeRatio);
                     stretcher.SetPitchScale(PitchRatio);
-                    stretcher.Process(leftInput, rightInput, (uint)stereoFrames, false);
+                    stretcher.Process(leftInput, rightInput, (uint)(read / 2), false);
 
                     while (stretcher.Available() > 0)
                     {
@@ -105,11 +103,9 @@ namespace SignalManipulator.Logic.Providers
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int samplesNeeded = count / 4; // Float = 4 byte
-            float[] temp = new float[samplesNeeded];
-
-            int read = Read(temp, 0, samplesNeeded);
-            Buffer.BlockCopy(temp, 0, buffer, offset, read * 4);
+            float[] samples = new float[count / 4];
+            int read = Read(samples, 0, count / 4);
+            samples.CopyToBytes(buffer, offset, read * 4);
             return read * 4;
         }
     }

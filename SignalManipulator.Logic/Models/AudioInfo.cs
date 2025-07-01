@@ -1,6 +1,5 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Providers;
-using System;
 
 namespace SignalManipulator.Logic.Models
 {

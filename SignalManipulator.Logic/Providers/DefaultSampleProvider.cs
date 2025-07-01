@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
 
 namespace SignalManipulator.Logic.Providers
@@ -10,7 +11,7 @@ namespace SignalManipulator.Logic.Providers
         public int Read(float[] buffer, int offset, int count)
         {
             // It does nothing, write 0 samples in the buffer
-            Array.Clear(buffer, offset, count);
+            buffer.Clear(offset, count);
             return 0;  // No samples read
         }
     }

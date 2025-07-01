@@ -45,9 +45,9 @@ namespace SignalManipulator.Logic.Providers
         public int Read(float[] samples, int offset, int count)
         {
             byte[] buffer = new byte[count * 4];
-            int read = Read(buffer, offset * 4, count * 4);
-            Array.Copy(buffer, samples, count * 4);
-            return read;
+            int read = Read(buffer, 0, count * 4);
+            buffer.CopyToFloats(samples, offset, read / 4);
+            return read / 4;
         }
     }
 }

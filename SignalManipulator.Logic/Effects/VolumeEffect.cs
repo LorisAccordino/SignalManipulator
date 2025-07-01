@@ -1,6 +1,5 @@
 ﻿using NAudio.Wave.SampleProviders;
 using NAudio.Wave;
-using System;
 
 namespace SignalManipulator.Logic.Effects
 {
