@@ -132,8 +132,6 @@ namespace SignalManipulator.UI.Controls
 
         private void RenderPlot()
         {
-            if (!needsRender) return;
-
             lock (lockObject)
             {
                 var navigator = navigatorControl.Navigator;
@@ -141,11 +139,13 @@ namespace SignalManipulator.UI.Controls
                 {
                     navigator.Recalculate();
                     formsPlot.Plot.Axes.SetLimitsX(navigator.Start, navigator.End);
+                    needsRender = true;
                 }
 
-                formsPlot.Refresh();
+                if (needsRender)
+                    formsPlot.Refresh();
             }
-            
+
             needsRender = false;
         }
 

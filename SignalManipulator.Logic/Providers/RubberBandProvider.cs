@@ -1,5 +1,7 @@
 ﻿using NAudio.Wave;
 using RubberBandSharp;
+using SignalManipulator.Logic.AudioMath;
+using System.Diagnostics;
 
 namespace SignalManipulator.Logic.Providers
 {
@@ -59,11 +61,7 @@ namespace SignalManipulator.Logic.Providers
 
                     int stereoFrames = read / 2;
 
-                    for (int i = 0; i < stereoFrames; i++)
-                    {
-                        leftInput[i] = sourceBuffer[i * 2];
-                        rightInput[i] = sourceBuffer[i * 2 + 1];
-                    }
+                    sourceBuffer.SplitStereo(leftInput, rightInput, stereoFrames);
 
                     stretcher.SetTimeRatio(TimeRatio);
                     stretcher.SetPitchScale(PitchRatio);
@@ -89,7 +87,7 @@ namespace SignalManipulator.Logic.Providers
                 buffer[offset + samplesWritten++] = rightBuffer.Dequeue();
             }
 
-            return samplesWritten;
+            return samplesWritten != 0 ? samplesWritten : 1; // Avoid EOF
         }
 
         public int Read(byte[] buffer, int offset, int count)

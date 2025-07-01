@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace SignalManipulator.Logic.AudioMath
 {
@@ -35,7 +34,15 @@ namespace SignalManipulator.Logic.AudioMath
 
         public static void SplitStereo(this float[] stereo, float[] left, float[] right)
         {
-            for (int i = 0, j = 0; i < stereo.Length / 2; i++, j += 2)
+            SplitStereo(stereo, left, right, stereo.Length / 2);
+        }
+
+        public static void SplitStereo(this float[] stereo, float[] left, float[] right, int length)
+        {
+            if (length <= 0 || length > stereo.Length / 2) 
+                throw new ArgumentException(nameof(length));
+
+            for (int i = 0, j = 0; i < length; i++, j += 2)
             {
                 left[i] = stereo[j];
                 right[i] = stereo[j + 1];
@@ -44,7 +51,15 @@ namespace SignalManipulator.Logic.AudioMath
 
         public static void SplitStereo(this double[] stereo, double[] left, double[] right)
         {
-            for (int i = 0, j = 0; i < stereo.Length / 2; i++, j += 2)
+            SplitStereo(stereo, left, right, stereo.Length / 2);
+        }
+
+        public static void SplitStereo(this double[] stereo, double[] left, double[] right, int length)
+        {
+            if (length <= 0 || length > stereo.Length / 2)
+                throw new ArgumentException(nameof(length));
+
+            for (int i = 0, j = 0; i < length; i++, j += 2)
             {
                 left[i] = stereo[j];
                 right[i] = stereo[j + 1];
