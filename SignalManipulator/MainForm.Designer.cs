@@ -52,6 +52,11 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             openAudioToolStripMenuItem = new ToolStripMenuItem();
             saveAudioToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            effectsToolStripMenuItem = new ToolStripMenuItem();
+            plotsToolStripMenuItem = new ToolStripMenuItem();
+            playbackToolStripMenuItem = new ToolStripMenuItem();
+            routingToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
             mainSplitContainer.Panel1.SuspendLayout();
@@ -340,7 +345,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(5, 2, 0, 2);
@@ -367,6 +372,53 @@
             saveAudioToolStripMenuItem.Name = "saveAudioToolStripMenuItem";
             saveAudioToolStripMenuItem.Size = new Size(136, 22);
             saveAudioToolStripMenuItem.Text = "Save audio";
+            // 
+            // viewToolStripMenuItem
+            // 
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { effectsToolStripMenuItem, plotsToolStripMenuItem, playbackToolStripMenuItem, routingToolStripMenuItem });
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new Size(44, 20);
+            viewToolStripMenuItem.Text = "View";
+            // 
+            // effectsToolStripMenuItem
+            // 
+            effectsToolStripMenuItem.Checked = true;
+            effectsToolStripMenuItem.CheckOnClick = true;
+            effectsToolStripMenuItem.CheckState = CheckState.Checked;
+            effectsToolStripMenuItem.Name = "effectsToolStripMenuItem";
+            effectsToolStripMenuItem.Size = new Size(180, 22);
+            effectsToolStripMenuItem.Text = "Effects";
+            effectsToolStripMenuItem.Click += ShowHideEffects;
+            // 
+            // plotsToolStripMenuItem
+            // 
+            plotsToolStripMenuItem.Checked = true;
+            plotsToolStripMenuItem.CheckOnClick = true;
+            plotsToolStripMenuItem.CheckState = CheckState.Checked;
+            plotsToolStripMenuItem.Name = "plotsToolStripMenuItem";
+            plotsToolStripMenuItem.Size = new Size(180, 22);
+            plotsToolStripMenuItem.Text = "Plots";
+            plotsToolStripMenuItem.Click += ShowHidePlots;
+            // 
+            // playbackToolStripMenuItem
+            // 
+            playbackToolStripMenuItem.Checked = true;
+            playbackToolStripMenuItem.CheckOnClick = true;
+            playbackToolStripMenuItem.CheckState = CheckState.Checked;
+            playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
+            playbackToolStripMenuItem.Size = new Size(180, 22);
+            playbackToolStripMenuItem.Text = "Playback";
+            playbackToolStripMenuItem.Click += ShowHidePlayback;
+            // 
+            // routingToolStripMenuItem
+            // 
+            routingToolStripMenuItem.Checked = true;
+            routingToolStripMenuItem.CheckOnClick = true;
+            routingToolStripMenuItem.CheckState = CheckState.Checked;
+            routingToolStripMenuItem.Name = "routingToolStripMenuItem";
+            routingToolStripMenuItem.Size = new Size(180, 22);
+            routingToolStripMenuItem.Text = "Routing";
+            routingToolStripMenuItem.Click += ShowHideRouting;
             // 
             // audioOFD
             // 
@@ -440,5 +492,10 @@
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
         private UI.Controls.SpectrumViewerControl spectrumViewer;
         private UI.Controls.AudioPlayerControl audioPlayer;
+        private ToolStripMenuItem viewToolStripMenuItem;
+        private ToolStripMenuItem effectsToolStripMenuItem;
+        private ToolStripMenuItem plotsToolStripMenuItem;
+        private ToolStripMenuItem playbackToolStripMenuItem;
+        private ToolStripMenuItem routingToolStripMenuItem;
     }
 }
