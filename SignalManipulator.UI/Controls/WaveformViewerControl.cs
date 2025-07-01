@@ -40,18 +40,27 @@ namespace SignalManipulator.UI.Controls
             if (!DesignModeHelper.IsDesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
-                InitializeEvents();
                 InitializePlot();
+                InitializeEvents();
             }
         }
 
         private void InitializeEvents()
         {
             audioEventDispatcher.OnLoad += (_, info) => { sampleRate = info.SampleRate; ConfigureBuffers(); };
-            audioEventDispatcher.OnStopped += (_, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
-            audioEventDispatcher.WaveformReady += (_, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
+            //audioEventDispatcher.OnStopped += (_, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
+            //audioEventDispatcher.WaveformReady += ProcessFrame;
 
             UIUpdateService.Instance.Register(RenderPlot);
+
+            UIUpdateService.Instance.RegisterOnStart(() => audioEventDispatcher.WaveformReady += ProcessFrame);
+            UIUpdateService.Instance.RegisterOnStart(() => EnableUI(true));
+
+            UIUpdateService.Instance.RegisterOnStop(() => audioEventDispatcher.WaveformReady -= ProcessFrame);
+            UIUpdateService.Instance.RegisterOnStop(ClearBuffers);
+            UIUpdateService.Instance.RegisterOnStop(ResetUI);
+
+            UIUpdateService.Instance.ForceStop();
 
             secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
             secNum.Maximum = MAX_WINDOWS_SECONDS;
@@ -93,7 +102,8 @@ namespace SignalManipulator.UI.Controls
 
         private void ResetUI()
         {
-            monoCheckBox.CheckState = CheckState.Checked;
+            // Checkbox and numeric up-down
+            monoCheckBox.CheckState = CheckState.Unchecked;
             secNum.Value = 1;
 
             // Navigator
@@ -169,29 +179,21 @@ namespace SignalManipulator.UI.Controls
             needsRender = true;
         }
 
-        private void ProcessPendingFrames()
+        private void ProcessFrame(object? sender, WaveformFrame frame)
         {
-            bool updated = false;
-
-            while (pendingFrames.TryDequeue(out var frame))
+            lock (lockObject)
             {
-                updated = true;
+                // Decimate samples for each channel/signal
+                DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
+                DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
+                DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
 
-                lock (lockObject)
-                {
-                    // Decimate samples for each channel/signal
-                    DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
-                    DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
-                    DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
-
-                    stereoBuf.CopyTo(stereoArr, 0);
-                    leftBuf.CopyTo(leftArr, 0);
-                    rightBuf.CopyTo(rightArr, 0);
-                }
+                stereoBuf.CopyTo(stereoArr, 0);
+                leftBuf.CopyTo(leftArr, 0);
+                rightBuf.CopyTo(rightArr, 0);
             }
 
-            if (updated) 
-                needsRender = true;
+            needsRender = true;
         }
 
         private void DecimateSamples(double[] source, CircularBuffer<double> target, int step)

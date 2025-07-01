@@ -1,6 +1,6 @@
 ﻿using SignalManipulator.Logic.Core;
 using System.Collections.Concurrent;
-using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace SignalManipulator.UI.Misc
 {
@@ -17,47 +17,35 @@ namespace SignalManipulator.UI.Misc
             }
         }
 
-        private readonly System.Windows.Forms.Timer timer;
-        private System.Windows.Forms.Timer? delayedStopTimer = null;
-        private bool isDelayedStopScheduled = false;
+        private readonly Timer timer;
+        private readonly List<Action> subscribers = new();
+        private readonly ConcurrentQueue<Action> oneShotQueue = new();
 
-        private readonly List<Action> subscribers = new List<Action>();
-        private readonly ConcurrentQueue<Action> oneShotQueue = new ConcurrentQueue<Action>();
+        private readonly List<Action> onStartActions = new();
+        private readonly List<Action> onStopActions = new();
+
+        private bool isTimerRunning = false;
 
         private UIUpdateService()
         {
-            timer = new System.Windows.Forms.Timer { Interval = AudioEngine.TARGET_FPS };
+            timer = new Timer { Interval = AudioEngine.TARGET_FPS };
             timer.Tick += (s, e) => Update();
         }
 
         private void Update()
         {
-            // Execute one-shot queued action
+            // One-shot queue
             while (oneShotQueue.TryDequeue(out var action))
             {
-                try
-                {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    // Log errors
-                    Console.WriteLine($"[UIUpdateService] One-shot action failed: {ex}");
-                }
+                try { action(); }
+                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] One-shot failed: {ex}"); }
             }
 
-            // Execute every normal subscriber
+            // Periodic subscribers
             foreach (var cb in subscribers)
             {
-                try
-                {
-                    cb();
-                }
-                catch (Exception ex)
-                {
-                    // Log errors
-                    Console.WriteLine($"[UIUpdateService] Subscriber failed: {ex}");
-                }
+                try { cb(); }
+                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] Subscriber failed: {ex}"); }
             }
         }
 
@@ -84,15 +72,59 @@ namespace SignalManipulator.UI.Misc
             timer.Interval = (int)(1000.0 / fps);
         }
 
-        public void Start() => timer.Start();
+        public void Start()
+        {
+            if (isTimerRunning) return;
+
+            foreach (var action in onStartActions)
+            {
+                try { action(); }
+                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] OnStart failed: {ex}"); }
+            }
+
+            ForceUpdate();
+            timer.Start();
+            isTimerRunning = true;
+        }
 
         public void Stop()
         {
+            if (!isTimerRunning) return;
+
+            foreach (var action in onStopActions)
+            {
+                try { action(); }
+                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] OnStop failed: {ex}"); }
+            }
+
             timer.Stop();
             ForceUpdate();
-            isDelayedStopScheduled = false;
+
+            isTimerRunning = false;
         }
 
+        public void ForceStart() { isTimerRunning = false; Start(); }
         public void ForceUpdate() => Update();
+        public void ForceStop() { isTimerRunning = true; Stop(); }
+
+
+        // Extra: Register actions for lifecycle hooks
+        public void RegisterOnStart(Action action)
+        {
+            if (action != null && !onStartActions.Contains(action))
+                onStartActions.Add(action);
+        }
+
+        public void RegisterOnStop(Action action)
+        {
+            if (action != null && !onStopActions.Contains(action))
+                onStopActions.Add(action);
+        }
+
+        public void ClearHooks()
+        {
+            onStartActions.Clear();
+            onStopActions.Clear();
+        }
     }
 }

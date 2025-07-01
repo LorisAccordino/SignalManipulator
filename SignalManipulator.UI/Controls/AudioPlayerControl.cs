@@ -68,8 +68,8 @@ namespace SignalManipulator.UI.Controls
 
         private void stopBtn_Click(object sender, EventArgs e)
         {
-            playback.Stop();
             UIUpdateService.Instance.Stop();
+            playback.Stop();
         }
     }
 }
