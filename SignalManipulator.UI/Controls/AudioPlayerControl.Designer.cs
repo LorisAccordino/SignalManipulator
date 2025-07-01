@@ -56,7 +56,7 @@ namespace SignalManipulator.UI.Controls
             stopBtn.TabIndex = 2;
             stopBtn.Text = "Stop";
             stopBtn.UseVisualStyleBackColor = true;
-            stopBtn.Click += stopBtn_Click;
+            stopBtn.Click += OnStop;
             // 
             // playBtn
             // 
@@ -68,7 +68,7 @@ namespace SignalManipulator.UI.Controls
             playBtn.TabIndex = 3;
             playBtn.Text = "Play";
             playBtn.UseVisualStyleBackColor = true;
-            playBtn.Click += playBtn_Click;
+            playBtn.Click += OnPlay;
             // 
             // pauseBtn
             // 
@@ -81,7 +81,7 @@ namespace SignalManipulator.UI.Controls
             pauseBtn.Text = "Pause";
             pauseBtn.UseVisualStyleBackColor = true;
             pauseBtn.Visible = false;
-            pauseBtn.Click += pauseBtn_Click;
+            pauseBtn.Click += OnPause;
             // 
             // waveFmtLbl
             // 

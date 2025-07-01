@@ -3,7 +3,6 @@ using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
@@ -84,10 +83,10 @@ namespace SignalManipulator.UI.Controls
             timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
         }
 
-        private void playBtn_Click(object sender, EventArgs e) => playback.Play();
+        private void OnPlay(object sender, EventArgs e) => playback.Play();
 
-        private void pauseBtn_Click(object sender, EventArgs e) => playback.Pause();
+        private void OnPause(object sender, EventArgs e) => playback.Pause();
 
-        private void stopBtn_Click(object sender, EventArgs e) => playback.Stop();
+        private void OnStop(object sender, EventArgs e) => playback.Stop();
     }
 }
