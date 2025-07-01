@@ -91,6 +91,26 @@ namespace SignalManipulator.UI.Controls
             ClearBuffers();  // Start from scratch
         }
 
+        private void ResetUI()
+        {
+            monoCheckBox.CheckState = CheckState.Checked;
+            secNum.Value = 1;
+
+            // Navigator
+            navigatorControl.Navigator.SetZoom(1);
+            navigatorControl.Navigator.SetPan(0);
+
+            // Disable UI
+            EnableUI(false);
+        }
+
+        private void EnableUI(bool enabled)
+        {
+            monoCheckBox.Enabled = enabled;
+            secNum.Enabled = enabled;
+            navigatorControl.Enabled = enabled;
+        }
+
         private void ConfigureBuffers()
         {
             // Init buffers
