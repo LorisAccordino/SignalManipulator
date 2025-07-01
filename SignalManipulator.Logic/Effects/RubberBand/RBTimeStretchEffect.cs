@@ -36,14 +36,15 @@ namespace SignalManipulator.Logic.Effects.RubberBand
         public RBTimeStretchEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
             variSpeed = new VariSpeedEffect(sourceProvider);
-            this.sourceProvider = variSpeed;
+            SetSource(sourceProvider);
             Speed = 1.0f;
         }
 
         public override void SetSource(ISampleProvider newSourceProvider)
         {
-            variSpeed = new VariSpeedEffect(newSourceProvider);
-            base.SetSource(variSpeed);
+            //variSpeed = new VariSpeedEffect(newSourceProvider);
+            //base.SetSource(variSpeed);
+            base.SetSource(newSourceProvider);
         }
 
         public override int Read(float[] samples, int offset, int count)

@@ -34,7 +34,18 @@ namespace SignalManipulator.Logic.Providers
             RebuildResampler();
         }
 
-        public void RebuildResampler()
+        public void Reset()
+        {
+            if (source is AudioFileReader afr)
+                afr.Position = 0;
+            else if (source is ISampleProvider sp && sp is IWaveProvider wp && wp is WaveStream ws)
+                ws.Position = 0;
+
+            RebuildResampler();
+        }
+
+
+        private void RebuildResampler()
         {
             int newRate = (int)(source.WaveFormat.SampleRate * speedRatio);
             resampler = new WdlResamplingSampleProvider(source, newRate);
@@ -42,7 +53,6 @@ namespace SignalManipulator.Logic.Providers
 
         public int Read(float[] buffer, int offset, int count)
         {
-            // semplicemente inoltra al resampler
             return resampler.Read(buffer, offset, count);
         }
     }

@@ -8,12 +8,12 @@ namespace SignalManipulator.Logic.Providers
     {
         private readonly ISampleProvider sourceProvider;
         private readonly WaveFormat waveFormat;
-        private readonly RubberBandStretcherStereo stretcher;
+        private RubberBandStretcherStereo stretcher;
         private readonly Queue<float> leftBuffer = new();
         private readonly Queue<float> rightBuffer = new();
         private readonly int blockSize = 512; // Size for Process/Retrieve calls
-        private readonly float[] leftInput;
-        private readonly float[] rightInput;
+        private float[] leftInput;
+        private float[] rightInput;
         private float[] sourceBuffer;
 
         public double TimeRatio { get; set; } = 1.0;
@@ -30,6 +30,12 @@ namespace SignalManipulator.Logic.Providers
             if (waveFormat.Channels != 2)
                 throw new NotSupportedException("RubberBandProvider currently only supports stereo audio");
 
+            Reset();
+        }
+
+        public void Reset()
+        {
+            // Recreate the stretcher from scratch
             stretcher = new RubberBandStretcherStereo(
                 waveFormat.SampleRate,
                 RubberBandStretcher.Options.ProcessRealTime |
@@ -39,12 +45,17 @@ namespace SignalManipulator.Logic.Providers
                 RubberBandStretcher.Options.StretchElastic |
                 RubberBandStretcher.Options.TransientsSmooth);
 
+            // Set initial TimeRatio and PitchRatio
             stretcher.SetTimeRatio(TimeRatio);
             stretcher.SetPitchScale(PitchRatio);
 
             leftInput = new float[blockSize];
             rightInput = new float[blockSize];
             sourceBuffer = new float[blockSize * 2]; // Stereo
+
+            // Clear output buffers
+            leftBuffer.Clear();
+            rightBuffer.Clear();
         }
 
         public int Read(float[] buffer, int offset, int count)
@@ -97,18 +108,6 @@ namespace SignalManipulator.Logic.Providers
             int read = Read(temp, 0, samplesNeeded);
             Buffer.BlockCopy(temp, 0, buffer, offset, read * 4);
             return read * 4;
-        }
-
-        public void ClearBuffers()
-        {
-            // Clear input buffers
-            Array.Clear(sourceBuffer);
-            Array.Clear(leftInput);
-            Array.Clear(rightInput);
-
-            // Clear output buffers
-            leftBuffer.Clear();
-            rightBuffer.Clear();
         }
     }
 }
