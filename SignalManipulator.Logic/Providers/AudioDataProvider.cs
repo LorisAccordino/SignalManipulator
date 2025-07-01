@@ -1,7 +1,6 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.AudioMath;
-using RubberBandSharp;
 
 namespace SignalManipulator.Logic.Providers
 {

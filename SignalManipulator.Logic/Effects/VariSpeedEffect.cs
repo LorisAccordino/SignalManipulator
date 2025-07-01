@@ -8,6 +8,7 @@ namespace SignalManipulator.Logic.Effects
         public override string Name => "VariSpeed";
 
         private ResampleSpeedProvider resampleProvider;
+        private readonly object lockObject = new object();
 
         public double Speed
         {
@@ -17,24 +18,24 @@ namespace SignalManipulator.Logic.Effects
 
         public VariSpeedEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
-            resampleProvider = new ResampleSpeedProvider(sourceProvider);
+            SetSource(sourceProvider);
             Speed = 1.0f;
         }
 
         public override void SetSource(ISampleProvider newSourceProvider)
         {
             base.SetSource(newSourceProvider);
-            resampleProvider = new ResampleSpeedProvider(sourceProvider);
+            lock (lockObject) resampleProvider = new ResampleSpeedProvider(sourceProvider);
         }
 
         public override int Read(float[] samples, int offset, int count)
         {
-            return resampleProvider.Read(samples, offset, count);
+            lock (lockObject) return resampleProvider.Read(samples, offset, count);
         }
 
         public override void Reset()
         {
-            resampleProvider.RebuildResampler();
+            lock (lockObject) resampleProvider.RebuildResampler();
         }
     }
 }

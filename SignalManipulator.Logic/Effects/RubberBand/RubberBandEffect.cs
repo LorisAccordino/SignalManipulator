@@ -6,26 +6,27 @@ namespace SignalManipulator.Logic.Effects.RubberBand
     public abstract class RubberBandEffect : AudioEffect
     {
         protected RubberBandProvider rubberBandProvider;
+        private readonly object lockObject = new object();
 
         public RubberBandEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
-            rubberBandProvider = new RubberBandProvider(sourceProvider);
+            SetSource(sourceProvider);
         }
 
         public override void SetSource(ISampleProvider newSourceProvider)
         {
             base.SetSource(newSourceProvider);
-            rubberBandProvider = new RubberBandProvider(newSourceProvider);
+            lock (lockObject) rubberBandProvider = new RubberBandProvider(sourceProvider);
         }
 
         public override int Read(float[] samples, int offset, int count)
         {
-            return rubberBandProvider.Read(samples, offset, count);
+            lock (lockObject) return rubberBandProvider.Read(samples, offset, count);
         }
 
         public override void Reset()
         {
-            rubberBandProvider.ClearBuffers();
+            lock (lockObject) rubberBandProvider.ClearBuffers();
         }
     }
 }
