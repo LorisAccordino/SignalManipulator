@@ -84,18 +84,10 @@ namespace SignalManipulator.UI.Controls
             timeSlider.Maximum = (int)Math.Ceiling(playback.Info.TotalTime.TotalSeconds);
         }
 
-        private void playBtn_Click(object sender, EventArgs e)
-        {
-            UIUpdateService.Instance.Start();
-            playback.Play();
-        }
+        private void playBtn_Click(object sender, EventArgs e) => playback.Play();
 
         private void pauseBtn_Click(object sender, EventArgs e) => playback.Pause();
 
-        private void stopBtn_Click(object sender, EventArgs e)
-        {
-            UIUpdateService.Instance.Stop();
-            playback.Stop();
-        }
+        private void stopBtn_Click(object sender, EventArgs e) => playback.Stop();
     }
 }

@@ -21,11 +21,6 @@ namespace SignalManipulator.UI.Misc
         private readonly List<Action> subscribers = new();
         private readonly ConcurrentQueue<Action> oneShotQueue = new();
 
-        private readonly List<Action> onStartActions = new();
-        private readonly List<Action> onStopActions = new();
-
-        private bool isTimerRunning = false;
-
         private UIUpdateService()
         {
             timer = new Timer { Interval = AudioEngine.TARGET_FPS };
@@ -72,59 +67,6 @@ namespace SignalManipulator.UI.Misc
             timer.Interval = (int)(1000.0 / fps);
         }
 
-        public void Start()
-        {
-            if (isTimerRunning) return;
-
-            foreach (var action in onStartActions)
-            {
-                try { action(); }
-                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] OnStart failed: {ex}"); }
-            }
-
-            ForceUpdate();
-            timer.Start();
-            isTimerRunning = true;
-        }
-
-        public void Stop()
-        {
-            if (!isTimerRunning) return;
-
-            foreach (var action in onStopActions)
-            {
-                try { action(); }
-                catch (Exception ex) { Console.WriteLine($"[UIUpdateService] OnStop failed: {ex}"); }
-            }
-
-            timer.Stop();
-            ForceUpdate();
-
-            isTimerRunning = false;
-        }
-
-        public void ForceStart() { isTimerRunning = false; Start(); }
         public void ForceUpdate() => Update();
-        public void ForceStop() { isTimerRunning = true; Stop(); }
-
-
-        // Extra: Register actions for lifecycle hooks
-        public void RegisterOnStart(Action action)
-        {
-            if (action != null && !onStartActions.Contains(action))
-                onStartActions.Add(action);
-        }
-
-        public void RegisterOnStop(Action action)
-        {
-            if (action != null && !onStopActions.Contains(action))
-                onStopActions.Add(action);
-        }
-
-        public void ClearHooks()
-        {
-            onStartActions.Clear();
-            onStopActions.Clear();
-        }
     }
 }
