@@ -1,6 +1,6 @@
-﻿using SignalManipulator.Logic.AudioMath;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+using SignalManipulator.Logic.AudioMath.Smoothing;
 
 public class SmootherSMA : Smoother
 {

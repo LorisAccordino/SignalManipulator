@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SignalManipulator.Logic.AudioMath
+namespace SignalManipulator.Logic.AudioMath.Smoothing
 {
     public class SmootherEMA : Smoother
     {

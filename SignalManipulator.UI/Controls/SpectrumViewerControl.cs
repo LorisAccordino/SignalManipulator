@@ -1,12 +1,11 @@
 ﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
-using SignalManipulator.Logic.AudioMath;
+using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
@@ -127,6 +126,9 @@ namespace SignalManipulator.UI.Controls
                 // Smooth values
                 double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
                 double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
+
+                // Clamp values
+
                 smaSmoothed.CopyTo(magnitudes, 0);
             }
 
