@@ -10,6 +10,7 @@ namespace SignalManipulator.Logic.Core.Playback
         void Play();
         void Pause();
         void Stop();
+        void Seek(double time);
         void Seek(TimeSpan position);
 
         // State properties

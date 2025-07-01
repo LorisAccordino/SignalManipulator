@@ -79,7 +79,6 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public void _Stop()
         {
-            //router.Dispose();
             source.Seek(TimeSpan.Zero);
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
