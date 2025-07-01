@@ -7,6 +7,7 @@ using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
@@ -57,14 +58,53 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (s, info) => { sampleRate = info.SampleRate; UpdateDataPeriod(); };
-            audioEventDispatcher.OnStopped += (s, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
-            audioEventDispatcher.WaveformReady += (s, frame) => { pendingFrames.Enqueue(frame); ProcessPendingFrames(); };
+            // Main events
+            audioEventDispatcher.OnLoad += OnLoad;
+            audioEventDispatcher.OnStarted += OnStarted;
+            audioEventDispatcher.OnStopped += OnStopped;
 
+            // Update event
             UIUpdateService.Instance.Register(RenderPlot);
 
+            // Force stop event to init purpose
+            OnStopped(this, EventArgs.Empty);
+
+            // Other events
             smaNum.ValueChanged += (s, e) => { smootherSMA.SetHistoryLength((int)smaNum.Value); };
             emaNum.ValueChanged += (s, e) => { smootherEMA.SetAlpha((double)emaNum.Value); };
+        }
+
+        public void OnLoad(object? sender, AudioInfo info)
+        {
+            sampleRate = info.SampleRate;
+            UpdateDataPeriod();
+        }
+
+        public void OnStarted(object? sender, EventArgs e)
+        {
+            audioEventDispatcher.WaveformReady += ProcessFrame;
+            settingsPanel.Enabled = true; // Enable UI
+        }
+
+        public void OnStopped(object? sender, EventArgs e)
+        {
+            audioEventDispatcher.WaveformReady -= ProcessFrame;
+            ClearBuffers();
+            ResetUI();
+        }
+
+        private void ResetUI()
+        {
+            // Checkbox and numeric up-down
+            smaNum.Value = 1;
+            emaNum.Value = 0M;
+
+            // Navigator
+            navigator.Zoom = 1;
+            navigator.Pan = -1;
+
+            // Disable UI
+            settingsPanel.Enabled = false;
         }
 
         private void InitializePlot()
@@ -104,21 +144,12 @@ namespace SignalManipulator.UI.Controls
             needsRender = true;
         }
 
-        private void ProcessPendingFrames()
+        private void ProcessFrame(object? sender, WaveformFrame frame)
         {
-            bool updated = false;
-
             lock (lockObject)
             {
-                while (pendingFrames.TryDequeue(out var frame))
-                {
-                    updated = true;
-
-                    foreach (var sample in frame.DoubleMono)
-                        audioBuffer.Add(sample);
-                }
-
-                if (!updated) return;
+                foreach (var sample in frame.DoubleMono)
+                    audioBuffer.Add(sample);
 
                 // Get magnitudes from FFT
                 var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);

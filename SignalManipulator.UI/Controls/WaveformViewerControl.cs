@@ -15,12 +15,15 @@ namespace SignalManipulator.UI.Controls
     [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : UserControl
     {
+        // References
+        private IAudioEventDispatcher audioEventDispatcher;
+        private UIUpdateService UIupdateService;
+
         // Window config
         private const int MAX_WINDOWS_SECONDS = 10;       // Maximum limit
         private int windowSeconds = 1;                    // Current shown seconds
 
         // Audio & buffer
-        private IAudioEventDispatcher audioEventDispatcher;
         private readonly ConcurrentQueue<WaveformFrame> pendingFrames = new ConcurrentQueue<WaveformFrame>();
         private int sampleRate = AudioEngine.SAMPLE_RATE;
         private readonly object lockObject = new object();
@@ -40,6 +43,8 @@ namespace SignalManipulator.UI.Controls
             if (!DesignModeHelper.IsDesignMode)
             {
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
+                UIupdateService = UIUpdateService.Instance;
+
                 InitializePlot();
                 InitializeEvents();
             }
@@ -47,24 +52,54 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializeEvents()
         {
-            audioEventDispatcher.OnLoad += (_, info) => { sampleRate = info.SampleRate; ConfigureBuffers(); };
-            //audioEventDispatcher.OnStopped += (_, e) => { ClearBuffers(); UIUpdateService.Instance.ForceUpdate(); };
-            //audioEventDispatcher.WaveformReady += ProcessFrame;
+            // Main events
+            audioEventDispatcher.OnLoad += OnLoad;
+            audioEventDispatcher.OnStarted += OnStarted;
+            audioEventDispatcher.OnStopped += OnStopped;
 
-            UIUpdateService.Instance.Register(RenderPlot);
+            // Update event
+            UIupdateService.Register(RenderPlot);
 
-            UIUpdateService.Instance.RegisterOnStart(() => audioEventDispatcher.WaveformReady += ProcessFrame);
-            UIUpdateService.Instance.RegisterOnStart(() => EnableUI(true));
+            // Force stop event to init purpose
+            OnStopped(this, EventArgs.Empty);
 
-            UIUpdateService.Instance.RegisterOnStop(() => audioEventDispatcher.WaveformReady -= ProcessFrame);
-            UIUpdateService.Instance.RegisterOnStop(ClearBuffers);
-            UIUpdateService.Instance.RegisterOnStop(ResetUI);
-
-            UIUpdateService.Instance.ForceStop();
-
+            // Other events
             secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
             secNum.Maximum = MAX_WINDOWS_SECONDS;
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
+        }
+
+        public void OnLoad(object? sender, AudioInfo info)
+        {
+            sampleRate = info.SampleRate; 
+            ConfigureBuffers();
+        }
+
+        public void OnStarted(object? sender, EventArgs e)
+        {
+            audioEventDispatcher.WaveformReady += ProcessFrame;
+            settingsPanel.Enabled = true; // Enable UI
+        }
+
+        public void OnStopped(object? sender, EventArgs e)
+        {
+            audioEventDispatcher.WaveformReady -= ProcessFrame;
+            ClearBuffers();
+            ResetUI();
+        }
+
+        private void ResetUI()
+        {
+            // Checkbox and numeric up-down
+            monoCheckBox.CheckState = CheckState.Unchecked;
+            secNum.Value = 1;
+
+            // Navigator
+            navigator.Zoom = 1;
+            navigator.Pan = 0;
+
+            // Disable UI
+            settingsPanel.Enabled = false;
         }
 
         private void InitializePlot()
@@ -98,27 +133,6 @@ namespace SignalManipulator.UI.Controls
             // Final setups
             ToggleStreams(); // Hide or show streams
             ClearBuffers();  // Start from scratch
-        }
-
-        private void ResetUI()
-        {
-            // Checkbox and numeric up-down
-            monoCheckBox.CheckState = CheckState.Unchecked;
-            secNum.Value = 1;
-
-            // Navigator
-            navigator.Zoom = 1;
-            navigator.Pan = 0;
-
-            // Disable UI
-            EnableUI(false);
-        }
-
-        private void EnableUI(bool enabled)
-        {
-            monoCheckBox.Enabled = enabled;
-            secNum.Enabled = enabled;
-            navigator.Enabled = enabled;
         }
 
         private void ConfigureBuffers()

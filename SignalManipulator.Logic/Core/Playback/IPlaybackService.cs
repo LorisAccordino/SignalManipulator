@@ -15,6 +15,7 @@ namespace SignalManipulator.Logic.Core.Playback
 
         // Events
         event EventHandler<AudioInfo> LoadCompleted;
+        event EventHandler OnStarted;
         event EventHandler OnResume;
         event EventHandler OnPaused;
         event EventHandler OnStopped;

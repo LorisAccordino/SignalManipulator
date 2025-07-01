@@ -29,6 +29,7 @@ namespace SignalManipulator.Logic.Core.Playback
 
         // Events
         public event EventHandler<AudioInfo> LoadCompleted;
+        public event EventHandler OnStarted;
         public event EventHandler OnResume;
         public event EventHandler OnPaused;
         public event EventHandler OnStopped;
@@ -60,6 +61,9 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public void Play()
         {
+            if (router.CurrentDevice.PlaybackState == PlaybackState.Stopped) 
+                OnStarted?.Invoke(this, EventArgs.Empty);
+
             router.CurrentDevice.Play();
             OnResume?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, true);

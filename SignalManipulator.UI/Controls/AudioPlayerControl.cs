@@ -29,21 +29,53 @@ namespace SignalManipulator.UI.Controls
 
         private void InitializePlaybackEvents()
         {
+            // Main events
+            audioEventDispatcher.OnStarted += OnStarted;
+            audioEventDispatcher.OnStopped += OnStopped;
+            audioEventDispatcher.OnPlaybackStateChanged += OnPlaybackStateChanged;
+
+            // Update event
             UIUpdateService.Instance.Register(OnUpdate);
 
-            audioEventDispatcher.OnPlaybackStateChanged += (s, playing) => { playBtn.Visible = !playing; pauseBtn.Visible = playing; };
+            // Force stop event to init purpose
+            OnStopped(this, EventArgs.Empty);
 
+            // Other events
             playbackSpeedSlider.ValueChanged += (s, speed) => playback.PlaybackSpeed = speed;
             timeSlider.ValueChanged += (s, time) => playback.Seek(time);
             volumeSlider.ValueChanged += (s, volume) => playback.Volume = volume;
             pitchCheckBox.CheckedChanged += (s, e) => playback.PreservePitch = pitchCheckBox.Checked;
         }
 
+        public void OnStarted(object? sender, EventArgs e)
+        {
+            timeSlider.Enabled = true;
+            playbackSpeedSlider.Enabled = true;
+            volumeSlider.Enabled = true;
+            pitchCheckBox.Enabled = true;
+        }
+
+        public void OnStopped(object? sender, EventArgs e)
+        {
+            volumeSlider.Value = 1.0;
+            playbackSpeedSlider.Value = 1.0;
+            pitchCheckBox.CheckState = CheckState.Unchecked;
+
+            timeSlider.Enabled = false;
+            playbackSpeedSlider.Enabled = false;
+            volumeSlider.Enabled = false;
+            pitchCheckBox.Enabled = false;
+        }
+
+        public void OnPlaybackStateChanged(object? sender, bool playing)
+        {
+            playBtn.Visible = !playing; 
+            pauseBtn.Visible = playing;
+        }
+
         private void OnUpdate()
         {
             timeLbl.Time = playback.Info.CurrentTime;
-
-            // Update without firing event!
             timeSlider.Value = (int)playback.Info.CurrentTime.TotalSeconds;
         }
 

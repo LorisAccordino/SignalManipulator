@@ -30,14 +30,14 @@
         {
             formsPlot = new ScottPlot.WinForms.FormsPlot();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            panel1 = new System.Windows.Forms.Panel();
+            settingsPanel = new System.Windows.Forms.Panel();
             navigator = new Misc.ZoomPanControl();
             secLbl = new System.Windows.Forms.Label();
             secNum = new System.Windows.Forms.NumericUpDown();
             monoCheckBox = new System.Windows.Forms.CheckBox();
             zoomLbl = new System.Windows.Forms.Label();
             tableLayoutPanel1.SuspendLayout();
-            panel1.SuspendLayout();
+            settingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)secNum).BeginInit();
             SuspendLayout();
             // 
@@ -55,7 +55,7 @@
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(panel1, 0, 1);
+            tableLayoutPanel1.Controls.Add(settingsPanel, 0, 1);
             tableLayoutPanel1.Controls.Add(formsPlot, 0, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -67,30 +67,33 @@
             tableLayoutPanel1.Size = new System.Drawing.Size(653, 374);
             tableLayoutPanel1.TabIndex = 1;
             // 
-            // panel1
+            // settingsPanel
             // 
-            panel1.BackColor = System.Drawing.SystemColors.Control;
-            panel1.Controls.Add(navigator);
-            panel1.Controls.Add(secLbl);
-            panel1.Controls.Add(secNum);
-            panel1.Controls.Add(monoCheckBox);
-            panel1.Controls.Add(zoomLbl);
-            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            panel1.Location = new System.Drawing.Point(4, 302);
-            panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(645, 69);
-            panel1.TabIndex = 2;
+            settingsPanel.BackColor = System.Drawing.SystemColors.Control;
+            settingsPanel.Controls.Add(navigator);
+            settingsPanel.Controls.Add(secLbl);
+            settingsPanel.Controls.Add(secNum);
+            settingsPanel.Controls.Add(monoCheckBox);
+            settingsPanel.Controls.Add(zoomLbl);
+            settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            settingsPanel.Location = new System.Drawing.Point(4, 302);
+            settingsPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            settingsPanel.Name = "settingsPanel";
+            settingsPanel.Size = new System.Drawing.Size(645, 69);
+            settingsPanel.TabIndex = 2;
             // 
-            // navigatorControl
+            // navigator
             // 
             navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             navigator.BackColor = System.Drawing.SystemColors.Control;
+            navigator.Capacity = 1;
             navigator.Location = new System.Drawing.Point(1, 5);
             navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            navigator.Name = "navigatorControl";
+            navigator.Name = "navigator";
+            navigator.Pan = 0D;
             navigator.Size = new System.Drawing.Size(532, 61);
             navigator.TabIndex = 10;
+            navigator.Zoom = 1D;
             navigator.ZoomMax = 100D;
             navigator.ZoomMin = 1D;
             navigator.ZoomPrecision = 0.1D;
@@ -148,8 +151,8 @@
             Name = "WaveformViewerControl";
             Size = new System.Drawing.Size(653, 374);
             tableLayoutPanel1.ResumeLayout(false);
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            settingsPanel.ResumeLayout(false);
+            settingsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)secNum).EndInit();
             ResumeLayout(false);
         }
@@ -159,7 +162,7 @@
         private ScottPlot.WinForms.FormsPlot formsPlot;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label zoomLbl;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel settingsPanel;
         private System.Windows.Forms.CheckBox monoCheckBox;
         private System.Windows.Forms.NumericUpDown secNum;
         private System.Windows.Forms.Label secLbl;

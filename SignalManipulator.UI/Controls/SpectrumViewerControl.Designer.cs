@@ -30,7 +30,7 @@
         {
             formsPlot = new ScottPlot.WinForms.FormsPlot();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            settingsPanel = new System.Windows.Forms.TableLayoutPanel();
             groupBox2 = new System.Windows.Forms.GroupBox();
             smaLbl = new System.Windows.Forms.Label();
             emaNum = new System.Windows.Forms.NumericUpDown();
@@ -38,7 +38,7 @@
             smaNum = new System.Windows.Forms.NumericUpDown();
             navigator = new Misc.ZoomPanControl();
             tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
+            settingsPanel.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)emaNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smaNum).BeginInit();
@@ -59,7 +59,7 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(formsPlot, 0, 0);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Controls.Add(settingsPanel, 0, 1);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -70,21 +70,21 @@
             tableLayoutPanel1.Size = new System.Drawing.Size(834, 351);
             tableLayoutPanel1.TabIndex = 1;
             // 
-            // tableLayoutPanel2
+            // settingsPanel
             // 
-            tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
-            tableLayoutPanel2.Controls.Add(groupBox2, 1, 0);
-            tableLayoutPanel2.Controls.Add(navigator, 0, 0);
-            tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel2.Location = new System.Drawing.Point(4, 267);
-            tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new System.Drawing.Size(826, 81);
-            tableLayoutPanel2.TabIndex = 2;
+            settingsPanel.ColumnCount = 2;
+            settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
+            settingsPanel.Controls.Add(groupBox2, 1, 0);
+            settingsPanel.Controls.Add(navigator, 0, 0);
+            settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            settingsPanel.Location = new System.Drawing.Point(4, 267);
+            settingsPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            settingsPanel.Name = "settingsPanel";
+            settingsPanel.RowCount = 1;
+            settingsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            settingsPanel.Size = new System.Drawing.Size(826, 81);
+            settingsPanel.TabIndex = 2;
             // 
             // groupBox2
             // 
@@ -148,14 +148,17 @@
             smaNum.TabIndex = 5;
             smaNum.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
-            // navigatorControl
+            // navigator
             // 
             navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            navigator.Capacity = 1;
             navigator.Location = new System.Drawing.Point(5, 17);
             navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            navigator.Name = "navigatorControl";
+            navigator.Name = "navigator";
+            navigator.Pan = -1D;
             navigator.Size = new System.Drawing.Size(675, 61);
             navigator.TabIndex = 1;
+            navigator.Zoom = 1D;
             navigator.ZoomMax = 20D;
             navigator.ZoomMin = 1D;
             navigator.ZoomPrecision = 0.01D;
@@ -169,7 +172,7 @@
             Name = "SpectrumViewerControl";
             Size = new System.Drawing.Size(834, 351);
             tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel2.ResumeLayout(false);
+            settingsPanel.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)emaNum).EndInit();
@@ -182,7 +185,7 @@
         private ScottPlot.WinForms.FormsPlot formsPlot;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Misc.ZoomPanControl navigator;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel settingsPanel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label smaLbl;
         private System.Windows.Forms.NumericUpDown emaNum;
