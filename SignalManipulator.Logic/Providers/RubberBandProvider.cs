@@ -64,10 +64,12 @@ namespace SignalManipulator.Logic.Providers
 
             while (samplesWritten < count)
             {
-                if (leftBuffer.Count == 0 || rightBuffer.Count == 0)
+                // At least 2 samples needed (stereo)
+                while ((leftBuffer.Count < 1 || rightBuffer.Count < 1) && sourceProvider != null)
                 {
+                    // Read new samples
                     int read = sourceProvider.Read(sourceBuffer, 0, sourceBuffer.Length);
-                    if (read == 0) break;
+                    if (read == 0) return samplesWritten; // EOF
 
                     int stereoFrames = read / 2;
 
@@ -91,13 +93,14 @@ namespace SignalManipulator.Logic.Providers
                     }
                 }
 
-                if (leftBuffer.Count == 0 || rightBuffer.Count == 0) break;
+                // Now, there should be at least one sample per channel
+                if (leftBuffer.Count == 0 || rightBuffer.Count == 0) break; // End of source (EOF)
 
                 buffer[offset + samplesWritten++] = leftBuffer.Dequeue();
                 buffer[offset + samplesWritten++] = rightBuffer.Dequeue();
             }
 
-            return samplesWritten != 0 ? samplesWritten : 1; // Avoid EOF
+            return samplesWritten;
         }
 
         public int Read(byte[] buffer, int offset, int count)
