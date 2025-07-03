@@ -18,6 +18,11 @@ namespace SignalManipulator.Logic.Effects
             sourceProvider = newSourceProvider;
         }
         public abstract int Read(float[] samples, int offset, int count);
-        public virtual void Reset() { }
+
+        public virtual void Reset()
+        {
+            if (sourceProvider is AudioEffect audioEffect) 
+                audioEffect.Reset();
+        }
     }
 }

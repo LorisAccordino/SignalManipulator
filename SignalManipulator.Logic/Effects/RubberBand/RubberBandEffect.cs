@@ -26,6 +26,7 @@ namespace SignalManipulator.Logic.Effects.RubberBand
 
         public override void Reset()
         {
+            base.Reset();
             lock (lockObject) rubberBandProvider.Reset();
         }
     }

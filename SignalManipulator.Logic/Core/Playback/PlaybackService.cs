@@ -2,7 +2,6 @@
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
-using SignalManipulator.Logic.Effects.RubberBand;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.Providers;
 
@@ -15,17 +14,12 @@ namespace SignalManipulator.Logic.Core.Playback
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
 
-        // Playback "effects"
-        private readonly RBTimeStretchEffect timeStretch;
-        private readonly VolumeEffect volumeManager;
-
         // Properties
+        private readonly PlaybackModifiers modifiers;
         public AudioInfo Info => source.Info;
-
-        public double Speed { get => timeStretch.Speed; set => timeStretch.Speed = value; }
-        public bool PreservePitch { get => timeStretch.PreservePitch; set => timeStretch.PreservePitch = value; }
-        public double Volume { get => volumeManager.Volume; set => volumeManager.Volume = value; }
-        
+        public double Speed { get => modifiers.Speed; set => modifiers.Speed = value; }
+        public bool PreservePitch { get => modifiers.PreservePitch; set => modifiers.PreservePitch = value; }
+        public double Volume { get => modifiers.Volume; set => modifiers.Volume = value; }
 
         // Events
         public event EventHandler<AudioInfo> LoadCompleted;
@@ -42,18 +36,16 @@ namespace SignalManipulator.Logic.Core.Playback
             this.effects = effects;
             this.audioDataProvider = audioDataProvider;
 
-            this.effects.AddEffect<RBTimeStretchEffect>();
-            this.effects.AddEffect<VolumeEffect>();
-            timeStretch = effects.GetEffect<RBTimeStretchEffect>(0);
-            volumeManager = effects.GetEffect<VolumeEffect>(1);
+            modifiers = new PlaybackModifiers();
 
+            effects.SetSource(modifiers.Output);
             router.PlaybackStopped += (s, e) => _Stop();
         }
 
         public void Load(string path)
         {
             source.Load(path);
-            effects.SetSource(source.Info.SourceProvider);
+            modifiers.SetSource(source.Info.SourceProvider);
             router.InitOutputs(audioDataProvider as IWaveProvider);
             Stop();
             LoadCompleted?.Invoke(this, Info);
@@ -87,6 +79,7 @@ namespace SignalManipulator.Logic.Core.Playback
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
             effects.ResetAll();
+            modifiers.Reset();
         }
 
         public void Seek(TimeSpan pos) => source.Seek(pos);

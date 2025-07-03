@@ -33,31 +33,6 @@ namespace SignalManipulator.Logic.Providers
             Reset();
         }
 
-        public void Reset()
-        {
-            // Recreate the stretcher from scratch
-            stretcher = new RubberBandStretcherStereo(
-                waveFormat.SampleRate,
-                RubberBandStretcher.Options.ProcessRealTime |
-                RubberBandStretcher.Options.FormantPreserved |
-                RubberBandStretcher.Options.PitchHighConsistency |
-                RubberBandStretcher.Options.SmoothingOn |
-                RubberBandStretcher.Options.StretchElastic |
-                RubberBandStretcher.Options.TransientsSmooth);
-
-            // Set initial TimeRatio and PitchRatio
-            stretcher.SetTimeRatio(TimeRatio);
-            stretcher.SetPitchScale(PitchRatio);
-
-            leftInput = new float[blockSize];
-            rightInput = new float[blockSize];
-            sourceBuffer = new float[blockSize * 2]; // Stereo
-
-            // Clear output buffers
-            leftBuffer.Clear();
-            rightBuffer.Clear();
-        }
-
         public int Read(float[] buffer, int offset, int count)
         {
             int samplesWritten = 0;
@@ -107,6 +82,31 @@ namespace SignalManipulator.Logic.Providers
             int read = Read(samples, 0, count / 4);
             samples.CopyToBytes(buffer, offset, read * 4);
             return read * 4;
+        }
+
+        public void Reset()
+        {
+            // Recreate the stretcher from scratch
+            stretcher = new RubberBandStretcherStereo(
+                waveFormat.SampleRate,
+                RubberBandStretcher.Options.ProcessRealTime |
+                RubberBandStretcher.Options.FormantPreserved |
+                RubberBandStretcher.Options.PitchHighConsistency |
+                RubberBandStretcher.Options.SmoothingOn |
+                RubberBandStretcher.Options.StretchElastic |
+                RubberBandStretcher.Options.TransientsSmooth);
+
+            // Set initial TimeRatio and PitchRatio
+            stretcher.SetTimeRatio(TimeRatio);
+            stretcher.SetPitchScale(PitchRatio);
+
+            leftInput = new float[blockSize];
+            rightInput = new float[blockSize];
+            sourceBuffer = new float[blockSize * 2]; // Stereo
+
+            // Clear output buffers
+            leftBuffer.Clear();
+            rightBuffer.Clear();
         }
     }
 }

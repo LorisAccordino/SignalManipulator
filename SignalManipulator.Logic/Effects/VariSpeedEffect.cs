@@ -35,6 +35,7 @@ namespace SignalManipulator.Logic.Effects
 
         public override void Reset()
         {
+            base.Reset();
             lock (lockObject) resampleProvider.Reset();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using SignalManipulator.Logic.Models;
-using System;
 
 namespace SignalManipulator.Logic.Core.Playback
 {

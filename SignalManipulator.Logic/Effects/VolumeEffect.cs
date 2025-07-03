@@ -8,7 +8,7 @@ namespace SignalManipulator.Logic.Effects
         public override string Name => "Volume";
 
         private double volume = 1.0; // Default: full volume
-        private ISampleProvider volumeAdjustedProvider;
+        private VolumeSampleProvider volumeAdjustedProvider;
 
         public VolumeEffect(ISampleProvider sourceProvider) : base(sourceProvider)
         {
@@ -31,18 +31,20 @@ namespace SignalManipulator.Logic.Effects
             return volumeAdjustedProvider.Read(samples, offset, count);
         }
 
-        /// <summary>
-        /// Gets or sets the volume multiplier (1.0 = 100%)
-        /// </summary>
         public double Volume
         {
             get => volume;
             set
             {
                 volume = Math.Max(0.0, value); // Prevent negative values
-                if (volumeAdjustedProvider is VolumeSampleProvider vsp)
-                    vsp.Volume = (float)volume;
+                volumeAdjustedProvider.Volume = (float)volume;
             }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            RebuildInternalPipeline();
         }
     }
 }

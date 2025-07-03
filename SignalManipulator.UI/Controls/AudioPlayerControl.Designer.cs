@@ -38,10 +38,10 @@ namespace SignalManipulator.UI.Controls
             playingAudioLbl = new DescriptorLabel(components);
             settingsPanel = new System.Windows.Forms.Panel();
             timeInfoLbl = new System.Windows.Forms.Label();
-            timeSlider = new Components.TimeSlider();
             pitchCheckBox = new System.Windows.Forms.CheckBox();
             playbackSpeedSlider = new Components.Precision.PrecisionSlider();
             volumeSlider = new Components.Precision.PrecisionSlider();
+            timeSlider = new Components.TimeSlider();
             settingsPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -131,18 +131,6 @@ namespace SignalManipulator.UI.Controls
             timeInfoLbl.TabIndex = 21;
             timeInfoLbl.Text = "Playback time:";
             // 
-            // timeSlider
-            // 
-            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            timeSlider.AutoUpdate = true;
-            timeSlider.CurrentTime = TimeSpan.Parse("00:00:00");
-            timeSlider.Location = new System.Drawing.Point(94, 4);
-            timeSlider.Name = "timeSlider";
-            timeSlider.Size = new System.Drawing.Size(342, 30);
-            timeSlider.TabIndex = 24;
-            timeSlider.TimeFormat = "mm\\:ss\\.fff";
-            timeSlider.TotalTime = TimeSpan.Parse("00:01:00");
-            // 
             // pitchCheckBox
             // 
             pitchCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
@@ -163,7 +151,7 @@ namespace SignalManipulator.UI.Controls
             playbackSpeedSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             playbackSpeedSlider.Location = new System.Drawing.Point(3, 54);
             playbackSpeedSlider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            playbackSpeedSlider.Maximum = 3D;
+            playbackSpeedSlider.Maximum = 2D;
             playbackSpeedSlider.Minimum = 0.01D;
             playbackSpeedSlider.Name = "playbackSpeedSlider";
             playbackSpeedSlider.Size = new System.Drawing.Size(343, 30);
@@ -181,7 +169,7 @@ namespace SignalManipulator.UI.Controls
             volumeSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             volumeSlider.Location = new System.Drawing.Point(3, 29);
             volumeSlider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            volumeSlider.Maximum = 3D;
+            volumeSlider.Maximum = 2D;
             volumeSlider.Name = "volumeSlider";
             volumeSlider.Precision = 0.001D;
             volumeSlider.PrecisionScale = Components.Precision.PrecisionScale.Logarithmic;
@@ -190,6 +178,18 @@ namespace SignalManipulator.UI.Controls
             volumeSlider.TickFrequency = 150;
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
             volumeSlider.Value = 1D;
+            // 
+            // timeSlider
+            // 
+            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            timeSlider.AutoUpdate = true;
+            timeSlider.CurrentTime = TimeSpan.Parse("00:00:00");
+            timeSlider.Location = new System.Drawing.Point(94, 4);
+            timeSlider.Name = "timeSlider";
+            timeSlider.Size = new System.Drawing.Size(342, 30);
+            timeSlider.TabIndex = 24;
+            timeSlider.TimeFormat = "mm\\:ss\\.fff";
+            timeSlider.TotalTime = TimeSpan.Parse("00:01:00");
             // 
             // AudioPlayerControl
             // 
