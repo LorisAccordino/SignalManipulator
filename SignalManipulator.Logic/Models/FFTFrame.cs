@@ -13,7 +13,7 @@ namespace SignalManipulator.Logic.Models
             Magnitudes = magnitudes;
         }
 
-        public static FFTFrame FromFFT(double[] samples, int sampleRate)
+        public static FFTFrame FromWaveform(double[] samples, int sampleRate)
         {
             var (magnitudes, freqs) = FFTCalculator.CalculateMagnitudeSpectrum(samples, sampleRate);
             return new FFTFrame(freqs, magnitudes);

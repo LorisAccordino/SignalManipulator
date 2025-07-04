@@ -151,8 +151,8 @@ namespace SignalManipulator.UI.Controls
                 foreach (var sample in frame.DoubleMono)
                     audioBuffer.Add(sample);
 
-                // Get magnitudes from FFT
-                var fft = FFTFrame.FromFFT(audioBuffer.ToArray(), sampleRate);
+                // Get magnitudes computing the FFT from waveform
+                var fft = FFTFrame.FromWaveform(audioBuffer.ToArray(), sampleRate);
 
                 // Smooth values
                 double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
