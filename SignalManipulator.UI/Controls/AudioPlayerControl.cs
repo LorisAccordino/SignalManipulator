@@ -13,7 +13,8 @@ namespace SignalManipulator.UI.Controls
     {
         private IPlaybackController playback;
         private IAudioEventDispatcher audioEventDispatcher;
-        
+        private AudioInfoDialog audioInfoDialog = new AudioInfoDialog();
+
         public AudioPlayerControl()
         {
             InitializeComponent();
@@ -65,7 +66,7 @@ namespace SignalManipulator.UI.Controls
 
         public void OnPlaybackStateChanged(object? sender, bool playing)
         {
-            playBtn.Visible = !playing; 
+            playBtn.Visible = !playing;
             pauseBtn.Visible = playing;
         }
 
@@ -79,6 +80,8 @@ namespace SignalManipulator.UI.Controls
         {
             if (!string.IsNullOrEmpty(path))
                 playback.Load(path);
+
+            audioInfoDialog.SetInfo(playback.Info);
 
             // Update UI
             playingAudioLbl.Value = playback.Info.FileName;
@@ -98,6 +101,11 @@ namespace SignalManipulator.UI.Controls
         {
             UIUpdateService.Instance.Stop();
             playback.Stop();
+        }
+
+        private void OnShowMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            audioInfoDialog.ShowDialog();
         }
     }
 }

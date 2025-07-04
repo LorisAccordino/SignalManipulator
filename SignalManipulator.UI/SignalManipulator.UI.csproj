@@ -45,13 +45,12 @@
     <Compile Update="Controls\WaveformViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Dialogs\AudioInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Misc\ZoomPanControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dialogs\" />
   </ItemGroup>
 
 </Project>

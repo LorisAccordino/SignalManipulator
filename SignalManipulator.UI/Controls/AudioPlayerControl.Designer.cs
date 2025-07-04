@@ -127,16 +127,16 @@ namespace SignalManipulator.UI.Controls
             timeSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             timeSlider.Location = new System.Drawing.Point(3, 4);
             timeSlider.Name = "timeSlider";
-            timeSlider.Size = new System.Drawing.Size(425, 30);
+            timeSlider.Size = new System.Drawing.Size(428, 30);
             timeSlider.TabIndex = 25;
-            timeSlider.TimeFormat = "mm\\:ss\\.fff";
+            timeSlider.TimeFormat = "hh\\:mm\\:ss\\.fff";
             timeSlider.TotalTime = TimeSpan.Parse("00:01:00");
             // 
             // pitchCheckBox
             // 
             pitchCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             pitchCheckBox.AutoSize = true;
-            pitchCheckBox.Location = new System.Drawing.Point(343, 59);
+            pitchCheckBox.Location = new System.Drawing.Point(338, 59);
             pitchCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             pitchCheckBox.Name = "pitchCheckBox";
             pitchCheckBox.Size = new System.Drawing.Size(82, 19);
@@ -155,7 +155,7 @@ namespace SignalManipulator.UI.Controls
             playbackSpeedSlider.Maximum = 2D;
             playbackSpeedSlider.Minimum = 0.01D;
             playbackSpeedSlider.Name = "playbackSpeedSlider";
-            playbackSpeedSlider.Size = new System.Drawing.Size(343, 30);
+            playbackSpeedSlider.Size = new System.Drawing.Size(338, 30);
             playbackSpeedSlider.Suffix = "x";
             playbackSpeedSlider.TabIndex = 23;
             playbackSpeedSlider.TickFrequency = 30;
@@ -174,7 +174,7 @@ namespace SignalManipulator.UI.Controls
             volumeSlider.Name = "volumeSlider";
             volumeSlider.Precision = 0.001D;
             volumeSlider.PrecisionScale = Components.Precision.PrecisionScale.Logarithmic;
-            volumeSlider.Size = new System.Drawing.Size(424, 30);
+            volumeSlider.Size = new System.Drawing.Size(419, 30);
             volumeSlider.TabIndex = 25;
             volumeSlider.TickFrequency = 150;
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
@@ -189,6 +189,7 @@ namespace SignalManipulator.UI.Controls
             infoLbl.TabIndex = 24;
             infoLbl.TabStop = true;
             infoLbl.Text = "Show more info";
+            infoLbl.LinkClicked += OnShowMoreInfo;
             // 
             // AudioPlayerControl
             // 

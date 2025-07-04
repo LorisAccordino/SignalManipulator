@@ -1,34 +1,14 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Models;
-using System;
 
 namespace SignalManipulator.Logic.Core.Sourcing
 {
     public class AudioFileLoader : IAudioSource
     {
-        private AudioFileReader reader;
+        private AudioFileReader? reader;
 
         // Audio info
-        public AudioInfo Info
-        {
-            get
-            {
-                if (reader == null) return AudioInfo.Default;
-
-                WaveFormat waveFormat = reader.WaveFormat;
-                return new AudioInfo
-                {
-                    SourceProvider = reader,
-                    FileName = reader?.FileName,
-                    CurrentTime = reader?.CurrentTime ?? TimeSpan.Zero,
-                    TotalTime = reader?.TotalTime ?? TimeSpan.Zero,
-                    SampleRate = waveFormat.SampleRate,
-                    Channels = waveFormat.Channels,
-                    BitsPerSample = waveFormat.BitsPerSample,
-                    WaveFormatDescription = waveFormat.ToString()
-                };
-            }
-        }
+        public AudioInfo Info => new AudioInfo(reader);
 
         public void Load(string path)
         {

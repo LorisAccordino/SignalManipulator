@@ -74,7 +74,7 @@ namespace SignalManipulator.UI.Controls
             emaNum.ValueChanged += (s, e) => { smootherEMA.SetAlpha((double)emaNum.Value); };
         }
 
-        public void OnLoad(object? sender, AudioInfo info)
+        public void OnLoad(object? sender, Logic.Models.AudioInfo info)
         {
             sampleRate = info.SampleRate;
             UpdateDataPeriod();

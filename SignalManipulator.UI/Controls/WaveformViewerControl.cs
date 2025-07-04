@@ -69,7 +69,7 @@ namespace SignalManipulator.UI.Controls
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
-        public void OnLoad(object? sender, AudioInfo info)
+        public void OnLoad(object? sender, Logic.Models.AudioInfo info)
         {
             sampleRate = info.SampleRate; 
             ConfigureBuffers();
