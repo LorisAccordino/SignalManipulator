@@ -23,7 +23,7 @@ namespace SignalManipulator.Logic.Models
                 return new AudioInfo
                 {
                     SourceProvider = source,
-                    FileName = string.Empty,
+                    FileName = "No audio loaded",
                     CurrentTime = TimeSpan.Zero,
                     TotalTime = TimeSpan.Zero,
                     SampleRate = waveFormat.SampleRate,

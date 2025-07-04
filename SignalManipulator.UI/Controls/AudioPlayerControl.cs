@@ -23,6 +23,9 @@ namespace SignalManipulator.UI.Controls
                 playback = AudioEngine.Instance.PlaybackController;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
                 InitializePlaybackEvents();
+
+                // Initialize stuff
+                LoadAudio(null);
             }
         }
 
@@ -72,9 +75,10 @@ namespace SignalManipulator.UI.Controls
         }
 
 
-        public void LoadAudio(string path)
+        public void LoadAudio(string? path)
         {
-            playback.Load(path);
+            if (!string.IsNullOrEmpty(path))
+                playback.Load(path);
 
             // Update UI
             playingAudioLbl.Value = playback.Info.FileName;
