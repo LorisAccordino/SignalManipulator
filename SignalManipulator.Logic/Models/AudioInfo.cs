@@ -82,6 +82,12 @@ namespace SignalManipulator.Logic.Models
         /**********************/
 
 
+        /******STATS DATA******/
+
+
+        /**********************/
+
+
         public static AudioInfo Default => new AudioInfo();
 
         public AudioInfo() { }

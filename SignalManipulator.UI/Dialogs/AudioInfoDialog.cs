@@ -35,6 +35,8 @@ namespace SignalManipulator
             trackNumberLbl.Value = info.TrackNumber.ToString();
             durationLbl.Value = info.TotalTime.ToString("hh\\:mm\\:ss\\.fff");
             if (info.CoverImage != null) coverImageBox.Image = info.CoverImage;
+
+            peakLbl.Value = info.VolumeInfo.Peak.ToString();
         }
     }
 }

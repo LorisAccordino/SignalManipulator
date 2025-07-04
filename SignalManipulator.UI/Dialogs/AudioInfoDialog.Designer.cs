@@ -52,10 +52,12 @@ namespace SignalManipulator
             artistLbl = new UI.Components.Labels.DescriptorLabel(components);
             titleLbl = new UI.Components.Labels.DescriptorLabel(components);
             statsPage = new TabPage();
+            peakLbl = new UI.Components.Labels.DescriptorLabel(components);
             tabControl.SuspendLayout();
             techPage.SuspendLayout();
             metadataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)coverImageBox).BeginInit();
+            statsPage.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl
@@ -283,12 +285,24 @@ namespace SignalManipulator
             // 
             // statsPage
             // 
+            statsPage.Controls.Add(peakLbl);
             statsPage.Location = new Point(4, 24);
             statsPage.Name = "statsPage";
             statsPage.Size = new Size(351, 163);
             statsPage.TabIndex = 2;
             statsPage.Text = "Audio analysis";
             statsPage.UseVisualStyleBackColor = true;
+            // 
+            // peakLbl
+            // 
+            peakLbl.AutoSize = true;
+            peakLbl.Description = "Volume peak";
+            peakLbl.Font = new Font("Microsoft Sans Serif", 9.75F);
+            peakLbl.Location = new Point(8, 9);
+            peakLbl.Name = "peakLbl";
+            peakLbl.Size = new Size(93, 16);
+            peakLbl.TabIndex = 8;
+            peakLbl.Value = "";
             // 
             // AudioInfoDialog
             // 
@@ -311,6 +325,8 @@ namespace SignalManipulator
             metadataPage.ResumeLayout(false);
             metadataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)coverImageBox).EndInit();
+            statsPage.ResumeLayout(false);
+            statsPage.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -335,5 +351,6 @@ namespace SignalManipulator
         private UI.Components.Labels.DescriptorLabel trackNumberLbl;
         private UI.Components.Labels.DescriptorLabel durationLbl;
         private PictureBox coverImageBox;
+        private UI.Components.Labels.DescriptorLabel peakLbl;
     }
 }
