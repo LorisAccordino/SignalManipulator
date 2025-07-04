@@ -37,11 +37,11 @@ namespace SignalManipulator.UI.Controls
             waveFmtLbl = new DescriptorLabel(components);
             playingAudioLbl = new DescriptorLabel(components);
             settingsPanel = new System.Windows.Forms.Panel();
-            timeInfoLbl = new System.Windows.Forms.Label();
+            timeSlider = new Components.TimeSlider();
             pitchCheckBox = new System.Windows.Forms.CheckBox();
             playbackSpeedSlider = new Components.Precision.PrecisionSlider();
             volumeSlider = new Components.Precision.PrecisionSlider();
-            timeSlider = new Components.TimeSlider();
+            infoLbl = new System.Windows.Forms.LinkLabel();
             settingsPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -109,27 +109,28 @@ namespace SignalManipulator.UI.Controls
             // settingsPanel
             // 
             settingsPanel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            settingsPanel.Controls.Add(timeInfoLbl);
+            settingsPanel.Controls.Add(timeSlider);
             settingsPanel.Controls.Add(pitchCheckBox);
             settingsPanel.Controls.Add(playbackSpeedSlider);
             settingsPanel.Controls.Add(volumeSlider);
-            settingsPanel.Controls.Add(timeSlider);
             settingsPanel.Location = new System.Drawing.Point(0, 69);
             settingsPanel.Name = "settingsPanel";
             settingsPanel.Size = new System.Drawing.Size(431, 88);
             settingsPanel.TabIndex = 23;
             // 
-            // timeInfoLbl
+            // timeSlider
             // 
-            timeInfoLbl.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            timeInfoLbl.AutoSize = true;
-            timeInfoLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            timeInfoLbl.Location = new System.Drawing.Point(3, 6);
-            timeInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            timeInfoLbl.Name = "timeInfoLbl";
-            timeInfoLbl.Size = new System.Drawing.Size(95, 16);
-            timeInfoLbl.TabIndex = 21;
-            timeInfoLbl.Text = "Playback time:";
+            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            timeSlider.AutoUpdate = true;
+            timeSlider.CurrentTime = TimeSpan.Parse("00:00:00");
+            timeSlider.Description = "Time:";
+            timeSlider.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+            timeSlider.Location = new System.Drawing.Point(3, 4);
+            timeSlider.Name = "timeSlider";
+            timeSlider.Size = new System.Drawing.Size(425, 30);
+            timeSlider.TabIndex = 25;
+            timeSlider.TimeFormat = "mm\\:ss\\.fff";
+            timeSlider.TotalTime = TimeSpan.Parse("00:01:00");
             // 
             // pitchCheckBox
             // 
@@ -179,22 +180,21 @@ namespace SignalManipulator.UI.Controls
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
             volumeSlider.Value = 1D;
             // 
-            // timeSlider
+            // infoLbl
             // 
-            timeSlider.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            timeSlider.AutoUpdate = true;
-            timeSlider.CurrentTime = TimeSpan.Parse("00:00:00");
-            timeSlider.Location = new System.Drawing.Point(94, 4);
-            timeSlider.Name = "timeSlider";
-            timeSlider.Size = new System.Drawing.Size(342, 30);
-            timeSlider.TabIndex = 24;
-            timeSlider.TimeFormat = "mm\\:ss\\.fff";
-            timeSlider.TotalTime = TimeSpan.Parse("00:01:00");
+            infoLbl.AutoSize = true;
+            infoLbl.Location = new System.Drawing.Point(17, 47);
+            infoLbl.Name = "infoLbl";
+            infoLbl.Size = new System.Drawing.Size(91, 15);
+            infoLbl.TabIndex = 24;
+            infoLbl.TabStop = true;
+            infoLbl.Text = "Show more info";
             // 
             // AudioPlayerControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(infoLbl);
             Controls.Add(settingsPanel);
             Controls.Add(playingAudioLbl);
             Controls.Add(waveFmtLbl);
@@ -225,5 +225,6 @@ namespace SignalManipulator.UI.Controls
         private System.Windows.Forms.CheckBox pitchCheckBox;
         private System.Windows.Forms.Label timeInfoLbl;
         private Components.TimeSlider timeSlider;
+        private System.Windows.Forms.LinkLabel infoLbl;
     }
 }

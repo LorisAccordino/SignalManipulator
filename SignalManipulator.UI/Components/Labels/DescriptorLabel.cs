@@ -58,19 +58,10 @@ namespace SignalManipulator.UI.Components.Labels
         public DescriptorLabel(IContainer container)
         {
             container.Add(this);
-
             InitializeComponent();
         }
 
-        protected override void OnCreateControl()
-        {
-            FormatText();
-        }
-
-
-        private void FormatText()
-        {
-            base.Text = Description + Separator + Value;
-        }
+        protected override void OnCreateControl() => FormatText();
+        private void FormatText() => base.Text = Description + Separator + Value;
     }
 }

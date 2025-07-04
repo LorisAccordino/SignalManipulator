@@ -9,7 +9,6 @@ namespace SignalManipulator.UI.Components.Precision
 {
     [DesignerCategory("Code")]
     [DefaultProperty("Value")]
-    [DefaultEvent("ValueChanged")]
     [ExcludeFromCodeCoverage]
     public class PrecisionSlider : PrecisionControl
     {
@@ -78,7 +77,8 @@ namespace SignalManipulator.UI.Components.Precision
 
         public override Font Font
         {
-            get => base.Font; set
+            get => base.Font; 
+            set
             {
                 base.Font = value;
                 descriptionLabel.Font = value;
@@ -198,8 +198,6 @@ namespace SignalManipulator.UI.Components.Precision
 
         protected override void OnCreateControl()
         {
-            base.OnCreateControl();
-
             UpdateTrackbarSettings();
             ApplyOrientationConstraints();
         }

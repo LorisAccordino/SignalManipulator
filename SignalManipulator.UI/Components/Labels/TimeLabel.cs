@@ -1,5 +1,5 @@
-﻿using ScottPlot.Plottables;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Components.Labels
@@ -61,6 +61,22 @@ namespace SignalManipulator.UI.Components.Labels
             container.Add(this);
             InitializeComponent();
             FormatText();
+        }
+
+        public int EstimateRequiredWidth(int extraPixels = 6, bool apply = false)
+        {
+            // Simulate a TimeSpan with max values for the current format
+            // For example: mm:ss.fff => 59:59.999
+            TimeSpan testSpan = new TimeSpan(1, 9, 59, 59, 999); // 1d 9h 59m 59s 999ms
+            string formatted = testSpan.ToString(format);
+
+            // Measure the resulting text with the current font
+            Size size = TextRenderer.MeasureText(formatted, Font);
+            int totalWidth = size.Width + extraPixels;
+
+            if (apply) Width = totalWidth;
+
+            return totalWidth;
         }
     }
 }
