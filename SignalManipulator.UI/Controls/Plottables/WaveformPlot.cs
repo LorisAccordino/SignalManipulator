@@ -1,0 +1,47 @@
+﻿using ScottPlot.Collections;
+using ScottPlot.DataSources;
+using ScottPlot.Plottables;
+
+namespace SignalManipulator.UI.Controls.Plottables
+{
+    public class WaveformPlot : Signal
+    {
+        // Data
+        private CircularBuffer<double> buffer;
+        private double[] data;
+
+        public WaveformPlot(int sampleRate) : this(sampleRate, "") { }
+        public WaveformPlot(int sampleRate, string channelName) : base(new SignalSourceDouble(new double[sampleRate], 1.0))
+        {
+            ResampleBuffer(sampleRate);
+            LegendText = channelName;
+        }
+
+        public void ResampleBuffer(int sampleRate)
+        {
+            buffer = new CircularBuffer<double>(sampleRate);
+            data = new double[sampleRate];
+            Data = new SignalSourceDouble(data, 1.0);
+        }
+
+        public void AddSamples(double[] samples)
+        {
+            for (int i = 0; i < samples.Length; i += (int)Data.Period)
+                buffer.Add(samples[i]);
+
+            buffer.CopyTo(data, 0);
+        }
+
+        public void UpdatePeriod(double period)
+        {
+            Data.Period = period;
+        }
+
+        public void ClearBuffer()
+        {
+            buffer.Clear();
+            while (!buffer.IsFull) buffer.Add(0);
+            Array.Clear(data);
+        }
+    }
+}

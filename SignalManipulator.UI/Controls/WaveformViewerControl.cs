@@ -1,9 +1,7 @@
-﻿using ScottPlot.Collections;
-using ScottPlot.DataSources;
-using ScottPlot.Plottables;
-using SignalManipulator.Logic.Core;
+﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.Collections.Concurrent;
@@ -28,10 +26,8 @@ namespace SignalManipulator.UI.Controls
         private int sampleRate = AudioEngine.SAMPLE_RATE;
         private readonly object lockObject = new object();
 
-        // Buffers, arrays and signals
-        private CircularBuffer<double> stereoBuf, leftBuf, rightBuf;
-        private double[] stereoArr, leftArr, rightArr;
-        private Signal stereoSig, leftSig, rightSig;
+        // Waveform plots
+        private List<WaveformPlot> waveformPlots = new List<WaveformPlot>();
 
         // UI dirty flag
         private volatile bool needsRender = false;
@@ -69,10 +65,10 @@ namespace SignalManipulator.UI.Controls
             monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
         }
 
-        public void OnLoad(object? sender, Logic.Models.AudioInfo info)
+        public void OnLoad(object? sender, AudioInfo info)
         {
             sampleRate = info.SampleRate; 
-            ConfigureBuffers();
+            ResampleBuffers();
         }
 
         public void OnStarted(object? sender, EventArgs e)
@@ -110,16 +106,10 @@ namespace SignalManipulator.UI.Controls
             plt.XLabel("Time (samples)"); plt.YLabel("Amplitude");
             formsPlot.UserInputProcessor.Disable();
 
-            // Resize buffers
-            ConfigureBuffers();
-
-            // Add each signal to the plot
-            stereoSig = plt.Add.Signal(stereoArr);
-            leftSig = plt.Add.Signal(leftArr);
-            rightSig = plt.Add.Signal(rightArr);
-
-            // Legend setup
-            stereoSig.LegendText = "Stereo"; leftSig.LegendText = "Left"; rightSig.LegendText = "Right";
+            // Add each waveform to the plot
+            waveformPlots.Add(plt.Add.Waveform(sampleRate, "Stereo"));
+            waveformPlots.Add(plt.Add.Waveform(sampleRate, "Left"));
+            waveformPlots.Add(plt.Add.Waveform(sampleRate, "Right"));
             plt.ShowLegend();
 
             // Set the bounds
@@ -135,24 +125,11 @@ namespace SignalManipulator.UI.Controls
             ClearBuffers();  // Start from scratch
         }
 
-        private void ConfigureBuffers()
+        private void ResampleBuffers()
         {
-            // Init buffers
-            stereoBuf = new CircularBuffer<double>(sampleRate);
-            leftBuf = new CircularBuffer<double>(sampleRate);
-            rightBuf = new CircularBuffer<double>(sampleRate);
-            stereoArr = new double[sampleRate];
-            leftArr = new double[sampleRate];
-            rightArr = new double[sampleRate];
-
-            // Return if signals are null
-            if (stereoSig == null || leftSig == null || rightSig == null)
-                return;
-
-            // Reallocate data sources
-            stereoSig.Data = new SignalSourceDouble(stereoArr, 1);
-            leftSig.Data = new SignalSourceDouble(leftArr, 1);
-            rightSig.Data = new SignalSourceDouble(rightArr, 1);
+            // Resample the waveforms
+            foreach (var w in waveformPlots)
+                w.ResampleBuffer(sampleRate);
 
             // Update data period
             UpdateDataPeriod();
@@ -165,15 +142,9 @@ namespace SignalManipulator.UI.Controls
 
             lock (lockObject)
             {
-                stereoBuf.Clear(); leftBuf.Clear(); rightBuf.Clear();
-
-                while (!stereoBuf.IsFull) stereoBuf.Add(0);
-                while (!leftBuf.IsFull) leftBuf.Add(0);
-                while (!rightBuf.IsFull) rightBuf.Add(0);
-
-                Array.Clear(stereoArr);
-                Array.Clear(leftArr);
-                Array.Clear(rightArr);
+                // Clear waveform buffers
+                foreach (var w in waveformPlots)
+                    w.ClearBuffer();
             }
 
             needsRender = true;
@@ -185,9 +156,9 @@ namespace SignalManipulator.UI.Controls
 
             lock (lockObject)
             {
-                stereoSig.IsVisible = !mono;
-                leftSig.IsVisible = mono;
-                rightSig.IsVisible = mono;
+                waveformPlots[0].IsVisible = !mono; // Stereo
+                waveformPlots[1].IsVisible = mono;  // Left
+                waveformPlots[2].IsVisible = mono;  // Right
             }
 
             needsRender = true;
@@ -197,23 +168,13 @@ namespace SignalManipulator.UI.Controls
         {
             lock (lockObject)
             {
-                // Decimate samples for each channel/signal
-                DecimateSamples(frame.DoubleMono, stereoBuf, windowSeconds);
-                DecimateSamples(frame.DoubleSplitStereo.Left, leftBuf, windowSeconds);
-                DecimateSamples(frame.DoubleSplitStereo.Right, rightBuf, windowSeconds);
-
-                stereoBuf.CopyTo(stereoArr, 0);
-                leftBuf.CopyTo(leftArr, 0);
-                rightBuf.CopyTo(rightArr, 0);
+                // Add samples to each channel
+                waveformPlots[0].AddSamples(frame.DoubleMono);
+                waveformPlots[1].AddSamples(frame.DoubleSplitStereo.Left);
+                waveformPlots[2].AddSamples(frame.DoubleSplitStereo.Right);
             }
 
             needsRender = true;
-        }
-
-        private void DecimateSamples(double[] source, CircularBuffer<double> target, int step)
-        {
-            for (int i = 0; i < source.Length; i += step)
-                target.Add(source[i]);
         }
 
         private void RenderPlot()
@@ -236,9 +197,8 @@ namespace SignalManipulator.UI.Controls
 
         private void UpdateDataPeriod()
         {
-            stereoSig.Data.Period = windowSeconds;
-            leftSig.Data.Period = windowSeconds;
-            rightSig.Data.Period = windowSeconds;
+            foreach (var w in waveformPlots)
+                w.UpdatePeriod(windowSeconds);
 
             navigator.Capacity = sampleRate * windowSeconds;
         }

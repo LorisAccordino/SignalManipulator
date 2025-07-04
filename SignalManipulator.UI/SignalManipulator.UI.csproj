@@ -42,6 +42,7 @@
     <Compile Update="Controls\SpectrumViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\Viewers\BaseViewerControl.cs" />
     <Compile Update="Controls\WaveformViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

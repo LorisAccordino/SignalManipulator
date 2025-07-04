@@ -1,6 +1,5 @@
 ﻿using ScottPlot.Collections;
 using ScottPlot.Plottables;
-using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
