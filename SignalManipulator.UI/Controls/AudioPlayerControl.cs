@@ -79,9 +79,11 @@ namespace SignalManipulator.UI.Controls
         public void LoadAudio(string? path)
         {
             if (!string.IsNullOrEmpty(path))
+            {
                 playback.Load(path);
-
-            audioInfoDialog.SetInfo(playback.Info);
+                audioInfoDialog.SetInfo(playback.Info);
+                moreInfoLbl.Visible = true;
+            }
 
             // Update UI
             playingAudioLbl.Value = playback.Info.FileName;

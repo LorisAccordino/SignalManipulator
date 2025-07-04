@@ -296,7 +296,6 @@ namespace SignalManipulator
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(359, 191);
             Controls.Add(tabControl);
-            HelpButton = true;
             Margin = new Padding(2);
             MaximizeBox = false;
             MaximumSize = new Size(1000, 230);

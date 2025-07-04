@@ -1,6 +1,7 @@
 using NAudio.Gui;
 using NAudio.Wave;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Helpers;
 using System.Windows.Forms;
 
 namespace SignalManipulator

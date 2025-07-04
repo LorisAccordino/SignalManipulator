@@ -41,7 +41,7 @@ namespace SignalManipulator.UI.Controls
             pitchCheckBox = new System.Windows.Forms.CheckBox();
             playbackSpeedSlider = new Components.Precision.PrecisionSlider();
             volumeSlider = new Components.Precision.PrecisionSlider();
-            infoLbl = new System.Windows.Forms.LinkLabel();
+            moreInfoLbl = new System.Windows.Forms.LinkLabel();
             settingsPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -180,22 +180,24 @@ namespace SignalManipulator.UI.Controls
             volumeSlider.TickStyle = System.Windows.Forms.TickStyle.None;
             volumeSlider.Value = 1D;
             // 
-            // infoLbl
+            // moreInfoLbl
             // 
-            infoLbl.AutoSize = true;
-            infoLbl.Location = new System.Drawing.Point(17, 47);
-            infoLbl.Name = "infoLbl";
-            infoLbl.Size = new System.Drawing.Size(91, 15);
-            infoLbl.TabIndex = 24;
-            infoLbl.TabStop = true;
-            infoLbl.Text = "Show more info";
-            infoLbl.LinkClicked += OnShowMoreInfo;
+            moreInfoLbl.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            moreInfoLbl.AutoSize = true;
+            moreInfoLbl.Location = new System.Drawing.Point(329, 32);
+            moreInfoLbl.Name = "moreInfoLbl";
+            moreInfoLbl.Size = new System.Drawing.Size(91, 15);
+            moreInfoLbl.TabIndex = 24;
+            moreInfoLbl.TabStop = true;
+            moreInfoLbl.Text = "Show more info";
+            moreInfoLbl.Visible = false;
+            moreInfoLbl.LinkClicked += OnShowMoreInfo;
             // 
             // AudioPlayerControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            Controls.Add(infoLbl);
+            Controls.Add(moreInfoLbl);
             Controls.Add(settingsPanel);
             Controls.Add(playingAudioLbl);
             Controls.Add(waveFmtLbl);
@@ -226,6 +228,6 @@ namespace SignalManipulator.UI.Controls
         private System.Windows.Forms.CheckBox pitchCheckBox;
         private System.Windows.Forms.Label timeInfoLbl;
         private Components.TimeSlider timeSlider;
-        private System.Windows.Forms.LinkLabel infoLbl;
+        private System.Windows.Forms.LinkLabel moreInfoLbl;
     }
 }
