@@ -15,11 +15,11 @@ namespace SignalManipulator.UI.Controls.Plottables
         public WaveformPlot(int sampleRate, string channelName) : base(new SignalSourceDouble(new double[sampleRate], 1.0))
         {
             sampleRate = Math.Max(sampleRate, 1);
-            ResampleBuffer(sampleRate);
+            ResizeBuffer(sampleRate);
             LegendText = channelName;
         }
 
-        public void ResampleBuffer(int sampleRate)
+        public void ResizeBuffer(int sampleRate)
         {
             buffer = new CircularBuffer<double>(sampleRate);
             data = new double[sampleRate];

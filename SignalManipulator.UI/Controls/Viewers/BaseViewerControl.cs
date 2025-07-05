@@ -51,7 +51,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         private void OnLoad(object? s, AudioInfo info)
         {
             SampleRate = info.SampleRate;
-            ResampleBuffers();
+            ResizeBuffers();
             UpdateDataPeriod();
         }
 
@@ -98,7 +98,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         // Template methods to implement in derived classes
         protected virtual void InitializePlot() { }
         protected virtual void InitializeEvents() { }
-        protected virtual void ResampleBuffers() { }
+        protected virtual void ResizeBuffers() { }
         protected virtual void ClearBuffers() { }
         protected virtual void ResetUI() { }
         protected virtual void UpdateDataPeriod() { }

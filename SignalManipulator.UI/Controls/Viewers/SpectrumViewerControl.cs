@@ -5,6 +5,7 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls.Viewers
@@ -13,7 +14,6 @@ namespace SignalManipulator.UI.Controls.Viewers
     public partial class SpectrumViewerControl : BaseViewerControl
     {
         // FFT configuration and visualization
-        //private const int FFT_SIZE = 8192;                  // Must be power of 2
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Spectrum plots
@@ -38,6 +38,8 @@ namespace SignalManipulator.UI.Controls.Viewers
             emaNum.ValueChanged += (s, e) => { spectrumPlots.ForEach(s => s.SetEMA((int)emaNum.Value)); };
 
             stereoMixRadBtn.CheckedChanged += (_, e) => ToggleChecks();
+            fftSizeCmbx.Text = AudioEngine.FFT_SIZE.ToString();
+            fftSizeCmbx.SelectedIndexChanged += (_, e) => spectrumPlots.ForEach(s => s.ResizeBuffer(int.Parse(fftSizeCmbx.Text)));
         }
 
         protected override void InitializePlot()

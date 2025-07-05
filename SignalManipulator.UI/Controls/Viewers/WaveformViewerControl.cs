@@ -77,9 +77,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             settingsPanel.Enabled = enable;
         }
 
-        protected override void ResampleBuffers()
+        protected override void ResizeBuffers()
         {
-            waveformPlots.ForEach(w => w.ResampleBuffer(SampleRate));
+            waveformPlots.ForEach(w => w.ResizeBuffer(SampleRate));
         }
 
         protected override void ClearBuffers()

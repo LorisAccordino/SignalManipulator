@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SignalManipulator.Logic.AudioMath.Smoothing
+﻿namespace SignalManipulator.Logic.AudioMath.Smoothing
 {
     public class SmootherEMA : Smoother
     {
@@ -19,7 +17,7 @@ namespace SignalManipulator.Logic.AudioMath.Smoothing
 
         public override double[] Smooth(double[] input)
         {
-            if (previous == null)
+            if (previous == null || previous.Length != input.Length)
                 previous = (double[])input.Clone();
 
             double[] output = new double[input.Length];
