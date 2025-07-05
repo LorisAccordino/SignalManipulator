@@ -16,7 +16,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Spectrum plots
-        private SpectrumPlot spectrumPlot;
+        private List<SpectrumPlot> spectrumPlots;
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
@@ -33,8 +33,8 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void InitializeEvents()
         {
             // Other events
-            smaNum.ValueChanged += (s, e) => { spectrumPlot.SetSMA((int)smaNum.Value); };
-            emaNum.ValueChanged += (s, e) => { spectrumPlot.SetEMA((int)emaNum.Value); };
+            smaNum.ValueChanged += (s, e) => { spectrumPlots.ForEach(s => s.SetSMA((int)smaNum.Value)); };
+            emaNum.ValueChanged += (s, e) => { spectrumPlots.ForEach(s => s.SetEMA((int)emaNum.Value)); };
         }
 
         protected override void InitializePlot()
@@ -43,7 +43,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             Plot.XLabel("Frequency (Hz)"); Plot.YLabel("Magnitude (dB)");
 
             // Set plotting
-            spectrumPlot = Plot.Add.Spectrum(SampleRate, FFT_SIZE);
+            spectrumPlots[0] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Stereo");
+            spectrumPlots[1] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Left");
+            spectrumPlots[2] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Right");
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
@@ -75,19 +77,21 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void ClearBuffers()
         {
-            lock (RenderLock) 
-                spectrumPlot.ClearBuffer();
+            lock (RenderLock)
+                spectrumPlots.ForEach(s => s.ClearBuffer());
             NeedsRender = true;
         }
 
         protected override void ProcessFrame(WaveformFrame frame)
         {
-            spectrumPlot.AddSamples(frame.DoubleMono);
+            spectrumPlots[0].AddSamples(frame.DoubleMono);
+            spectrumPlots[1].AddSamples(frame.DoubleSplitStereo.Left);
+            spectrumPlots[2].AddSamples(frame.DoubleSplitStereo.Right);
         }
 
         protected override void UpdateDataPeriod()
         {
-            spectrumPlot.UpdatePeriod(SampleRate);
+            spectrumPlots.ForEach(s => s.UpdatePeriod(SampleRate));
             AxisNavigator.SetCapacity(SampleRate / 2);
         }
     }

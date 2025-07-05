@@ -15,7 +15,7 @@ namespace SignalManipulator.Logic.AudioMath.Smoothing
             this.alpha = alpha;
         }
 
-        public void SetAlpha(double alpha) => this.alpha = alpha;
+        public override void Set(double alpha) => this.alpha = alpha;
 
         public override double[] Smooth(double[] input)
         {

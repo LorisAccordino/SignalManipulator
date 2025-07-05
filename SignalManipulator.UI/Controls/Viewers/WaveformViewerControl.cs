@@ -81,20 +81,13 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void ResampleBuffers()
         {
-            // Resample the waveforms
-            foreach (var w in waveformPlots)
-                w.ResampleBuffer(SampleRate);
+            waveformPlots.ForEach(w => w.ResampleBuffer(SampleRate));
         }
 
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-            {
-                // Clear waveform buffers
-                foreach (var w in waveformPlots)
-                    w.ClearBuffer();
-            }
-
+                waveformPlots.ForEach(x => x.ClearBuffer());
             NeedsRender = true;
         }
 
@@ -122,9 +115,7 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void UpdateDataPeriod()
         {
-            foreach (var w in waveformPlots)
-                w.UpdatePeriod(windowSeconds);
-
+            waveformPlots.ForEach(x => x.UpdatePeriod(windowSeconds));
             AxisNavigator.SetCapacity(SampleRate * windowSeconds);
         }
     }

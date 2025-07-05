@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
-using SignalManipulator.Logic.AudioMath.Smoothing;
+﻿using SignalManipulator.Logic.AudioMath.Smoothing;
 
 public class SmootherSMA : Smoother
 {
@@ -15,7 +13,7 @@ public class SmootherSMA : Smoother
         maxHistory = historyLength;
     }
 
-    public void SetHistoryLength(int historyLength) => maxHistory = historyLength;
+    public override void Set(double alpha) => maxHistory = (int)alpha; // History length
 
     public override double[] Smooth(double[] input)
     {

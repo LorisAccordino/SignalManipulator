@@ -16,8 +16,8 @@ namespace SignalManipulator.UI.Controls.Plottables
         private int fftSize;
 
         // Smoothing
-        private SmootherSMA smootherSMA = new SmootherSMA(1);
-        private SmootherEMA smootherEMA = new SmootherEMA(0.0);
+        private Smoother smootherSMA = new SmootherSMA(1);
+        private Smoother smootherEMA = new SmootherEMA(0.0);
 
         public SpectrumPlot(int sampleRate, int fftSize) : this(sampleRate, fftSize, "") { }
         public SpectrumPlot(int sampleRate, int fftSize, string channelName) : base(new SignalSourceDouble(new double[sampleRate], 1.0))
@@ -61,7 +61,7 @@ namespace SignalManipulator.UI.Controls.Plottables
             Array.Clear(magnitudes);
         }
 
-        public void SetSMA(int historyLength) => smootherSMA.SetHistoryLength(historyLength);
-        public void SetEMA(double alpha) => smootherEMA.SetAlpha(alpha);
+        public void SetSMA(int historyLength) => smootherSMA.Set(historyLength);
+        public void SetEMA(double alpha) => smootherEMA.Set(alpha);
     }
 }
