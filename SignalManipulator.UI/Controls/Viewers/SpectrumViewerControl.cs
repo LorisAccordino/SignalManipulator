@@ -16,7 +16,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Spectrum plots
-        private List<SpectrumPlot> spectrumPlots;
+        private List<SpectrumPlot> spectrumPlots = new List<SpectrumPlot>();
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
@@ -43,9 +43,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             Plot.XLabel("Frequency (Hz)"); Plot.YLabel("Magnitude (dB)");
 
             // Set plotting
-            spectrumPlots[0] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Stereo");
-            spectrumPlots[1] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Left");
-            spectrumPlots[2] = Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Right");
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Stereo"));
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Left"));
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Right"));
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
