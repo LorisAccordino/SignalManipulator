@@ -1,5 +1,6 @@
 ﻿using ScottPlot;
 using ScottPlot.WinForms;
+using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
@@ -12,7 +13,7 @@ namespace SignalManipulator.UI.Controls.Viewers
     public partial class SpectrumViewerControl : BaseViewerControl
     {
         // FFT configuration and visualization
-        private const int FFT_SIZE = 8192;                  // Must be power of 2
+        //private const int FFT_SIZE = 8192;                  // Must be power of 2
         private const int MAX_MAGNITUDE_DB = 125;
 
         // Spectrum plots
@@ -35,6 +36,8 @@ namespace SignalManipulator.UI.Controls.Viewers
             // Other events
             smaNum.ValueChanged += (s, e) => { spectrumPlots.ForEach(s => s.SetSMA((int)smaNum.Value)); };
             emaNum.ValueChanged += (s, e) => { spectrumPlots.ForEach(s => s.SetEMA((int)emaNum.Value)); };
+
+            stereoMixRadBtn.CheckedChanged += (_, e) => ToggleChecks();
         }
 
         protected override void InitializePlot()
@@ -43,9 +46,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             Plot.XLabel("Frequency (Hz)"); Plot.YLabel("Magnitude (dB)");
 
             // Set plotting
-            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Stereo"));
-            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Left"));
-            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, FFT_SIZE, "Right"));
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Stereo"));
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Left"));
+            spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
@@ -55,13 +58,16 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
             RenderPlot();
 
-            // Clear buffers
-            ClearBuffers();
+            // Final setups
+            ToggleChecks(); // Hide or show streams
+            ClearBuffers();  // Start from scratch
         }
 
         protected override void ResetUI()
         {
-            // Checkbox and numeric up-down
+            // Radio buttons and numeric up-downs
+            stereoMixRadBtn.Checked = true;
+            stereoSplitRadBtn.Checked = false;
             smaNum.Value = 1;
             emaNum.Value = 0M;
 
@@ -79,6 +85,20 @@ namespace SignalManipulator.UI.Controls.Viewers
         {
             lock (RenderLock)
                 spectrumPlots.ForEach(s => s.ClearBuffer());
+            NeedsRender = true;
+        }
+
+        private void ToggleChecks()
+        {
+            bool stereroMix = stereoMixRadBtn.Checked;
+
+            lock (RenderLock)
+            {
+                spectrumPlots[0].IsVisible = stereroMix; // Stereo
+                spectrumPlots[1].IsVisible = !stereroMix;  // Left
+                spectrumPlots[2].IsVisible = !stereroMix;  // Right
+            }
+
             NeedsRender = true;
         }
 

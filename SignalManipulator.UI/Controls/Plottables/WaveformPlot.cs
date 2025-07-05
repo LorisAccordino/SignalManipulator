@@ -34,9 +34,9 @@ namespace SignalManipulator.UI.Controls.Plottables
             buffer.CopyTo(data, 0);
         }
 
-        public void UpdatePeriod(double seconds)
+        public void UpdatePeriod(double windowSeconds)
         {
-            Data.Period = seconds;
+            Data.Period = windowSeconds;
         }
 
         public void ClearBuffer()

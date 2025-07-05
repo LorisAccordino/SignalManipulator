@@ -4,7 +4,6 @@ using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
@@ -12,7 +11,6 @@ namespace SignalManipulator.UI.Controls.Viewers
     public partial class WaveformViewerControl : BaseViewerControl
     {
         // Window config
-        private const int MAX_WINDOWS_SECONDS = 10;       // Maximum limit
         private int windowSeconds = 1;                    // Current shown seconds
 
         // Waveform plots
@@ -34,8 +32,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         {
             // Other events
             secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
-            secNum.Maximum = MAX_WINDOWS_SECONDS;
-            monoCheckBox.CheckedChanged += (_, e) => ToggleStreams();
+            stereoMixRadBtn.CheckedChanged += (_, e) => ToggleChecks();
         }
 
         protected override void InitializePlot()
@@ -59,14 +56,15 @@ namespace SignalManipulator.UI.Controls.Viewers
             RenderPlot();
 
             // Final setups
-            ToggleStreams(); // Hide or show streams
+            ToggleChecks(); // Hide or show streams
             ClearBuffers();  // Start from scratch
         }
 
         protected override void ResetUI()
         {
-            // Checkbox and numeric up-down
-            monoCheckBox.CheckState = CheckState.Unchecked;
+            // Radio buttonds and numeric up-down
+            stereoMixRadBtn.Checked = true;
+            stereoSplitRadBtn.Checked = false;
             secNum.Value = 1;
 
             // Navigator
@@ -91,15 +89,15 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        private void ToggleStreams()
+        private void ToggleChecks()
         {
-            bool mono = monoCheckBox.Checked;
+            bool stereroMix = stereoMixRadBtn.Checked;
 
             lock (RenderLock)
             {
-                waveformPlots[0].IsVisible = !mono; // Stereo
-                waveformPlots[1].IsVisible = mono;  // Left
-                waveformPlots[2].IsVisible = mono;  // Right
+                waveformPlots[0].IsVisible = stereroMix; // Stereo
+                waveformPlots[1].IsVisible = !stereroMix;  // Left
+                waveformPlots[2].IsVisible = !stereroMix;  // Right
             }
 
             NeedsRender = true;

@@ -29,19 +29,25 @@
         private void InitializeComponent()
         {
             formsPlot = new ScottPlot.WinForms.FormsPlot();
-            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            mainPanelTableLayout = new System.Windows.Forms.TableLayoutPanel();
             settingsPanel = new System.Windows.Forms.TableLayoutPanel();
-            groupBox2 = new System.Windows.Forms.GroupBox();
+            navigator = new Misc.ZoomPanControl();
+            smoothingGroupBox = new System.Windows.Forms.GroupBox();
             smaLbl = new System.Windows.Forms.Label();
             emaNum = new System.Windows.Forms.NumericUpDown();
             emaLbl = new System.Windows.Forms.Label();
             smaNum = new System.Windows.Forms.NumericUpDown();
-            navigator = new Misc.ZoomPanControl();
-            tableLayoutPanel1.SuspendLayout();
+            displaySettingsGroupBox = new System.Windows.Forms.GroupBox();
+            stereoSplitRadBtn = new System.Windows.Forms.RadioButton();
+            stereoMixRadBtn = new System.Windows.Forms.RadioButton();
+            fftSizeCmbx = new System.Windows.Forms.ComboBox();
+            fftSizeLbl = new System.Windows.Forms.Label();
+            mainPanelTableLayout.SuspendLayout();
             settingsPanel.SuspendLayout();
-            groupBox2.SuspendLayout();
+            smoothingGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)emaNum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smaNum).BeginInit();
+            displaySettingsGroupBox.SuspendLayout();
             SuspendLayout();
             // 
             // formsPlot
@@ -54,29 +60,31 @@
             formsPlot.Size = new System.Drawing.Size(826, 258);
             formsPlot.TabIndex = 0;
             // 
-            // tableLayoutPanel1
+            // mainPanelTableLayout
             // 
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(formsPlot, 0, 0);
-            tableLayoutPanel1.Controls.Add(settingsPanel, 0, 1);
-            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(834, 351);
-            tableLayoutPanel1.TabIndex = 1;
+            mainPanelTableLayout.ColumnCount = 1;
+            mainPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainPanelTableLayout.Controls.Add(formsPlot, 0, 0);
+            mainPanelTableLayout.Controls.Add(settingsPanel, 0, 1);
+            mainPanelTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainPanelTableLayout.Location = new System.Drawing.Point(0, 0);
+            mainPanelTableLayout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            mainPanelTableLayout.Name = "mainPanelTableLayout";
+            mainPanelTableLayout.RowCount = 2;
+            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            mainPanelTableLayout.Size = new System.Drawing.Size(834, 351);
+            mainPanelTableLayout.TabIndex = 1;
             // 
             // settingsPanel
             // 
-            settingsPanel.ColumnCount = 2;
+            settingsPanel.ColumnCount = 3;
             settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
-            settingsPanel.Controls.Add(groupBox2, 1, 0);
+            settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            settingsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
             settingsPanel.Controls.Add(navigator, 0, 0);
+            settingsPanel.Controls.Add(smoothingGroupBox, 2, 0);
+            settingsPanel.Controls.Add(displaySettingsGroupBox, 1, 0);
             settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             settingsPanel.Location = new System.Drawing.Point(4, 267);
             settingsPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -86,27 +94,41 @@
             settingsPanel.Size = new System.Drawing.Size(826, 81);
             settingsPanel.TabIndex = 2;
             // 
-            // groupBox2
+            // navigator
             // 
-            groupBox2.Controls.Add(smaLbl);
-            groupBox2.Controls.Add(emaNum);
-            groupBox2.Controls.Add(emaLbl);
-            groupBox2.Controls.Add(smaNum);
-            groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            groupBox2.Location = new System.Drawing.Point(689, 3);
-            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox2.Size = new System.Drawing.Size(133, 75);
-            groupBox2.TabIndex = 5;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Smoothing:";
+            navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            navigator.Location = new System.Drawing.Point(5, 17);
+            navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            navigator.Name = "navigator";
+            navigator.Pan = -1D;
+            navigator.Size = new System.Drawing.Size(506, 61);
+            navigator.TabIndex = 1;
+            navigator.Zoom = 1D;
+            navigator.ZoomMax = 20D;
+            navigator.ZoomMin = 1D;
+            navigator.ZoomPrecision = 0.01D;
+            // 
+            // smoothingGroupBox
+            // 
+            smoothingGroupBox.Controls.Add(smaLbl);
+            smoothingGroupBox.Controls.Add(emaNum);
+            smoothingGroupBox.Controls.Add(emaLbl);
+            smoothingGroupBox.Controls.Add(smaNum);
+            smoothingGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            smoothingGroupBox.Location = new System.Drawing.Point(700, 3);
+            smoothingGroupBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            smoothingGroupBox.Name = "smoothingGroupBox";
+            smoothingGroupBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            smoothingGroupBox.Size = new System.Drawing.Size(122, 75);
+            smoothingGroupBox.TabIndex = 6;
+            smoothingGroupBox.TabStop = false;
+            smoothingGroupBox.Text = "Smoothing:";
             // 
             // smaLbl
             // 
             smaLbl.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             smaLbl.AutoSize = true;
-            smaLbl.Location = new System.Drawing.Point(4, 20);
+            smaLbl.Location = new System.Drawing.Point(7, 21);
             smaLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             smaLbl.Name = "smaLbl";
             smaLbl.Size = new System.Drawing.Size(55, 15);
@@ -118,18 +140,18 @@
             emaNum.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             emaNum.DecimalPlaces = 2;
             emaNum.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            emaNum.Location = new System.Drawing.Point(70, 44);
+            emaNum.Location = new System.Drawing.Point(65, 46);
             emaNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             emaNum.Maximum = new decimal(new int[] { 85, 0, 0, 131072 });
             emaNum.Name = "emaNum";
-            emaNum.Size = new System.Drawing.Size(56, 23);
+            emaNum.Size = new System.Drawing.Size(51, 23);
             emaNum.TabIndex = 9;
             // 
             // emaLbl
             // 
             emaLbl.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             emaLbl.AutoSize = true;
-            emaLbl.Location = new System.Drawing.Point(4, 47);
+            emaLbl.Location = new System.Drawing.Point(8, 49);
             emaLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             emaLbl.Name = "emaLbl";
             emaLbl.Size = new System.Drawing.Size(52, 15);
@@ -139,56 +161,103 @@
             // smaNum
             // 
             smaNum.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            smaNum.Location = new System.Drawing.Point(70, 16);
+            smaNum.Location = new System.Drawing.Point(65, 18);
             smaNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             smaNum.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             smaNum.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             smaNum.Name = "smaNum";
-            smaNum.Size = new System.Drawing.Size(56, 23);
+            smaNum.Size = new System.Drawing.Size(51, 23);
             smaNum.TabIndex = 5;
             smaNum.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
-            // navigator
+            // displaySettingsGroupBox
             // 
-            navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            navigator.Location = new System.Drawing.Point(5, 17);
-            navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
-            navigator.Name = "navigator";
-            navigator.Pan = -1D;
-            navigator.Size = new System.Drawing.Size(675, 61);
-            navigator.TabIndex = 1;
-            navigator.Zoom = 1D;
-            navigator.ZoomMax = 20D;
-            navigator.ZoomMin = 1D;
-            navigator.ZoomPrecision = 0.01D;
+            displaySettingsGroupBox.Controls.Add(stereoSplitRadBtn);
+            displaySettingsGroupBox.Controls.Add(stereoMixRadBtn);
+            displaySettingsGroupBox.Controls.Add(fftSizeCmbx);
+            displaySettingsGroupBox.Controls.Add(fftSizeLbl);
+            displaySettingsGroupBox.Location = new System.Drawing.Point(519, 3);
+            displaySettingsGroupBox.Name = "displaySettingsGroupBox";
+            displaySettingsGroupBox.Size = new System.Drawing.Size(173, 75);
+            displaySettingsGroupBox.TabIndex = 7;
+            displaySettingsGroupBox.TabStop = false;
+            displaySettingsGroupBox.Text = "Display settings:";
+            // 
+            // stereoSplitRadBtn
+            // 
+            stereoSplitRadBtn.AutoSize = true;
+            stereoSplitRadBtn.Location = new System.Drawing.Point(85, 18);
+            stereoSplitRadBtn.Name = "stereoSplitRadBtn";
+            stereoSplitRadBtn.Size = new System.Drawing.Size(83, 19);
+            stereoSplitRadBtn.TabIndex = 10;
+            stereoSplitRadBtn.Text = "Stereo split";
+            stereoSplitRadBtn.UseVisualStyleBackColor = true;
+            // 
+            // stereoMixRadBtn
+            // 
+            stereoMixRadBtn.AutoSize = true;
+            stereoMixRadBtn.Checked = true;
+            stereoMixRadBtn.Location = new System.Drawing.Point(5, 18);
+            stereoMixRadBtn.Name = "stereoMixRadBtn";
+            stereoMixRadBtn.Size = new System.Drawing.Size(80, 19);
+            stereoMixRadBtn.TabIndex = 9;
+            stereoMixRadBtn.TabStop = true;
+            stereoMixRadBtn.Text = "Stereo mix";
+            stereoMixRadBtn.UseVisualStyleBackColor = true;
+            // 
+            // fftSizeCmbx
+            // 
+            fftSizeCmbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            fftSizeCmbx.FormattingEnabled = true;
+            fftSizeCmbx.Items.AddRange(new object[] { "256", "512", "1024", "2048", "4096", "8192", "16384", "32768" });
+            fftSizeCmbx.Location = new System.Drawing.Point(53, 43);
+            fftSizeCmbx.Name = "fftSizeCmbx";
+            fftSizeCmbx.Size = new System.Drawing.Size(115, 23);
+            fftSizeCmbx.TabIndex = 8;
+            // 
+            // fftSizeLbl
+            // 
+            fftSizeLbl.AutoSize = true;
+            fftSizeLbl.Location = new System.Drawing.Point(3, 46);
+            fftSizeLbl.Name = "fftSizeLbl";
+            fftSizeLbl.Size = new System.Drawing.Size(51, 15);
+            fftSizeLbl.TabIndex = 7;
+            fftSizeLbl.Text = "FFT size:";
             // 
             // SpectrumViewerControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            Controls.Add(tableLayoutPanel1);
+            Controls.Add(mainPanelTableLayout);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "SpectrumViewerControl";
             Size = new System.Drawing.Size(834, 351);
-            tableLayoutPanel1.ResumeLayout(false);
+            mainPanelTableLayout.ResumeLayout(false);
             settingsPanel.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            smoothingGroupBox.ResumeLayout(false);
+            smoothingGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)emaNum).EndInit();
             ((System.ComponentModel.ISupportInitialize)smaNum).EndInit();
+            displaySettingsGroupBox.ResumeLayout(false);
+            displaySettingsGroupBox.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private ScottPlot.WinForms.FormsPlot formsPlot;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel mainPanelTableLayout;
         private Misc.ZoomPanControl navigator;
         private System.Windows.Forms.TableLayoutPanel settingsPanel;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox smoothingGroupBox;
         private System.Windows.Forms.Label smaLbl;
         private System.Windows.Forms.NumericUpDown emaNum;
         private System.Windows.Forms.Label emaLbl;
         private System.Windows.Forms.NumericUpDown smaNum;
+        private System.Windows.Forms.GroupBox displaySettingsGroupBox;
+        private System.Windows.Forms.Label fftSizeLbl;
+        private System.Windows.Forms.ComboBox fftSizeCmbx;
+        private System.Windows.Forms.RadioButton stereoMixRadBtn;
+        private System.Windows.Forms.RadioButton stereoSplitRadBtn;
     }
 }
