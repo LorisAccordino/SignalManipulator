@@ -41,7 +41,7 @@
             spectrumPage = new TabPage();
             spectrumViewer = new UI.Controls.Viewers.SpectrumViewerControl();
             stereoPage = new TabPage();
-            lissajousViewer = new UI.Controls.LissajousViewerControl();
+            lissajousViewer = new UI.Controls.Viewers.LissajousViewerControl();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
             audioPlayer = new UI.Controls.AudioPlayerControl();
@@ -476,7 +476,7 @@
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoPage;
         private SignalManipulator.UI.Controls.EffectChainControl effectChain;
-        private SignalManipulator.UI.Controls.LissajousViewerControl lissajousViewer;
+        private SignalManipulator.UI.Controls.Viewers.LissajousViewerControl lissajousViewer;
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
         private UI.Controls.Viewers.SpectrumViewerControl spectrumViewer;
         private UI.Controls.AudioPlayerControl audioPlayer;

@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.UI.Controls
+﻿namespace SignalManipulator.UI.Controls.Viewers
 {
     partial class LissajousViewerControl
     {
@@ -41,7 +41,7 @@
             this.formsPlot.Name = "formsPlot";
             this.formsPlot.Size = new System.Drawing.Size(338, 328);
             this.formsPlot.TabIndex = 0;
-            this.formsPlot.Resize += new System.EventHandler(this.formsPlot_Resize);
+            this.formsPlot.Resize += new System.EventHandler(this.Plot_Resize);
             // 
             // LissajousViewerControl
             // 

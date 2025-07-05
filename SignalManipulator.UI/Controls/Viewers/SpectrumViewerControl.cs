@@ -56,9 +56,8 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
             RenderPlot();
 
-            // Final setups
-            ToggleChecks(); // Hide or show streams
-            ClearBuffers();  // Start from scratch
+            // Hide or show streams
+            ToggleChecks();
         }
 
         protected override void ResetUI()
