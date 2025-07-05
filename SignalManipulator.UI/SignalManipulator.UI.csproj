@@ -39,13 +39,9 @@
     <Compile Update="Controls\LissajousViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\SpectrumViewerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\Viewers\SpectrumViewerControl.cs" />
     <Compile Update="Controls\Viewers\BaseViewerControl.cs" />
-    <Compile Update="Controls\WaveformViewerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\Viewers\WaveformViewerControl.cs" />
     <Compile Update="Dialogs\AudioInfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>

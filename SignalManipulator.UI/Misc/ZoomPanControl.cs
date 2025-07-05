@@ -20,18 +20,12 @@ namespace SignalManipulator.UI.Misc
         }
 
         // Wrapping Navigator properties
+        public AxisNavigator Navigator => navigator;
         private AxisNavigator navigator = new AxisNavigator(1);
 
+        
         public double Zoom { get => navigator.Zoom; set => navigator.SetZoom(zoomSlider.Value = value); }
         public double Pan { get => navigator.Pan; set => navigator.SetPan(panSlider.Value = value); }
-
-        public double Start => navigator.Start;
-        public double End => navigator.End;
-
-        public int Capacity { get => navigator.Capacity; set => navigator.SetCapacity(value); }
-        public bool NeedsUpdate => navigator.NeedsUpdate;
-
-        public void Recalculate() => navigator.Recalculate();
 
         public ZoomPanControl()
         {

@@ -3,13 +3,12 @@ using ScottPlot.WinForms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
-using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    public abstract partial class BaseViewerControl : UserControl
+    public class BaseViewerControl : UserControl
     {
         // Common services and events
         protected IAudioEventDispatcher AudioEvents;
@@ -21,22 +20,21 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected volatile bool NeedsRender;
 
         // Navigator and plot
-        protected abstract AxisNavigator AxisNavigator { get; }
-        protected abstract FormsPlot FormsPlot { get; }
+        protected virtual FormsPlot FormsPlot => throw new NotImplementedException();
+        protected virtual AxisNavigator AxisNavigator => throw new NotImplementedException();
         protected Plot Plot => FormsPlot.Plot;
 
-        protected BaseViewerControl()
+        protected BaseViewerControl() { }
+
+        public void InitializeViewer()
         {
-            InitializeComponent();
-            if (!DesignModeHelper.IsDesignMode)
-            {
-                AudioEvents = AudioEngine.Instance.AudioEventDispatcher;
-                UIUpdate = UIUpdateService.Instance;
-                InitCommon();
-            }
+            AudioEvents = AudioEngine.Instance.AudioEventDispatcher;
+            UIUpdate = UIUpdateService.Instance;
+            InitializeCommon();
         }
 
-        private void InitCommon()
+
+        private void InitializeCommon()
         {
             AudioEvents.OnLoad += OnLoad;
             AudioEvents.OnStarted += OnStarted;
@@ -45,13 +43,14 @@ namespace SignalManipulator.UI.Controls.Viewers
             OnStopped(null, EventArgs.Empty);  // Init UI
 
             FormsPlot.UserInputProcessor.Disable();
-            InitializeLogic(); // Other defined logic
+            InitializePlot(); // Other defined plot settings
+            InitializeEvents(); // Other defined events
         }
 
         private void OnLoad(object? s, AudioInfo info)
         {
             SampleRate = info.SampleRate;
-            ConfigureBuffers();
+            ResampleBuffers();
             UpdateDataPeriod();
         }
 
@@ -67,8 +66,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             ClearBuffers();
             ResetUI();
             EnableUI(false);
+            UIUpdate.Enqueue(RenderPlot);
         }
-
+        
         private void ProcessFrameInternal(object? s, WaveformFrame frame)
         {
             lock (RenderLock)
@@ -78,7 +78,7 @@ namespace SignalManipulator.UI.Controls.Viewers
             }
         }
 
-        private void RenderPlot()
+        protected void RenderPlot()
         {
             lock (RenderLock)
             {
@@ -89,18 +89,19 @@ namespace SignalManipulator.UI.Controls.Viewers
                     NeedsRender = true;
                 }
                 if (NeedsRender)
-                    formsPlot.Refresh();
+                    FormsPlot.Refresh();
                 NeedsRender = false;
             }
         }
 
         // Template methods to implement in derived classes
-        protected abstract void InitializeLogic();
-        protected abstract void ConfigureBuffers();
-        protected abstract void ClearBuffers();
-        protected abstract void ResetUI();
-        protected abstract void UpdateDataPeriod();
-        protected abstract void ProcessFrame(WaveformFrame frame);
-        protected abstract void EnableUI(bool enable);
+        protected virtual void InitializePlot() { }
+        protected virtual void InitializeEvents() { }
+        protected virtual void ResampleBuffers() { }
+        protected virtual void ClearBuffers() { }
+        protected virtual void ResetUI() { }
+        protected virtual void UpdateDataPeriod() { }
+        protected virtual void ProcessFrame(WaveformFrame frame) { }
+        protected virtual void EnableUI(bool enable) { }
     }
 }

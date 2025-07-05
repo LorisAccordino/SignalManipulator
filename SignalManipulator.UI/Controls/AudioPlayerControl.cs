@@ -101,8 +101,8 @@ namespace SignalManipulator.UI.Controls
 
         private void OnStop(object sender, EventArgs e)
         {
-            UIUpdateService.Instance.Stop();
             playback.Stop();
+            UIUpdateService.Instance.Stop();
         }
 
         private void OnShowMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)

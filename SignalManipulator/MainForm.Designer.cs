@@ -38,9 +38,8 @@
             visualizationGroupBox = new GroupBox();
             tabControl1 = new TabControl();
             waveformPage = new TabPage();
-            waveformViewer = new UI.Controls.WaveformViewerControl();
             spectrumPage = new TabPage();
-            spectrumViewer = new UI.Controls.SpectrumViewerControl();
+            spectrumViewer = new UI.Controls.Viewers.SpectrumViewerControl();
             stereoPage = new TabPage();
             lissajousViewer = new UI.Controls.LissajousViewerControl();
             bottomSplitContainer = new SplitContainer();
@@ -57,6 +56,7 @@
             playbackToolStripMenuItem = new ToolStripMenuItem();
             routingToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
+            waveformViewer = new UI.Controls.Viewers.WaveformViewerControl();
             ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
             mainSplitContainer.Panel1.SuspendLayout();
             mainSplitContainer.Panel2.SuspendLayout();
@@ -223,15 +223,6 @@
             waveformPage.TabIndex = 0;
             waveformPage.Text = "Signal Waveform";
             // 
-            // waveformViewer
-            // 
-            waveformViewer.Dock = DockStyle.Fill;
-            waveformViewer.Location = new Point(4, 3);
-            waveformViewer.Margin = new Padding(2);
-            waveformViewer.Name = "waveformViewer";
-            waveformViewer.Size = new Size(830, 380);
-            waveformViewer.TabIndex = 0;
-            // 
             // spectrumPage
             // 
             spectrumPage.BackColor = SystemColors.Control;
@@ -385,7 +376,7 @@
             effectsToolStripMenuItem.CheckOnClick = true;
             effectsToolStripMenuItem.CheckState = CheckState.Checked;
             effectsToolStripMenuItem.Name = "effectsToolStripMenuItem";
-            effectsToolStripMenuItem.Size = new Size(180, 22);
+            effectsToolStripMenuItem.Size = new Size(121, 22);
             effectsToolStripMenuItem.Text = "Effects";
             effectsToolStripMenuItem.Click += ShowHideEffects;
             // 
@@ -395,7 +386,7 @@
             playbackToolStripMenuItem.CheckOnClick = true;
             playbackToolStripMenuItem.CheckState = CheckState.Checked;
             playbackToolStripMenuItem.Name = "playbackToolStripMenuItem";
-            playbackToolStripMenuItem.Size = new Size(180, 22);
+            playbackToolStripMenuItem.Size = new Size(121, 22);
             playbackToolStripMenuItem.Text = "Playback";
             playbackToolStripMenuItem.Click += ShowHidePlaybackAndRouting;
             // 
@@ -405,13 +396,22 @@
             routingToolStripMenuItem.CheckOnClick = true;
             routingToolStripMenuItem.CheckState = CheckState.Checked;
             routingToolStripMenuItem.Name = "routingToolStripMenuItem";
-            routingToolStripMenuItem.Size = new Size(180, 22);
+            routingToolStripMenuItem.Size = new Size(121, 22);
             routingToolStripMenuItem.Text = "Routing";
             routingToolStripMenuItem.Click += ShowHidePlaybackAndRouting;
             // 
             // audioOFD
             // 
             audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
+            // 
+            // waveformViewer
+            // 
+            waveformViewer.Dock = DockStyle.Fill;
+            waveformViewer.Location = new Point(4, 3);
+            waveformViewer.Margin = new Padding(2);
+            waveformViewer.Name = "waveformViewer";
+            waveformViewer.Size = new Size(830, 380);
+            waveformViewer.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -476,14 +476,14 @@
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoPage;
         private SignalManipulator.UI.Controls.EffectChainControl effectChain;
-        private SignalManipulator.UI.Controls.WaveformViewerControl waveformViewer;
         private SignalManipulator.UI.Controls.LissajousViewerControl lissajousViewer;
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
-        private UI.Controls.SpectrumViewerControl spectrumViewer;
+        private UI.Controls.Viewers.SpectrumViewerControl spectrumViewer;
         private UI.Controls.AudioPlayerControl audioPlayer;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
+        private UI.Controls.Viewers.WaveformViewerControl waveformViewer;
     }
 }

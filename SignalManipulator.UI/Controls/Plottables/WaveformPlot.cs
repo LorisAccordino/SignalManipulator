@@ -1,18 +1,21 @@
-﻿using ScottPlot.Collections;
+﻿using ScottPlot;
+using ScottPlot.Collections;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
+using SignalManipulator.Logic.Core;
 
 namespace SignalManipulator.UI.Controls.Plottables
 {
     public class WaveformPlot : Signal
     {
         // Data
-        private CircularBuffer<double> buffer;
+        private CircularBuffer<double> buffer = new CircularBuffer<double>(AudioEngine.SAMPLE_RATE);
         private double[] data;
 
         public WaveformPlot(int sampleRate) : this(sampleRate, "") { }
         public WaveformPlot(int sampleRate, string channelName) : base(new SignalSourceDouble(new double[sampleRate], 1.0))
         {
+            sampleRate = Math.Max(sampleRate, 1);
             ResampleBuffer(sampleRate);
             LegendText = channelName;
         }

@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.UI.Controls
+﻿namespace SignalManipulator.UI.Controls.Viewers
 {
     partial class SpectrumViewerControl
     {
@@ -151,7 +151,6 @@
             // navigator
             // 
             navigator.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            navigator.Capacity = 1;
             navigator.Location = new System.Drawing.Point(5, 17);
             navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             navigator.Name = "navigator";

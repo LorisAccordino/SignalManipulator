@@ -18,16 +18,20 @@ namespace SignalManipulator.UI.Misc
         }
 
         private readonly Timer timer;
+        private readonly Timer wakeOnTimer;
         private readonly List<Action> subscribers = new();
         private readonly ConcurrentQueue<Action> oneShotQueue = new();
 
         private UIUpdateService()
         {
             timer = new Timer { Interval = AudioEngine.TARGET_FPS };
+            wakeOnTimer = new Timer() { Interval = AudioEngine.TARGET_FPS };
             timer.Tick += (s, e) => Update();
+            wakeOnTimer.Tick += (s, e) => WakeOnUpdate();
+            wakeOnTimer.Start();
         }
 
-        private void Update()
+        private void WakeOnUpdate()
         {
             // One-shot queue
             while (oneShotQueue.TryDequeue(out var action))
@@ -35,7 +39,10 @@ namespace SignalManipulator.UI.Misc
                 try { action(); }
                 catch (Exception ex) { Console.WriteLine($"[UIUpdateService] One-shot failed: {ex}"); }
             }
+        }
 
+        private void Update()
+        {
             // Periodic subscribers
             foreach (var cb in subscribers)
             {
