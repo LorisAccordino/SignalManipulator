@@ -3,7 +3,7 @@ using ScottPlot.DataSources;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Models;
 
-namespace SignalManipulator.UI.Controls.Plottables
+namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class SpectrumPlot : BaseSignalPlot
     {
@@ -20,6 +20,8 @@ namespace SignalManipulator.UI.Controls.Plottables
 
         public override void ResizeBuffer(int fftSize)
         {
+            if (this.fftSize == fftSize) return;
+
             lock (lockObject)
             {
                 this.fftSize = fftSize;

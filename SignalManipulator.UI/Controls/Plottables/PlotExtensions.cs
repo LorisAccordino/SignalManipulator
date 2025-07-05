@@ -1,4 +1,7 @@
 ﻿using ScottPlot;
+using SignalManipulator.Logic.Core;
+using SignalManipulator.UI.Controls.Plottables.Scatters;
+using SignalManipulator.UI.Controls.Plottables.Signals;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls.Plottables
@@ -28,6 +31,20 @@ namespace SignalManipulator.UI.Controls.Plottables
             };
             adder.Plot.PlottableList.Add(spectrum);
             return spectrum;
+        }
+
+        public static LissajousPlot Lissajous(this PlottableAdder adder, int scatterSamples) =>
+            Lissajous(adder, AudioEngine.SAMPLE_RATE, scatterSamples, "");
+        public static LissajousPlot Lissajous(this PlottableAdder adder, int sampleRate, int scatterSamples) =>
+            Lissajous(adder, sampleRate, scatterSamples, "");
+        public static LissajousPlot Lissajous(this PlottableAdder adder, int sampleRate, int scatterSamples, string channelName)
+        {
+            LissajousPlot lissajous = new LissajousPlot(sampleRate, scatterSamples, channelName)
+            {
+                Color = adder.GetNextColor()
+            };
+            adder.Plot.PlottableList.Add(lissajous);
+            return lissajous;
         }
     }
 }

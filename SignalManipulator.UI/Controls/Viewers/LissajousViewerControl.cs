@@ -1,22 +1,19 @@
-﻿using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.AudioMath;
-using System.Drawing;
+﻿using System.Drawing;
 using SignalManipulator.UI.Helpers;
 using System.Diagnostics.CodeAnalysis;
-using ScottPlot.Collections;
 using SignalManipulator.Logic.Models;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
+using SignalManipulator.UI.Controls.Plottables.Scatters;
+using SignalManipulator.UI.Controls.Plottables;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
     public partial class LissajousViewerControl : BaseViewerControl
     {
+        private LissajousPlot lissajousPlot;
         private const int MAX_SAMPLES = 1024;
-        private readonly double[] left = new double[MAX_SAMPLES];
-        private readonly double[] right = new double[MAX_SAMPLES];
-        private CircularBuffer<double> interleavedBuffer = new CircularBuffer<double>(MAX_SAMPLES * 2);
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
@@ -41,36 +38,19 @@ namespace SignalManipulator.UI.Controls.Viewers
             AxisNavigator.Recalculate(); // Ensure to block the limits
 
             // Setup scatter plot
-            var xyPlot = Plot.Add.Scatter(left, right);
-            xyPlot.MarkerSize = 0; // Don't draw markers
-            xyPlot.LineWidth = 1; // Thick enough
-            
-            // Clear buffers
-            ClearBuffers();
+            lissajousPlot = Plot.Add.Lissajous(MAX_SAMPLES);
         }
 
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-            {
-                interleavedBuffer.Clear();
-                Array.Clear(left, 0, left.Length);
-                Array.Clear(right, 0, right.Length);
-            }
-
-            // Force render
+                lissajousPlot.ClearBuffer();
             NeedsRender = true;
         }
 
         protected override void ProcessFrame(WaveformFrame frame)
         {
-            foreach (var sample in frame.DoubleStereo)
-                interleavedBuffer.Add(sample);
-
-            if (interleavedBuffer.Count < MAX_SAMPLES * 2)
-                return;
-
-            interleavedBuffer.ToArray().SplitStereo(left, right);
+            lissajousPlot.AddSamples(frame.DoubleStereo);
         }
 
         private void Plot_Resize(object sender, EventArgs e)

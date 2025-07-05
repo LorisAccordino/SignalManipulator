@@ -1,6 +1,7 @@
 ﻿using ScottPlot.WinForms;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Controls.Plottables;
+using SignalManipulator.UI.Controls.Plottables.Signals;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.Diagnostics.CodeAnalysis;

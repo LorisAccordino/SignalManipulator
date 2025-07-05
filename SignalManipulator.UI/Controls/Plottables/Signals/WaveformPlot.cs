@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.UI.Controls.Plottables
+﻿namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class WaveformPlot : BaseSignalPlot
     {
