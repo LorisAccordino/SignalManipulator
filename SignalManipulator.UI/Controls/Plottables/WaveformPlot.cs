@@ -1,5 +1,4 @@
-﻿using ScottPlot;
-using ScottPlot.Collections;
+﻿using ScottPlot.Collections;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Core;
@@ -35,9 +34,9 @@ namespace SignalManipulator.UI.Controls.Plottables
             buffer.CopyTo(data, 0);
         }
 
-        public void UpdatePeriod(double period)
+        public void UpdatePeriod(double seconds)
         {
-            Data.Period = period;
+            Data.Period = seconds;
         }
 
         public void ClearBuffer()

@@ -11,9 +11,9 @@ namespace SignalManipulator.Logic.Core
     public class AudioEngine
     {
         // --- Constants ---
-        //public const int CHUNK_SIZE = 512;
         public const int SAMPLE_RATE = 44100;
         public const int CHANNELS = 2;
+        public const int FFT_SIZE = 8192;
         public const int TARGET_FPS = 30;
 
         public static readonly WaveFormat WAVE_FORMAT =

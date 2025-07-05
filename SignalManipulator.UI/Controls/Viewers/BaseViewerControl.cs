@@ -15,7 +15,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected UIUpdateService UIUpdate;
 
         // Other commons
-        protected int SampleRate { get; private set; }
+        protected int SampleRate { get; private set; } = AudioEngine.SAMPLE_RATE;
         protected readonly object RenderLock = new();
         protected volatile bool NeedsRender;
 
@@ -40,11 +40,12 @@ namespace SignalManipulator.UI.Controls.Viewers
             AudioEvents.OnStarted += OnStarted;
             AudioEvents.OnStopped += OnStopped;
             UIUpdate.Register(RenderPlot);
-            OnStopped(null, EventArgs.Empty);  // Init UI
 
             FormsPlot.UserInputProcessor.Disable();
             InitializePlot(); // Other defined plot settings
             InitializeEvents(); // Other defined events
+
+            OnStopped(null, EventArgs.Empty);  // Init UI
         }
 
         private void OnLoad(object? s, AudioInfo info)

@@ -1,9 +1,7 @@
 ﻿using ScottPlot;
-using ScottPlot.Collections;
-using ScottPlot.Plottables;
 using ScottPlot.WinForms;
-using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.Diagnostics.CodeAnalysis;
@@ -17,19 +15,8 @@ namespace SignalManipulator.UI.Controls.Viewers
         private const int FFT_SIZE = 8192;                  // Must be power of 2
         private const int MAX_MAGNITUDE_DB = 125;
 
-        // FFT data
-        private SmootherSMA smootherSMA = new SmootherSMA(1);
-        private SmootherEMA smootherEMA = new SmootherEMA(0.0);
-        private readonly CircularBuffer<double> audioBuffer = new CircularBuffer<double>(FFT_SIZE);
-        private double[] magnitudes = new double[FFT_SIZE];
-
-        // Plotting
-        private Signal spectrumPlot;
-        //private volatile bool needsRender = false;
-
-        // FFT properties
-        private double BinSize => (double)SampleRate / FFT_SIZE;
-        private int MaxFrequency => SampleRate / 2;
+        // Spectrum plots
+        private SpectrumPlot spectrumPlot;
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
@@ -46,8 +33,8 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void InitializeEvents()
         {
             // Other events
-            smaNum.ValueChanged += (s, e) => { smootherSMA.SetHistoryLength((int)smaNum.Value); };
-            emaNum.ValueChanged += (s, e) => { smootherEMA.SetAlpha((double)emaNum.Value); };
+            smaNum.ValueChanged += (s, e) => { spectrumPlot.SetSMA((int)smaNum.Value); };
+            emaNum.ValueChanged += (s, e) => { spectrumPlot.SetEMA((int)emaNum.Value); };
         }
 
         protected override void InitializePlot()
@@ -56,11 +43,11 @@ namespace SignalManipulator.UI.Controls.Viewers
             Plot.XLabel("Frequency (Hz)"); Plot.YLabel("Magnitude (dB)");
 
             // Set plotting
-            spectrumPlot = Plot.Add.Signal(magnitudes);
+            spectrumPlot = Plot.Add.Spectrum(SampleRate, FFT_SIZE);
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
-            AxisNavigator.SetCapacity(MaxFrequency);
+            UpdateDataPeriod();
 
             // Force the update
             NeedsRender = true;
@@ -88,37 +75,20 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void ClearBuffers()
         {
-            lock (RenderLock)
-            {
-                audioBuffer.Clear();
-                while (!audioBuffer.IsFull) audioBuffer.Add(0);
-
-                Array.Clear(magnitudes);
-            }
-
+            lock (RenderLock) 
+                spectrumPlot.ClearBuffer();
             NeedsRender = true;
         }
 
         protected override void ProcessFrame(WaveformFrame frame)
         {
-            foreach (var sample in frame.DoubleMono)
-                audioBuffer.Add(sample);
-
-            // Get magnitudes computing the FFT from waveform
-            var fft = FFTFrame.FromWaveform(audioBuffer.ToArray(), SampleRate);
-
-            // Smooth values
-            double[] emaSmoothed = smootherEMA.Smooth(fft.Magnitudes);
-            double[] smaSmoothed = smootherSMA.Smooth(emaSmoothed);
-
-            // Clamp values
-            smaSmoothed.CopyTo(magnitudes, 0);
+            spectrumPlot.AddSamples(frame.DoubleMono);
         }
 
         protected override void UpdateDataPeriod()
         {
-            spectrumPlot.Data.Period = BinSize;
-            AxisNavigator.SetCapacity(MaxFrequency);
+            spectrumPlot.UpdatePeriod(SampleRate);
+            AxisNavigator.SetCapacity(SampleRate / 2);
         }
     }
 }

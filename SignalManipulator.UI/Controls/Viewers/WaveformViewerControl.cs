@@ -52,7 +52,7 @@ namespace SignalManipulator.UI.Controls.Viewers
 
             // Set the bounds
             Plot.Axes.SetLimitsY(-1, 1);
-            AxisNavigator.SetCapacity(SampleRate);
+            UpdateDataPeriod();
 
             // Force the update
             NeedsRender = true;
