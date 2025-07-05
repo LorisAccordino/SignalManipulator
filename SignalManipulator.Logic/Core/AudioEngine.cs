@@ -13,8 +13,11 @@ namespace SignalManipulator.Logic.Core
         // --- Constants ---
         public const int SAMPLE_RATE = 44100;
         public const int CHANNELS = 2;
-        public const int FFT_SIZE = 8192;
         public const int TARGET_FPS = 30;
+
+        public const int MAX_MAGNITUDE_DB = 125;
+        public const int FFT_SIZE = 8192;
+
 
         public static readonly WaveFormat WAVE_FORMAT =
             WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);

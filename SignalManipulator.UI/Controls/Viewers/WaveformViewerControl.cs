@@ -10,9 +10,6 @@ namespace SignalManipulator.UI.Controls.Viewers
     [ExcludeFromCodeCoverage]
     public partial class WaveformViewerControl : BaseViewerControl
     {
-        // Window config
-        private int windowSeconds = 1;                    // Current shown seconds
-
         // Waveform plots
         private List<WaveformPlot> waveformPlots = new List<WaveformPlot>();
 
@@ -31,7 +28,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void InitializeEvents()
         {
             // Other events
-            secNum.ValueChanged += (_, v) => { windowSeconds = (int)secNum.Value; UpdateDataPeriod(); };
+            secNum.ValueChanged += (_, v) => UpdateDataPeriod();
             stereoMixRadBtn.CheckedChanged += (_, e) => ToggleChecks();
         }
 
@@ -113,8 +110,10 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void UpdateDataPeriod()
         {
-            waveformPlots.ForEach(x => x.UpdatePeriod(windowSeconds));
-            AxisNavigator.SetCapacity(SampleRate * windowSeconds);
+            int seconds = (int)secNum.Value;
+            waveformPlots.ForEach(p => p.UpdatePeriod(seconds));
+            AxisNavigator.SetCapacity(SampleRate * seconds);
         }
+
     }
 }

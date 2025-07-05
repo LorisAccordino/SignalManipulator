@@ -25,7 +25,7 @@ public class SmootherSMA : Smoother
         double[] result = new double[length];
 
         foreach (var arr in history)
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < Math.Min(length, arr.Length); i++)
                 result[i] += arr[i];
 
         for (int i = 0; i < length; i++)

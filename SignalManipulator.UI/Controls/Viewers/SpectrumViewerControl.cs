@@ -5,7 +5,6 @@ using SignalManipulator.Logic.Models;
 using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls.Viewers
@@ -13,9 +12,6 @@ namespace SignalManipulator.UI.Controls.Viewers
     [ExcludeFromCodeCoverage]
     public partial class SpectrumViewerControl : BaseViewerControl
     {
-        // FFT configuration and visualization
-        private const int MAX_MAGNITUDE_DB = 125;
-
         // Spectrum plots
         private List<SpectrumPlot> spectrumPlots = new List<SpectrumPlot>();
 
@@ -53,7 +49,7 @@ namespace SignalManipulator.UI.Controls.Viewers
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
 
             // Set the bounds
-            Plot.Axes.SetLimitsY(0, MAX_MAGNITUDE_DB);
+            Plot.Axes.SetLimitsY(0, AudioEngine.MAX_MAGNITUDE_DB);
             UpdateDataPeriod();
 
             // Force the update
