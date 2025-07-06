@@ -14,7 +14,7 @@ namespace SignalManipulator.UI.Controls.Viewers
     public partial class SpectrumViewerControl : BaseViewerControl
     {
         // Spectrum plots
-        private List<SpectrumPlot> spectrumPlots = new List<SpectrumPlot>();
+        private List<Spectrum> spectrumPlots = new List<Spectrum>();
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;

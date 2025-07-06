@@ -12,7 +12,7 @@ namespace SignalManipulator.UI.Controls.Viewers
     public partial class WaveformViewerControl : BaseViewerControl
     {
         // Waveform plots
-        private List<WaveformPlot> waveformPlots = new List<WaveformPlot>();
+        private List<Waveform> waveformPlots = new List<Waveform>();
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;

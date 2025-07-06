@@ -9,11 +9,11 @@ namespace SignalManipulator.UI.Controls.Plottables
     [ExcludeFromCodeCoverage]
     public static class PlotExtensions
     {
-        public static WaveformPlot Waveform(this PlottableAdder adder, int sampleRate) => 
+        public static Waveform Waveform(this PlottableAdder adder, int sampleRate) => 
             Waveform(adder, sampleRate, "");
-        public static WaveformPlot Waveform(this PlottableAdder adder, int sampleRate, string channelName)
+        public static Waveform Waveform(this PlottableAdder adder, int sampleRate, string channelName)
         {
-            WaveformPlot waveform = new WaveformPlot(sampleRate, channelName)
+            Waveform waveform = new Waveform(sampleRate, channelName)
             {
                 Color = adder.GetNextColor()
             };
@@ -21,11 +21,11 @@ namespace SignalManipulator.UI.Controls.Plottables
             return waveform;
         }
 
-        public static SpectrumPlot Spectrum(this PlottableAdder adder, int sampleRate, int fftSize) => 
+        public static Spectrum Spectrum(this PlottableAdder adder, int sampleRate, int fftSize) => 
             Spectrum(adder, sampleRate, fftSize, "");
-        public static SpectrumPlot Spectrum(this PlottableAdder adder, int sampleRate, int fftSize, string channelName)
+        public static Spectrum Spectrum(this PlottableAdder adder, int sampleRate, int fftSize, string channelName)
         {
-            SpectrumPlot spectrum = new SpectrumPlot(sampleRate, fftSize, channelName)
+            Spectrum spectrum = new Spectrum(sampleRate, fftSize, channelName)
             {
                 Color = adder.GetNextColor()
             };
@@ -33,13 +33,11 @@ namespace SignalManipulator.UI.Controls.Plottables
             return spectrum;
         }
 
-        public static LissajousPlot Lissajous(this PlottableAdder adder, int scatterSamples) =>
-            Lissajous(adder, AudioEngine.SAMPLE_RATE, scatterSamples, "");
-        public static LissajousPlot Lissajous(this PlottableAdder adder, int sampleRate, int scatterSamples) =>
-            Lissajous(adder, sampleRate, scatterSamples, "");
-        public static LissajousPlot Lissajous(this PlottableAdder adder, int sampleRate, int scatterSamples, string channelName)
+        public static Lissajous Lissajous(this PlottableAdder adder, int scatterSamples) =>
+            Lissajous(adder, scatterSamples, "");
+        public static Lissajous Lissajous(this PlottableAdder adder, int scatterSamples, string channelName)
         {
-            LissajousPlot lissajous = new LissajousPlot(sampleRate, scatterSamples, channelName)
+            Lissajous lissajous = new Lissajous(scatterSamples, channelName)
             {
                 Color = adder.GetNextColor()
             };

@@ -4,23 +4,21 @@ using System.Diagnostics.CodeAnalysis;
 using SignalManipulator.Logic.Models;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
-using SignalManipulator.UI.Controls.Plottables.Scatters;
 using SignalManipulator.UI.Controls.Plottables;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class LissajousViewerControl : BaseViewerControl
+    public partial class PolarPanningViewer : BaseViewerControl
     {
-        private Lissajous lissajousPlot;
-        private const int MAX_SAMPLES = 1024;
+        private PolarPanningPlot panningPlot;
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
         private AxisNavigator navigator = new AxisNavigator(1);
         protected override AxisNavigator AxisNavigator => navigator;
 
-        public LissajousViewerControl()
+        public PolarPanningViewer()
         {
             InitializeComponent();
 
@@ -31,26 +29,27 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void InitializePlot()
         {
             // Init plot
-            Plot.Title("XY Stereo Oscilloscope");
-            Plot.XLabel("Left"); Plot.YLabel("Right");
+            Plot.Title("Polar Panning");
+            //Plot.XLabel("Left"); Plot.YLabel("Right");
             Plot.Axes.SquareUnits();
             Plot.Axes.SetLimits(-1, 1, -1, 1);
             AxisNavigator.Recalculate(); // Ensure to block the limits
 
-            // Setup scatter plot
-            lissajousPlot = Plot.Add.Lissajous(MAX_SAMPLES);
+            // Setup polar panning plot
+            panningPlot = new PolarPanningPlot(Plot); 
+            Plot.Add.Plottable(panningPlot);
         }
 
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-                lissajousPlot.ClearBuffer();
+                panningPlot.ClearBuffer();
             NeedsRender = true;
         }
 
         protected override void ProcessFrame(WaveformFrame frame)
         {
-            lissajousPlot.AddSamples(frame.DoubleStereo);
+            panningPlot.AddSamples(frame.DoubleStereo);
         }
 
         private void Plot_Resize(object sender, EventArgs e)

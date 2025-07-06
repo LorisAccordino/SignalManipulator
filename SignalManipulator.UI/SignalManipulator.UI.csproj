@@ -36,6 +36,9 @@
     <Compile Update="Controls\EffectChainControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\Viewers\PolarPanningViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\Viewers\LissajousViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

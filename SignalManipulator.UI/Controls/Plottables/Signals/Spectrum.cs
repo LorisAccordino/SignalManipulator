@@ -5,15 +5,15 @@ using SignalManipulator.Logic.Models;
 
 namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
-    public class SpectrumPlot : BaseSignalPlot
+    public class Spectrum : BaseSignalPlot
     {
         private int fftSize;
-        private double[] magnitudes;
+        private double[] magnitudes = [];
         private Smoother smootherSMA = new SmootherSMA(1);
         private Smoother smootherEMA = new SmootherEMA(0.0);
 
-        public SpectrumPlot(int sampleRate, int fftSize) : this(sampleRate, fftSize, "") { }
-        public SpectrumPlot(int sampleRate, int fftSize, string channelName = "") : base(sampleRate, channelName)
+        public Spectrum(int sampleRate, int fftSize) : this(sampleRate, fftSize, "") { }
+        public Spectrum(int sampleRate, int fftSize, string channelName = "") : base(sampleRate, channelName)
         {
             ResizeBuffer(fftSize);
         }
@@ -28,7 +28,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
                 buffer = new CircularBuffer<double>(fftSize);
                 magnitudes = new double[fftSize];
                 data = magnitudes; // Alias for base compatibility
-                Data = new SignalSourceDouble(magnitudes, 1.0);
+                Signal.Data = new SignalSourceDouble(magnitudes, 1.0);
                 UpdatePeriod(sampleRate);
             }
         }
@@ -52,7 +52,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
             lock (lockObject)
             {
                 this.sampleRate = sampleRate;
-                Data.Period = (double)sampleRate / fftSize;
+                Signal.Data.Period = (double)sampleRate / fftSize;
             }
         }
 
