@@ -82,7 +82,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-                spectrumPlots.ForEach(s => s.ClearBuffer());
+                spectrumPlots.ForEach(s => s.Clear());
             NeedsRender = true;
         }
 

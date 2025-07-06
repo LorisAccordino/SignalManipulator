@@ -34,7 +34,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
             }
         }
 
-        public void ClearBuffer()
+        public void Clear()
         {
             lock (lockObject)
             {

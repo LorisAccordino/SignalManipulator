@@ -82,7 +82,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-                waveformPlots.ForEach(x => x.ClearBuffer());
+                waveformPlots.ForEach(x => x.Clear());
             NeedsRender = true;
         }
 

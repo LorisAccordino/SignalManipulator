@@ -44,7 +44,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-                lissajousPlot.ClearBuffer();
+                lissajousPlot.Clear();
             NeedsRender = true;
         }
 
