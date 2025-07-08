@@ -1,5 +1,4 @@
-﻿using ScottPlot.Collections;
-using ScottPlot.DataSources;
+﻿using ScottPlot.DataSources;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Models;
 
@@ -7,6 +6,8 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class Spectrum : BaseSignalPlot
     {
+        public ChannelMode ChannelMode { get; set; } = ChannelMode.Stereo;
+
         private int fftSize;
         private double[] magnitudes = [];
         private Smoother smootherSMA = new SmootherSMA(1);
@@ -25,7 +26,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
             lock (lockObject)
             {
                 this.fftSize = fftSize;
-                buffer = new CircularBuffer<double>(fftSize);
+                buffer = new Logic.Utils.CircularBuffer<double>(fftSize);
                 magnitudes = new double[fftSize];
                 data = magnitudes; // Alias for base compatibility
                 Signal.Data = new SignalSourceDouble(magnitudes, 1.0);
@@ -33,17 +34,16 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
             }
         }
 
-        public override void AddSamples(double[] samples)
+        public void AddData(FFTFrame fft)
         {
             lock (lockObject)
             {
-                foreach (var s in samples)
-                    buffer.Add(s);
-
-                var fft = FFTFrame.FromWaveform(buffer.ToArray(), sampleRate);
-                double[] ema = smootherEMA.Smooth(fft.Magnitudes);
-                double[] sma = smootherSMA.Smooth(ema);
-                sma.CopyTo(magnitudes, 0);
+                if (fft.TryGet(ChannelMode, out var mags))
+                {
+                    double[] ema = smootherEMA.Smooth(mags);
+                    double[] sma = smootherSMA.Smooth(ema);
+                    sma.CopyTo(magnitudes, 0);
+                }
             }
         }
 

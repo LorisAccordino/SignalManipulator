@@ -57,20 +57,20 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         private void OnStarted(object? s, EventArgs e)
         {
-            AudioEvents.WaveformReady += ProcessFrameInternal;
+            AudioEvents.AudioFrameReady += ProcessFrameDispatch;
             EnableUI(true);
         }
 
         private void OnStopped(object? s, EventArgs e)
         {
-            AudioEvents.WaveformReady -= ProcessFrameInternal;
+            AudioEvents.AudioFrameReady -= ProcessFrameDispatch;
             ClearBuffers();
             ResetUI();
             EnableUI(false);
             UIUpdate.Enqueue(RenderPlot);
         }
-        
-        private void ProcessFrameInternal(object? s, WaveformFrame frame)
+
+        private void ProcessFrameDispatch(object? s, CompositeAudioFrame frame)
         {
             lock (RenderLock)
             {
@@ -102,7 +102,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected virtual void ClearBuffers() { }
         protected virtual void ResetUI() { }
         protected virtual void UpdateDataPeriod() { }
-        protected virtual void ProcessFrame(WaveformFrame frame) { }
+        protected virtual void ProcessFrame(CompositeAudioFrame frame) { }
         protected virtual void EnableUI(bool enable) { }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using MathNet.Numerics.IntegralTransforms;
-using System.Linq;
 using System.Numerics;
 
-namespace SignalManipulator.Logic.AudioMath
+namespace SignalManipulator.Logic.AudioMath.Models
 {
-    public static class FFTCalculator
+    public static class FFT
     {
         public static Complex[] Forward(double[] realSamples, FourierOptions options = FourierOptions.Matlab)
         {

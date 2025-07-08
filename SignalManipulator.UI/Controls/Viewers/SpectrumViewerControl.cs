@@ -36,7 +36,7 @@ namespace SignalManipulator.UI.Controls.Viewers
 
             stereoMixRadBtn.CheckedChanged += (_, e) => ToggleChecks();
             fftSizeCmbx.Text = AudioEngine.FFT_SIZE.ToString();
-            fftSizeCmbx.SelectedIndexChanged += (_, e) => spectrumPlots.ForEach(s => s.ResizeBuffer(int.Parse(fftSizeCmbx.Text)));
+            fftSizeCmbx.SelectedIndexChanged += (_, e) => spectrumPlots.ForEach(s => s.ResizeBuffer(AudioEngine.CurrentFFTSize = int.Parse(fftSizeCmbx.Text)));
         }
 
         protected override void InitializePlot()
@@ -48,6 +48,11 @@ namespace SignalManipulator.UI.Controls.Viewers
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Stereo"));
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Left"));
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
+
+            // Set channel modes
+            spectrumPlots[0].ChannelMode = ChannelMode.Stereo;
+            spectrumPlots[1].ChannelMode = ChannelMode.Left;
+            spectrumPlots[2].ChannelMode = ChannelMode.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, AudioEngine.MAX_MAGNITUDE_DB);
@@ -100,11 +105,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(WaveformFrame frame)
+        protected override void ProcessFrame(CompositeAudioFrame frame)
         {
-            spectrumPlots[0].AddSamples(frame.DoubleMono);
-            spectrumPlots[1].AddSamples(frame.DoubleSplitStereo.Left);
-            spectrumPlots[2].AddSamples(frame.DoubleSplitStereo.Right);
+            spectrumPlots.ForEach(s => s.AddData(frame.FFT));
         }
 
         protected override void UpdateDataPeriod()

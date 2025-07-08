@@ -1,7 +1,7 @@
 ﻿using ScottPlot;
-using ScottPlot.Collections;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
+using SignalManipulator.Logic.Utils;
 
 namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
@@ -21,7 +21,6 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
             Signal.LegendText = label;
         }
 
-        public abstract void AddSamples(double[] samples);
         public abstract void UpdatePeriod(int param); // param = either windowSeconds or fftSize, etc...
 
         public virtual void ResizeBuffer(int newCapacity)

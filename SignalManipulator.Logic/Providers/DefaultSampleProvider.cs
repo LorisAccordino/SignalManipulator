@@ -11,7 +11,7 @@ namespace SignalManipulator.Logic.Providers
 
         public int Read(float[] buffer, int offset, int count)
         {
-            // It does nothing, write 0 samples in the buffer
+            // It does nothing, write 0 samples in the fftBuffer
             buffer.Clear(offset, count);
             return 0;  // No samples read
         }

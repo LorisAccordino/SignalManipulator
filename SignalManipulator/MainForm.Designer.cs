@@ -36,14 +36,14 @@
             effectChain = new UI.Controls.EffectChainControl();
             rightSideSplitContainer = new SplitContainer();
             visualizationGroupBox = new GroupBox();
-            tabControl1 = new TabControl();
+            viewersTab = new TabControl();
             waveformPage = new TabPage();
             waveformViewer = new UI.Controls.Viewers.WaveformViewerControl();
             spectrumPage = new TabPage();
             spectrumViewer = new UI.Controls.Viewers.SpectrumViewerControl();
             stereoPage = new TabPage();
+            surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
             lissajousViewer = new UI.Controls.Viewers.LissajousViewerControl();
-            panningPage = new TabPage();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
             audioPlayer = new UI.Controls.AudioPlayerControl();
@@ -58,7 +58,6 @@
             playbackToolStripMenuItem = new ToolStripMenuItem();
             routingToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
-            polarPanningViewer1 = new UI.Controls.Viewers.PolarPanningViewer();
             ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
             mainSplitContainer.Panel1.SuspendLayout();
             mainSplitContainer.Panel2.SuspendLayout();
@@ -73,11 +72,10 @@
             rightSideSplitContainer.Panel2.SuspendLayout();
             rightSideSplitContainer.SuspendLayout();
             visualizationGroupBox.SuspendLayout();
-            tabControl1.SuspendLayout();
+            viewersTab.SuspendLayout();
             waveformPage.SuspendLayout();
             spectrumPage.SuspendLayout();
             stereoPage.SuspendLayout();
-            panningPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bottomSplitContainer).BeginInit();
             bottomSplitContainer.Panel1.SuspendLayout();
             bottomSplitContainer.Panel2.SuspendLayout();
@@ -190,7 +188,7 @@
             // 
             // visualizationGroupBox
             // 
-            visualizationGroupBox.Controls.Add(tabControl1);
+            visualizationGroupBox.Controls.Add(viewersTab);
             visualizationGroupBox.Dock = DockStyle.Fill;
             visualizationGroupBox.Location = new Point(0, 0);
             visualizationGroupBox.Margin = new Padding(2);
@@ -201,19 +199,18 @@
             visualizationGroupBox.TabStop = false;
             visualizationGroupBox.Text = "Visualization:";
             // 
-            // tabControl1
+            // viewersTab
             // 
-            tabControl1.Controls.Add(waveformPage);
-            tabControl1.Controls.Add(spectrumPage);
-            tabControl1.Controls.Add(stereoPage);
-            tabControl1.Controls.Add(panningPage);
-            tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(2, 18);
-            tabControl1.Margin = new Padding(4, 3, 4, 3);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(846, 414);
-            tabControl1.TabIndex = 1;
+            viewersTab.Controls.Add(waveformPage);
+            viewersTab.Controls.Add(spectrumPage);
+            viewersTab.Controls.Add(stereoPage);
+            viewersTab.Dock = DockStyle.Fill;
+            viewersTab.Location = new Point(2, 18);
+            viewersTab.Margin = new Padding(4, 3, 4, 3);
+            viewersTab.Name = "viewersTab";
+            viewersTab.SelectedIndex = 0;
+            viewersTab.Size = new Size(846, 414);
+            viewersTab.TabIndex = 1;
             // 
             // waveformPage
             // 
@@ -260,34 +257,33 @@
             // stereoPage
             // 
             stereoPage.BackColor = SystemColors.Control;
+            stereoPage.Controls.Add(surroundAnalyzer);
             stereoPage.Controls.Add(lissajousViewer);
             stereoPage.Location = new Point(4, 24);
             stereoPage.Margin = new Padding(4, 3, 4, 3);
             stereoPage.Name = "stereoPage";
             stereoPage.Padding = new Padding(4, 3, 4, 3);
-            stereoPage.Size = new Size(192, 72);
+            stereoPage.Size = new Size(838, 386);
             stereoPage.TabIndex = 2;
-            stereoPage.Text = "XY Stero Oscilloscpe";
+            stereoPage.Text = "Stereo Views";
+            // 
+            // surroundAnalyzer
+            // 
+            surroundAnalyzer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            surroundAnalyzer.Location = new Point(440, 0);
+            surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
+            surroundAnalyzer.Name = "surroundAnalyzer";
+            surroundAnalyzer.Size = new Size(366, 380);
+            surroundAnalyzer.TabIndex = 1;
             // 
             // lissajousViewer
             // 
-            lissajousViewer.Dock = DockStyle.Fill;
-            lissajousViewer.Location = new Point(4, 3);
+            lissajousViewer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            lissajousViewer.Location = new Point(34, 0);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(184, 66);
+            lissajousViewer.Size = new Size(381, 380);
             lissajousViewer.TabIndex = 0;
-            // 
-            // panningPage
-            // 
-            panningPage.Controls.Add(polarPanningViewer1);
-            panningPage.Location = new Point(4, 24);
-            panningPage.Name = "panningPage";
-            panningPage.Padding = new Padding(3);
-            panningPage.Size = new Size(838, 386);
-            panningPage.TabIndex = 3;
-            panningPage.Text = "Polar Panning";
-            panningPage.UseVisualStyleBackColor = true;
             // 
             // bottomSplitContainer
             // 
@@ -428,15 +424,6 @@
             // 
             audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
             // 
-            // polarPanningViewer1
-            // 
-            polarPanningViewer1.Dock = DockStyle.Fill;
-            polarPanningViewer1.Location = new Point(3, 3);
-            polarPanningViewer1.Margin = new Padding(4, 3, 4, 3);
-            polarPanningViewer1.Name = "polarPanningViewer1";
-            polarPanningViewer1.Size = new Size(832, 380);
-            polarPanningViewer1.TabIndex = 0;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -463,11 +450,10 @@
             ((System.ComponentModel.ISupportInitialize)rightSideSplitContainer).EndInit();
             rightSideSplitContainer.ResumeLayout(false);
             visualizationGroupBox.ResumeLayout(false);
-            tabControl1.ResumeLayout(false);
+            viewersTab.ResumeLayout(false);
             waveformPage.ResumeLayout(false);
             spectrumPage.ResumeLayout(false);
             stereoPage.ResumeLayout(false);
-            panningPage.ResumeLayout(false);
             bottomSplitContainer.Panel1.ResumeLayout(false);
             bottomSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bottomSplitContainer).EndInit();
@@ -496,7 +482,7 @@
         private System.Windows.Forms.ToolStripMenuItem openAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAudioToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog audioOFD;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl viewersTab;
         private System.Windows.Forms.TabPage waveformPage;
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoPage;
@@ -510,7 +496,6 @@
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
         private UI.Controls.Viewers.WaveformViewerControl waveformViewer;
-        private TabPage panningPage;
-        private UI.Controls.Viewers.PolarPanningViewer polarPanningViewer1;
+        private UI.Controls.Viewers.SurroundAnalyzerViewer surroundAnalyzer;
     }
 }

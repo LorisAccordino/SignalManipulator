@@ -43,7 +43,11 @@ namespace SignalManipulator.UI.Controls.Viewers
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Stereo"));
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Left"));
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Right"));
-            Plot.ShowLegend();
+
+            // Set channel modes
+            waveformPlots[0].ChannelMode = ChannelMode.Stereo;
+            waveformPlots[1].ChannelMode = ChannelMode.Left;
+            waveformPlots[2].ChannelMode = ChannelMode.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(-1, 1);
@@ -100,12 +104,10 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(WaveformFrame frame)
+        protected override void ProcessFrame(CompositeAudioFrame frame)
         {
             // Add samples to each channel
-            waveformPlots[0].AddSamples(frame.DoubleMono);
-            waveformPlots[1].AddSamples(frame.DoubleSplitStereo.Left);
-            waveformPlots[2].AddSamples(frame.DoubleSplitStereo.Right);
+            waveformPlots.ForEach(w => w.AddData(frame.Waveform));
         }
 
         protected override void UpdateDataPeriod()
@@ -114,6 +116,5 @@ namespace SignalManipulator.UI.Controls.Viewers
             waveformPlots.ForEach(p => p.UpdatePeriod(seconds));
             AxisNavigator.SetCapacity(SampleRate * seconds);
         }
-
     }
 }

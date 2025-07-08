@@ -48,9 +48,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(WaveformFrame frame)
+        protected override void ProcessFrame(CompositeAudioFrame frame)
         {
-            lissajousPlot.AddSamples(frame.DoubleStereo);
+            lissajousPlot.AddSamples(frame.Waveform.DoubleStereo);
         }
 
         private void Plot_Resize(object sender, EventArgs e)

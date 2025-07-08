@@ -36,12 +36,8 @@
     <Compile Update="Controls\EffectChainControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\Viewers\PolarPanningViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\Viewers\LissajousViewerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Controls\Viewers\SurroundAnalyzerViewer.cs" />
+    <Compile Update="Controls\Viewers\LissajousViewerControl.cs" />
     <Compile Update="Controls\Viewers\SpectrumViewerControl.cs" />
     <Compile Update="Controls\Viewers\BaseViewerControl.cs" />
     <Compile Update="Controls\Viewers\WaveformViewerControl.cs" />

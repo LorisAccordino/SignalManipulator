@@ -109,8 +109,31 @@ namespace SignalManipulator.Logic.AudioMath
             channels.CombineStereo(stereo);
             return stereo;
         }
+    }
 
+    public static class MiscMath
+    {
+        public static double ExaggerateRms(this double x, double power = 0.3)
+        {
+            return Math.Clamp(Math.Pow(Math.Clamp(x, 0, 1), power), 0, 1);
+        }
 
+        public static double LogNormalize(this double x, double min = 0.01)
+        {
+            x = Math.Max(x, min);
+            return Math.Log10(x) / Math.Log10(1);
+        }
+
+        public static double SoftLimit(this double value, double limit, double softness = 10)
+        {
+            if (value <= limit)
+                return value;
+
+            double weightValue = Math.Exp(-value * softness / limit);
+            double weightLimit = Math.Exp(-limit * softness / limit);
+
+            return (value * weightValue + limit * weightLimit) / (weightValue + weightLimit);
+        }
 
         public static float ToDecibels(this float linear) => (float)ToDecibels((double)linear);
         public static double ToDecibels(this double linear)
@@ -212,6 +235,26 @@ namespace SignalManipulator.Logic.AudioMath
         public static void Clear(this double[] array, int index, int length)
         {
             Array.Clear(array, index, length);
+        }
+
+        public static double SoftMax(this double[] values, double softness = 10)
+        {
+            if (values.Length == 0)
+                return 0;
+
+            double max = values.Max();
+            if (max == 0)
+                return 0;
+
+            double sumExp = 0;
+            foreach (var v in values)
+                sumExp += Math.Exp(v * softness / max); // Normalized
+
+            double weightedSum = 0;
+            foreach (var v in values)
+                weightedSum += v * Math.Exp(v * softness / max);
+
+            return weightedSum / sumExp;
         }
 
         public static void Add(this float[] dest, float[] addend)

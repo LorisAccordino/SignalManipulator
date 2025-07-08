@@ -1,6 +1,6 @@
 ﻿namespace SignalManipulator.UI.Controls.Viewers
 {
-    partial class PolarPanningViewer
+    partial class SurroundAnalyzerViewer
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.

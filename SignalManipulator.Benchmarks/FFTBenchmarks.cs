@@ -1,9 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using MathNet.Numerics.IntegralTransforms;
-using SignalManipulator.Logic.AudioMath;
-using System.Linq;
 using System.Numerics;
-using System;
+using SignalManipulator.Logic.AudioMath.Models;
 
 namespace SignalManipulator.Benchmarks
 {
@@ -50,25 +48,25 @@ namespace SignalManipulator.Benchmarks
         [Benchmark]
         public void ForwardFFT_Doubles()
         {
-            var result = FFTCalculator.Forward(sampledSignal);
+            var result = FFT.Forward(sampledSignal);
         }
 
         [Benchmark]
         public void ForwardFFT_Complex()
         {
-            var result = FFTCalculator.Forward(complexSignal);
+            var result = FFT.Forward(complexSignal);
         }
 
         [Benchmark]
         public void InverseFFT()
         {
-            var result = FFTCalculator.Inverse(spectrum);
+            var result = FFT.Inverse(spectrum);
         }
 
         [Benchmark]
         public void MagnitudeSpectrum()
         {
-            var (magnitudes, frequencies) = FFTCalculator.CalculateMagnitudeSpectrum(sampledSignal, 44100);
+            var (magnitudes, frequencies) = FFT.CalculateMagnitudeSpectrum(sampledSignal, 44100);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace SignalManipulator.Logic.Core
         public const int MAX_MAGNITUDE_DB = 125;
         public const int FFT_SIZE = 8192;
 
+        public static int CurrentFFTSize = FFT_SIZE;
+
 
         public static readonly WaveFormat WAVE_FORMAT =
             WaveFormat.CreateIeeeFloatWaveFormat(SAMPLE_RATE, CHANNELS);

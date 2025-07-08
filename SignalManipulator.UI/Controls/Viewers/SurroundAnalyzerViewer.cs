@@ -4,21 +4,23 @@ using System.Diagnostics.CodeAnalysis;
 using SignalManipulator.Logic.Models;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
+using SignalManipulator.UI.Controls.Plottables.Radars;
 using SignalManipulator.UI.Controls.Plottables;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class PolarPanningViewer : BaseViewerControl
+    public partial class SurroundAnalyzerViewer : BaseViewerControl
     {
-        private PolarPanningPlot panningPlot;
+        //private PolarPanningPlot panningPlot;
+        private SurroundAnalyzer surroundAnalyzer;
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
         private AxisNavigator navigator = new AxisNavigator(1);
         protected override AxisNavigator AxisNavigator => navigator;
 
-        public PolarPanningViewer()
+        public SurroundAnalyzerViewer()
         {
             InitializeComponent();
 
@@ -29,27 +31,26 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override void InitializePlot()
         {
             // Init plot
-            Plot.Title("Polar Panning");
+            Plot.Title("Surround Analyzer");
             //Plot.XLabel("Left"); Plot.YLabel("Right");
             Plot.Axes.SquareUnits();
             Plot.Axes.SetLimits(-1, 1, -1, 1);
             AxisNavigator.Recalculate(); // Ensure to block the limits
 
-            // Setup polar panning plot
-            panningPlot = new PolarPanningPlot(Plot); 
-            Plot.Add.Plottable(panningPlot);
+            // Setup surround analyzer
+            surroundAnalyzer = Plot.Add.SurroundAnalizer();
         }
 
         protected override void ClearBuffers()
         {
             lock (RenderLock)
-                panningPlot.ClearBuffer();
+                surroundAnalyzer.Clear();
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(WaveformFrame frame)
+        protected override void ProcessFrame(CompositeAudioFrame frame)
         {
-            panningPlot.AddSamples(frame.DoubleStereo);
+            surroundAnalyzer.AddData(frame.Volume);
         }
 
         private void Plot_Resize(object sender, EventArgs e)

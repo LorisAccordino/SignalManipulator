@@ -1,20 +1,20 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.AudioMath;
+using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.Core;
 
 namespace SignalManipulator.Logic.Providers
 {
     public class AudioDataProvider : ISampleProvider, IWaveProvider
     {
+        private CircularBuffer<float> fftBuffer = new CircularBuffer<float>(AudioEngine.CurrentFFTSize);
         private readonly IWaveProvider source;
 
-        public event EventHandler<byte[]> OnBytes;
-        public event EventHandler<float[]> OnSamples;
-        public event EventHandler<WaveformFrame> WaveformReady;
-        public event EventHandler<FFTFrame> FFTReady;
-
+        public event EventHandler<byte[]>? OnBytes;
+        public event EventHandler<float[]>? OnSamples;
+        public event EventHandler<CompositeAudioFrame>? AudioFrameReady;
         public WaveFormat WaveFormat => source.WaveFormat;
-        public bool EnableSpectrum { get; set; } = false;
 
         public AudioDataProvider(ISampleProvider source) : this(source.ToWaveProvider()) { }
         public AudioDataProvider(IWaveProvider source)
@@ -24,20 +24,25 @@ namespace SignalManipulator.Logic.Providers
 
         public int Read(byte[] buffer, int offset, int count)
         {
+            if (fftBuffer.Capacity != AudioEngine.CurrentFFTSize * 2)
+            {
+                fftBuffer.Capacity = AudioEngine.CurrentFFTSize * 2;
+                //fftBuffer.Clear();
+            }
+
+            // Bytes
             int read = source.Read(buffer, offset, count);
             OnBytes?.Invoke(this, buffer);
 
+            // Samples
             float[] samples = buffer.AsFloats();
             OnSamples?.Invoke(this, samples);
 
-            WaveformFrame frame = new WaveformFrame(samples);
-            WaveformReady?.Invoke(this, frame);
+            // Add samples to the FFT fftBuffer
+            fftBuffer.AddRange(samples);
 
-            if (EnableSpectrum)
-            {
-                var (magnitudes, freqs) = FFTCalculator.CalculateMagnitudeSpectrum(frame.DoubleMono, WaveFormat.SampleRate);
-                FFTReady?.Invoke(this, new FFTFrame(freqs, magnitudes));
-            }
+            // Audio frame delivering
+            AudioFrameReady?.Invoke(this, new CompositeAudioFrame(fftBuffer.ToArray(), WaveFormat.SampleRate));
 
             return read;
         }

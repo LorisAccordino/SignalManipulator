@@ -1,17 +1,20 @@
-﻿namespace SignalManipulator.UI.Controls.Plottables.Signals
+﻿using SignalManipulator.Logic.Models;
+
+namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class Waveform : BaseSignalPlot
     {
+        public ChannelMode ChannelMode { get; set; } = ChannelMode.Stereo;
+
         public Waveform(int sampleRate) : this(sampleRate, "") { }
         public Waveform(int sampleRate, string channelName = "") : base(sampleRate, channelName) { }
 
-        public override void AddSamples(double[] samples)
+        public void AddData(WaveformFrame waveform)
         {
             lock (lockObject)
             {
-                for (int i = 0; i < samples.Length; i += (int)Signal.Data.Period)
-                    buffer.Add(samples[i]);
-
+                waveform.TryGet(ChannelMode, out var samples);
+                buffer.AddRange(samples);
                 buffer.CopyTo(data, 0);
             }
         }

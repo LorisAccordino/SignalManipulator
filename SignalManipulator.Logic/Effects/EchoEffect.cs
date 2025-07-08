@@ -36,7 +36,7 @@ namespace SignalManipulator.Logic.Effects
                 float wet = delayedSample * WetMix;
                 buffer[i] = dry * DryMix + wet;
 
-                // Write in the echo buffer
+                // Write in the echo fftBuffer
                 echoBuffer[echoIndex] = dry + delayedSample * Feedback;
 
                 // Increment and loop

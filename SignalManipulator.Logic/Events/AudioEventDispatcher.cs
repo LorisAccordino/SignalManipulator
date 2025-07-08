@@ -7,15 +7,14 @@ namespace SignalManipulator.Logic.Events
 {
     public class AudioEventDispatcher : IAudioEventDispatcher
     {
-        public event EventHandler<AudioInfo> OnLoad;
-        public event EventHandler OnStarted;
-        public event EventHandler OnResume;
-        public event EventHandler OnPaused;
-        public event EventHandler OnStopped;
-        public event EventHandler<bool> OnPlaybackStateChanged;
+        public event EventHandler<AudioInfo>? OnLoad;
+        public event EventHandler? OnStarted;
+        public event EventHandler? OnResume;
+        public event EventHandler? OnPaused;
+        public event EventHandler? OnStopped;
+        public event EventHandler<bool>? OnPlaybackStateChanged;
 
-        public event EventHandler<WaveformFrame> WaveformReady;
-        public event EventHandler<FFTFrame> FFTReady;
+        public event EventHandler<CompositeAudioFrame>? AudioFrameReady;
 
         public AudioEventDispatcher(IPlaybackService playbackService, AudioDataProvider dataProvider)
         {
@@ -30,8 +29,7 @@ namespace SignalManipulator.Logic.Events
             playbackService.OnPlaybackStateChanged += (s, playing) => OnPlaybackStateChanged?.Invoke(s, playing);
 
             // Frame & update
-            dataProvider.WaveformReady += (s, frame) => WaveformReady?.Invoke(s, frame);
-            dataProvider.FFTReady += (s, frame) => FFTReady?.Invoke(s, frame);
+            dataProvider.AudioFrameReady += (s, frame) => AudioFrameReady?.Invoke(s, frame);
         }
     }
 }

@@ -2,12 +2,12 @@
 
 namespace SignalManipulator.Logic.Models
 {
-    public class WaveformFrame
+    public class WaveformFrame : IChannelProvider
     {
         private readonly float[] stereo;
-        private double[] cachedDoubleStereo;
-        private float[] cachedMono;
-        private double[] cachedDoubleMono;
+        private double[]? cachedDoubleStereo;
+        private float[]? cachedMono;
+        private double[]? cachedDoubleMono;
         private (float[] Left, float[] Right) cachedSplitStereo;
         private (double[] Left, double[] Right) cachedDoubleSplitStereo;
 
@@ -76,6 +76,58 @@ namespace SignalManipulator.Logic.Models
                 }
                 return cachedDoubleSplitStereo;
             }
+        }
+
+
+
+        public double[] Get(ChannelMode mode)
+        {
+            TryGet(mode, out var data);
+            return data;
+        }
+
+        public bool TryGet(ChannelMode mode, out double[] data)
+        {
+            data = mode switch
+            {
+                ChannelMode.Stereo when DoubleStereo != null => DoubleStereo,
+                ChannelMode.Left when DoubleSplitStereo.Left != null => DoubleSplitStereo.Left,
+                ChannelMode.Right when DoubleSplitStereo.Right != null => DoubleSplitStereo.Right,
+                ChannelMode.Mono when DoubleMono != null => DoubleMono,
+                _ => []
+            };
+
+            return data.Length > 0;
+        }
+
+        public double[] GetOrThrow(ChannelMode mode)
+        {
+            if (!TryGet(mode, out var data))
+                throw new InvalidOperationException($"Channel '{mode}' is not available.");
+            return data;
+        }
+
+        public IEnumerable<ChannelMode> AvailableChannels
+        {
+            get
+            {
+                if (DoubleStereo != null) yield return ChannelMode.Stereo;
+                if (DoubleSplitStereo.Left != null) yield return ChannelMode.Left;
+                if (DoubleSplitStereo.Right != null) yield return ChannelMode.Right;
+                if (DoubleMono != null) yield return ChannelMode.Mono;
+            }
+        }
+
+        public bool HasChannel(ChannelMode mode)
+        {
+            return mode switch
+            {
+                ChannelMode.Stereo => DoubleStereo != null,
+                ChannelMode.Left => DoubleSplitStereo.Left != null,
+                ChannelMode.Right => DoubleSplitStereo.Right != null,
+                ChannelMode.Mono => DoubleMono != null,
+                _ => false
+            };
         }
     }
 }
