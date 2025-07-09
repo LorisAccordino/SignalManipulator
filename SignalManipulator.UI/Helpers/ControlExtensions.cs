@@ -37,7 +37,7 @@ namespace SignalManipulator.UI.Helpers
             // Create a new form
             Form floatForm = new Form
             {
-                Text = control.Name != "" ? control.Name : control.GetType().Name,
+                Text = control.Text != "" ? control.Text : control.GetType().Name,
                 FormBorderStyle = FormBorderStyle.SizableToolWindow,
                 StartPosition = FormStartPosition.Manual,
                 Size = control.Size
@@ -62,5 +62,18 @@ namespace SignalManipulator.UI.Helpers
             floatForm.Controls.Add(control);
             floatForm.Show();
         }
+
+        public static void AttachContextMenu(this Control control, params (string text, Action action)[] items)
+        {
+            var menu = new ContextMenuStrip();
+            foreach (var (text, action) in items)
+            {
+                var item = new ToolStripMenuItem(text);
+                item.Click += (s, e) => action();
+                menu.Items.Add(item);
+            }
+            control.ContextMenuStrip = menu;
+        }
+
     }
 }

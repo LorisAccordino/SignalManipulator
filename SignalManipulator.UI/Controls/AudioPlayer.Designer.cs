@@ -2,7 +2,7 @@
 
 namespace SignalManipulator.UI.Controls
 {
-    partial class AudioPlayerControl
+    partial class AudioPlayer
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.

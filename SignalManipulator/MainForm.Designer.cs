@@ -38,15 +38,15 @@
             visualizationGroupBox = new GroupBox();
             viewersTab = new TabControl();
             waveformPage = new TabPage();
-            waveformViewer = new UI.Controls.Viewers.WaveformViewerControl();
+            waveformViewer = new UI.Controls.Viewers.WaveformViewer();
             spectrumPage = new TabPage();
-            spectrumViewer = new UI.Controls.Viewers.SpectrumViewerControl();
+            spectrumViewer = new UI.Controls.Viewers.SpectrumViewer();
             stereoPage = new TabPage();
             surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
-            lissajousViewer = new UI.Controls.Viewers.LissajousViewerControl();
+            lissajousViewer = new UI.Controls.Viewers.LissajousViewer();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
-            audioPlayer = new UI.Controls.AudioPlayerControl();
+            audioPlayer = new UI.Controls.AudioPlayer();
             routingGroupBox = new GroupBox();
             audioRouter = new UI.Controls.AudioRouterControl();
             menuStrip1 = new MenuStrip();
@@ -232,6 +232,7 @@
             waveformViewer.Name = "waveformViewer";
             waveformViewer.Size = new Size(830, 380);
             waveformViewer.TabIndex = 0;
+            waveformViewer.Text = null;
             // 
             // spectrumPage
             // 
@@ -241,7 +242,7 @@
             spectrumPage.Margin = new Padding(4, 3, 4, 3);
             spectrumPage.Name = "spectrumPage";
             spectrumPage.Padding = new Padding(4, 3, 4, 3);
-            spectrumPage.Size = new Size(192, 72);
+            spectrumPage.Size = new Size(838, 386);
             spectrumPage.TabIndex = 1;
             spectrumPage.Text = "FFT Spectrum";
             // 
@@ -251,8 +252,9 @@
             spectrumViewer.Location = new Point(4, 3);
             spectrumViewer.Margin = new Padding(5);
             spectrumViewer.Name = "spectrumViewer";
-            spectrumViewer.Size = new Size(184, 66);
+            spectrumViewer.Size = new Size(830, 380);
             spectrumViewer.TabIndex = 0;
+            spectrumViewer.Text = null;
             // 
             // stereoPage
             // 
@@ -263,18 +265,19 @@
             stereoPage.Margin = new Padding(4, 3, 4, 3);
             stereoPage.Name = "stereoPage";
             stereoPage.Padding = new Padding(4, 3, 4, 3);
-            stereoPage.Size = new Size(192, 72);
+            stereoPage.Size = new Size(838, 386);
             stereoPage.TabIndex = 2;
             stereoPage.Text = "Stereo Views";
             // 
             // surroundAnalyzer
             // 
             surroundAnalyzer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            surroundAnalyzer.Location = new Point(-206, 0);
+            surroundAnalyzer.Location = new Point(440, 0);
             surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
             surroundAnalyzer.Name = "surroundAnalyzer";
-            surroundAnalyzer.Size = new Size(366, 66);
+            surroundAnalyzer.Size = new Size(366, 380);
             surroundAnalyzer.TabIndex = 1;
+            surroundAnalyzer.Text = null;
             // 
             // lissajousViewer
             // 
@@ -282,8 +285,9 @@
             lissajousViewer.Location = new Point(34, 0);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(381, 66);
+            lissajousViewer.Size = new Size(381, 380);
             lissajousViewer.TabIndex = 0;
+            lissajousViewer.Text = null;
             // 
             // bottomSplitContainer
             // 
@@ -487,15 +491,15 @@
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoPage;
         private SignalManipulator.UI.Controls.EffectChainControl effectChain;
-        private SignalManipulator.UI.Controls.Viewers.LissajousViewerControl lissajousViewer;
+        private SignalManipulator.UI.Controls.Viewers.LissajousViewer lissajousViewer;
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
-        private UI.Controls.Viewers.SpectrumViewerControl spectrumViewer;
-        private UI.Controls.AudioPlayerControl audioPlayer;
+        private UI.Controls.Viewers.SpectrumViewer spectrumViewer;
+        private UI.Controls.AudioPlayer audioPlayer;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
-        private UI.Controls.Viewers.WaveformViewerControl waveformViewer;
+        private UI.Controls.Viewers.WaveformViewer waveformViewer;
         private UI.Controls.Viewers.SurroundAnalyzerViewer surroundAnalyzer;
     }
 }

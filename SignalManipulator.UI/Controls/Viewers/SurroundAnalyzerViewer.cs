@@ -10,7 +10,7 @@ using SignalManipulator.UI.Controls.Plottables;
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class SurroundAnalyzerViewer : BaseViewerControl
+    public partial class SurroundAnalyzerViewer : BaseViewer
     {
         //private PolarPanningPlot panningPlot;
         private SurroundAnalyzer surroundAnalyzer;

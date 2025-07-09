@@ -9,13 +9,13 @@ using System.Windows.Forms;
 namespace SignalManipulator.UI.Controls
 {
     [ExcludeFromCodeCoverage]
-    public partial class AudioPlayerControl : UserControl
+    public partial class AudioPlayer : UserControl
     {
         private IPlaybackController playback;
         private IAudioEventDispatcher audioEventDispatcher;
         private AudioInfoDialog audioInfoDialog = new AudioInfoDialog();
 
-        public AudioPlayerControl()
+        public AudioPlayer()
         {
             InitializeComponent();
 

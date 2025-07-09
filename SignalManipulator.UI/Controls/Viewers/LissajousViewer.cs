@@ -10,7 +10,7 @@ using SignalManipulator.UI.Controls.Plottables;
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class LissajousViewerControl : BaseViewerControl
+    public partial class LissajousViewer : BaseViewer
     {
         private Lissajous lissajousPlot;
         private const int MAX_SAMPLES = 1024;
@@ -20,7 +20,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         private AxisNavigator navigator = new AxisNavigator(1);
         protected override AxisNavigator AxisNavigator => navigator;
 
-        public LissajousViewerControl()
+        public LissajousViewer()
         {
             InitializeComponent();
 

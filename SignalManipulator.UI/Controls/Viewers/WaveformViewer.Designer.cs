@@ -1,6 +1,6 @@
 ﻿namespace SignalManipulator.UI.Controls.Viewers
 {
-    partial class WaveformViewerControl
+    partial class WaveformViewer
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.
@@ -153,14 +153,15 @@
             secLbl.TabIndex = 7;
             secLbl.Text = "Window seconds:";
             // 
-            // WaveformViewerControl
+            // WaveformViewer
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(mainPanelTableLayout);
             Margin = new System.Windows.Forms.Padding(2);
-            Name = "WaveformViewerControl";
+            Name = "WaveformViewer";
             Size = new System.Drawing.Size(686, 374);
+            Text = "Waveform Viewer";
             mainPanelTableLayout.ResumeLayout(false);
             settingsPanel.ResumeLayout(false);
             displaySettingsGroupBox.ResumeLayout(false);

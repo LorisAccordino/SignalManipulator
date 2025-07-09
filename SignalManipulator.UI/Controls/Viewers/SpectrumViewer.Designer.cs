@@ -1,6 +1,6 @@
 ﻿namespace SignalManipulator.UI.Controls.Viewers
 {
-    partial class SpectrumViewerControl
+    partial class SpectrumViewer
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.
@@ -224,14 +224,15 @@
             fftSizeLbl.TabIndex = 7;
             fftSizeLbl.Text = "FFT size:";
             // 
-            // SpectrumViewerControl
+            // SpectrumViewer
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(mainPanelTableLayout);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Name = "SpectrumViewerControl";
+            Name = "SpectrumViewer";
             Size = new System.Drawing.Size(834, 351);
+            Text = "Spectrum Viewer";
             mainPanelTableLayout.ResumeLayout(false);
             settingsPanel.ResumeLayout(false);
             smoothingGroupBox.ResumeLayout(false);

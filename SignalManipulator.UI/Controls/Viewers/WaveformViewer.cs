@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class WaveformViewerControl : BaseViewerControl
+    public partial class WaveformViewer : BaseViewer
     {
         // Waveform plots
         private List<Waveform> waveformPlots = new List<Waveform>();
@@ -18,7 +18,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override FormsPlot FormsPlot => formsPlot;
         protected override AxisNavigator AxisNavigator => navigator.Navigator;
 
-        public WaveformViewerControl()
+        public WaveformViewer()
         {
             InitializeComponent();
 

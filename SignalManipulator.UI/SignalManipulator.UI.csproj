@@ -27,7 +27,7 @@
     <Compile Update="Components\Labels\ValueLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\AudioPlayerControl.cs">
+    <Compile Update="Controls\AudioPlayer.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\AudioRouterControl.cs">
@@ -37,10 +37,10 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\Viewers\SurroundAnalyzerViewer.cs" />
-    <Compile Update="Controls\Viewers\LissajousViewerControl.cs" />
-    <Compile Update="Controls\Viewers\SpectrumViewerControl.cs" />
-    <Compile Update="Controls\Viewers\BaseViewerControl.cs" />
-    <Compile Update="Controls\Viewers\WaveformViewerControl.cs" />
+    <Compile Update="Controls\Viewers\LissajousViewer.cs" />
+    <Compile Update="Controls\Viewers\SpectrumViewer.cs" />
+    <Compile Update="Controls\Viewers\BaseViewer.cs" />
+    <Compile Update="Controls\Viewers\WaveformViewer.cs" />
     <Compile Update="Dialogs\AudioInfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>

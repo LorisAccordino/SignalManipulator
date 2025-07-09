@@ -3,13 +3,22 @@ using ScottPlot.WinForms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    public class BaseViewerControl : UserControl
+    public class BaseViewer : UserControl
     {
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Bindable(true)]
+        public override string Text { get; set; }
+
+
         // Common services and events
         protected IAudioEventDispatcher AudioEvents;
         protected UIUpdateService UIUpdate;
@@ -24,13 +33,15 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected virtual AxisNavigator AxisNavigator => throw new NotImplementedException();
         protected Plot Plot => FormsPlot.Plot;
 
-        protected BaseViewerControl() { }
+        protected BaseViewer() { }
 
         public void InitializeViewer()
         {
             AudioEvents = AudioEngine.Instance.AudioEventDispatcher;
             UIUpdate = UIUpdateService.Instance;
             InitializeCommon();
+
+            this.AttachContextMenu(("Undock", this.FloatControl));
         }
 
 

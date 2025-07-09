@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
-    public partial class SpectrumViewerControl : BaseViewerControl
+    public partial class SpectrumViewer : BaseViewer
     {
         // Spectrum plots
         private List<Spectrum> spectrumPlots = new List<Spectrum>();
@@ -20,7 +20,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         protected override FormsPlot FormsPlot => formsPlot;
         protected override AxisNavigator AxisNavigator => navigator.Navigator;
 
-        public SpectrumViewerControl()
+        public SpectrumViewer()
         {
             InitializeComponent();
 
