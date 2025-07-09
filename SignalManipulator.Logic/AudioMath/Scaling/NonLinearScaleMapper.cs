@@ -4,7 +4,7 @@ namespace SignalManipulator.Logic.AudioMath.Scaling
 {
     public class NonLinearScaleMapper : BaseScaleMapper
     {
-        protected INonLinearCurve curve = new LinearCurve();
+        public INonLinearCurve Curve { get; set; } = new LinearCurve();
         private readonly int resolution;
 
         public NonLinearScaleMapper(double realMin, double realMax, double precision)
@@ -13,19 +13,43 @@ namespace SignalManipulator.Logic.AudioMath.Scaling
             resolution = (int)Math.Round((realMax - realMin) / precision);
         }
 
-        public void SetCurve(INonLinearCurve curve) => this.curve = curve;
-
         public override int ToControlUnits(double realValue)
         {
             double normalized = ScalingHelper.InverseLerp(realValue, RealMin, RealMax);
-            double curved = curve.Forward(normalized);
+            double curved = Curve.Forward(normalized);
+            curved = Math.Clamp(curved, 0.0, 1.0);
             return (int)Math.Round(curved * resolution);
+        }
+
+        public override int[] ToControlUnits(double[] realValues)
+        {
+            int[] input = new int[realValues.Length];
+            for (int i = 0; i < realValues.Length; i++)
+                input[i] = ToControlUnits(realValues[i]);
+            return input;
+        }
+
+        public override double ToRealValue(double realValue)
+        {
+            double normalized = ScalingHelper.InverseLerp(realValue, RealMin, RealMax);
+            double curved = Curve.Forward(normalized);
+            curved = Math.Clamp(curved, 0.0, 1.0);
+            return ScalingHelper.Lerp(curved, RealMin, RealMax);
+        }
+
+        public override double[] ToRealValues(double[] realValues)
+        {
+            double[] output = new double[realValues.Length];
+            for (int i = 0; i < realValues.Length; i++)
+                output[i] = ToRealValue(realValues[i]);
+            return output;
         }
 
         public override double ToRealValue(int controlUnits)
         {
             double normalized = (double)controlUnits / resolution;
-            double curved = curve.Inverse(normalized);
+            double curved = Curve.Inverse(normalized);
+            curved = Math.Clamp(curved, 0.0, 1.0);
             double realValue = ScalingHelper.Lerp(curved, RealMin, RealMax);
             return ScalingHelper.SnapToPrecision(realValue, Precision);
         }

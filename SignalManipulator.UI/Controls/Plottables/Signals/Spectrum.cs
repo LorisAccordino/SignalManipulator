@@ -1,5 +1,4 @@
 ﻿using ScottPlot.DataSources;
-using SignalManipulator.Logic.AudioMath.Objects.Smoothing;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Models;
 

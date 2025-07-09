@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using SignalManipulator.Logic.AudioMath.Objects.Scaling.Curves;
+using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 using System.Diagnostics.CodeAnalysis;
 using SignalManipulator.Logic.AudioMath.Scaling;
 
@@ -172,13 +172,13 @@ namespace SignalManipulator.UI.Components.Precision
                 switch (PrecisionScale)
                 {
                     case PrecisionScale.Logarithmic: 
-                        scaleMapper.SetCurve(new LogCurve(curvature));
+                        scaleMapper.Curve = new LogCurve(curvature);
                         break;
                     case PrecisionScale.Exponential:
-                        scaleMapper.SetCurve(new ExpCurve(curvature));
+                        scaleMapper.Curve = new ExpCurve(curvature);
                         break;
                     default:
-                        scaleMapper.SetCurve(new LinearCurve());
+                        scaleMapper.Curve = new LinearCurve();
                         break;
                 }
 

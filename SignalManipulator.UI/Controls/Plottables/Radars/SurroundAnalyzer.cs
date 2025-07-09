@@ -1,6 +1,6 @@
 ﻿using ScottPlot;
-using SignalManipulator.Logic.AudioMath;
-using SignalManipulator.Logic.AudioMath.Objects.Smoothing;
+using SignalManipulator.Logic.AudioMath.Scaling;
+using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Models;
 
@@ -8,8 +8,10 @@ namespace SignalManipulator.UI.Controls.Plottables.Radars
 {
     public class SurroundAnalyzer : CardioidRadar
     {
+        // Smoothing and scaling
         private Smoother smootherEMA = new SmootherEMA(0.3);
         private Smoother smootherSMA = new SmootherSMA(2);
+        private NonLinearScaleMapper scaleMapper = new NonLinearScaleMapper(0.0, 0.95, 10e-6) { Curve = new LogCurve(2.5) };
 
         protected object lockObject = new object();
         private double[] magnitudes = [0.0, 0.0, 0.0, 0.0, 0.0]; // rL, L, C, R, rR
@@ -47,10 +49,9 @@ namespace SignalManipulator.UI.Controls.Plottables.Radars
                     rearR
                 ];
 
-                // Apply smoothing (EMA then SMA), and then exaggerate
+                // Apply smoothing (EMA then SMA), and then scale
                 double[] smoothed = smootherSMA.Smooth(smootherEMA.Smooth(rawMagnitudes));
-                smoothed.Exaggerate(scale: 0.9);
-                magnitudes = smoothed;
+                magnitudes = scaleMapper.ToRealValues(smoothed);
                 SetMagnitudes(magnitudes);
             }
         }

@@ -2,8 +2,10 @@
 {
     public interface IScaleMapper
     {
-        //void SetCurve(INonLinearCurve curve);
         int ToControlUnits(double realValue);
+        int[] ToControlUnits(double[] realValues);
+        double ToRealValue(double realValue);
+        double[] ToRealValues(double[] realValues);
         double ToRealValue(int controlUnits);
     }
 }

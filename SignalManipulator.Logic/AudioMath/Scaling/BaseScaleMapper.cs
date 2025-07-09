@@ -14,6 +14,9 @@
         }
 
         public abstract int ToControlUnits(double realValue);
+        public abstract int[] ToControlUnits(double[] realValues);
+        public abstract double ToRealValue(double realValue);
+        public abstract double[] ToRealValues(double[] realValues);
         public abstract double ToRealValue(int controlUnits);
     }
 }

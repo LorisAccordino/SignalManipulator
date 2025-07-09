@@ -14,37 +14,6 @@
             Array.Clear(array, index, length);
         }
 
-        public static double SoftMax(this double[] values, double softness = 10)
-        {
-            if (values.Length == 0)
-                return 0;
-
-            double max = values.Max();
-            if (max == 0)
-                return 0;
-
-            double sumExp = 0;
-            foreach (var v in values)
-                sumExp += Math.Exp(v * softness / max); // Normalized
-
-            double weightedSum = 0;
-            foreach (var v in values)
-                weightedSum += v * Math.Exp(v * softness / max);
-
-            return weightedSum / sumExp;
-        }
-
-        public static void Exaggerate(this float[] array, double power = 0.3, double scale = 1.0)
-        {
-            for (int i = 0; i < array.Length; i++)
-                array[i] = Math.Clamp((float)Math.Pow(Math.Clamp(array[i], 0, 1), power), 0, 1) * (float)scale;
-        }
-        public static void Exaggerate(this double[] array, double power = 0.3, double scale = 1.0)
-        {
-            for (int i = 0; i < array.Length; i++)
-                array[i] = Math.Clamp(Math.Pow(Math.Clamp(array[i], 0, 1), power), 0, 1) * scale;
-        }
-
         public static void Add(this float[] dest, float[] addend)
         {
             int len = Math.Min(dest.Length, addend.Length);

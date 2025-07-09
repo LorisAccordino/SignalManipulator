@@ -45,6 +45,26 @@ namespace SignalManipulator.Logic.AudioMath.Objects
             return points;
         }
 
+        public static double SoftMax(double[] values, double softness = 10)
+        {
+            if (values.Length == 0)
+                return 0;
+
+            double max = values.Max();
+            if (max == 0)
+                return 0;
+
+            double sumExp = 0;
+            foreach (var v in values)
+                sumExp += Math.Exp(v * softness / max); // Normalized
+
+            double weightedSum = 0;
+            foreach (var v in values)
+                weightedSum += v * Math.Exp(v * softness / max);
+
+            return weightedSum / sumExp;
+        }
+
         public static List<Vector2> Merge(Cardioid a, Cardioid b, int resolution = 180)
         {
             List<Vector2> points = new();
@@ -53,7 +73,7 @@ namespace SignalManipulator.Logic.AudioMath.Objects
                 double theta = 2 * Math.PI * i / resolution;
                 double ra = a.GetRadius(theta);
                 double rb = b.GetRadius(theta);
-                double r = new[] { ra, rb }.SoftMax();
+                double r = SoftMax([ra, rb]);
                 points.Add(new Vector2((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta))));
             }
             return points;
@@ -71,11 +91,10 @@ namespace SignalManipulator.Logic.AudioMath.Objects
 
                 // Compute the radii on this theta and get the soft max
                 double[] radii = cardioidList.Select(c => c.GetRadius(theta)).ToArray();
-                double r = radii.SoftMax();
+                double r = SoftMax(radii);
                 points.Add(new Vector2((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta))));
             }
             return points;
         }
-
     }
 }

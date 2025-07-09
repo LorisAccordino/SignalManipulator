@@ -1,8 +1,7 @@
-﻿using SignalManipulator.UI.Helpers;
-using SignalManipulator.UI.Scaling;
-using SignalManipulator.UI.Scaling.Curves;
+﻿using SignalManipulator.Logic.AudioMath.Scaling;
+using SignalManipulator.Logic.AudioMath.Scaling.Curves;
+using SignalManipulator.UI.Helpers;
 using System.Diagnostics.CodeAnalysis;
-using Xunit;
 
 namespace SignalManipulator.Tests.UI
 {
@@ -92,8 +91,7 @@ namespace SignalManipulator.Tests.UI
 
         private void TestMapper(double realMin, double realMax, double precision, INonLinearCurve curve)
         {
-            var mapper = new NonLinearScaleMapper(realMin, realMax, precision);
-            mapper.SetCurve(curve);
+            var mapper = new NonLinearScaleMapper(realMin, realMax, precision) { Curve = curve };
             int resolution = (int)Math.Round((realMax - realMin) / precision);
 
             // Check the mapped bounds
@@ -149,7 +147,7 @@ namespace SignalManipulator.Tests.UI
                 "log" => new LogCurve(),
                 _ => throw new ArgumentException($"Invalid curve type: {curveType}")
             };
-            mapper.SetCurve(curve);
+            mapper.Curve = curve;
             var settings = TrackBarHelper.GetTrackBarSettings(mapper);
 
             int expectedMin = mapper.ToControlUnits(realMin);

@@ -1,4 +1,5 @@
-﻿using SignalManipulator.UI.Components.Labels;
+﻿using SignalManipulator.Logic.AudioMath.Scaling;
+using SignalManipulator.UI.Components.Labels;
 using SignalManipulator.UI.Helpers;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
