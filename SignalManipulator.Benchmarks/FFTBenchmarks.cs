@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using MathNet.Numerics.IntegralTransforms;
 using System.Numerics;
-using SignalManipulator.Logic.AudioMath.Models;
+using SignalManipulator.Logic.AudioMath.Objects;
 
 namespace SignalManipulator.Benchmarks
 {

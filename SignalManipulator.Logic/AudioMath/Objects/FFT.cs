@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.IntegralTransforms;
 using System.Numerics;
 
-namespace SignalManipulator.Logic.AudioMath.Models
+namespace SignalManipulator.Logic.AudioMath.Objects
 {
     public static class FFT
     {

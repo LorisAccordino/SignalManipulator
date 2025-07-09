@@ -1,6 +1,6 @@
 ﻿using ScottPlot.Plottables;
 using ScottPlot;
-using SignalManipulator.Logic.AudioMath.Models;
+using SignalManipulator.Logic.AudioMath.Objects;
 using System.Numerics;
 
 namespace SignalManipulator.UI.Controls.Plottables.Radars

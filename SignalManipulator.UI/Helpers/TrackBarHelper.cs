@@ -1,4 +1,4 @@
-﻿using SignalManipulator.UI.Scaling;
+﻿using SignalManipulator.Logic.AudioMath.Scaling;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 

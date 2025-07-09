@@ -1,6 +1,5 @@
-﻿using Xunit;
-using SignalManipulator.UI.Helpers;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using SignalManipulator.Logic.AudioMath.Scaling;
 
 namespace SignalManipulator.Tests
 {
@@ -18,7 +17,7 @@ namespace SignalManipulator.Tests
         [InlineData(123456789, 9)]
         public void GetIntegerDigits_ShouldReturnCorrectDigits(double value, int expected)
         {
-            int result = MathHelper.GetIntegerDigits(value);
+            int result = ScalingHelper.GetIntegerDigits(value);
             Assert.Equal(expected, result);
         }
 
@@ -33,7 +32,7 @@ namespace SignalManipulator.Tests
         [InlineData(0.0000001, 7)]
         public void GetDecimalPlaces_ShouldReturnCorrectPlaces(double precision, int expected)
         {
-            int result = MathHelper.GetDecimalPlaces(precision);
+            int result = ScalingHelper.GetDecimalPlaces(precision);
             Assert.Equal(expected, result);
         }
 
@@ -48,7 +47,7 @@ namespace SignalManipulator.Tests
         [InlineData(1.0, -1.0, 1.0)]
         public void SnapToPrecision_ShouldSnapCorrectly(double value, double precision, double expected)
         {
-            double result = MathHelper.SnapToPrecision(value, precision);
+            double result = ScalingHelper.SnapToPrecision(value, precision);
             Assert.Equal(expected, result, 10);
         }
 
@@ -61,7 +60,7 @@ namespace SignalManipulator.Tests
         [InlineData(1.0, -10.0, 10.0, 10.0)]
         public void Lerp_ShouldReturnCorrectInterpolation(double value, double min, double max, double expected)
         {
-            double result = MathHelper.Lerp(value, min, max);
+            double result = ScalingHelper.Lerp(value, min, max);
             Assert.Equal(expected, result, 10);
         }
 
@@ -73,7 +72,7 @@ namespace SignalManipulator.Tests
         [InlineData(10.0, 10.0, 10.0, 0.0)] // Division by zero
         public void InverseLerp_ShouldReturnCorrectValue(double value, double min, double max, double expected)
         {
-            double result = MathHelper.InverseLerp(value, min, max);
+            double result = ScalingHelper.InverseLerp(value, min, max);
             Assert.Equal(expected, result, 10);
         }
 
@@ -84,19 +83,7 @@ namespace SignalManipulator.Tests
         [InlineData(-5.0, -10.0, 0.0, 0.5)]
         public void Normalize_ShouldAliasInverseLerp(double value, double min, double max, double expected)
         {
-            double result = MathHelper.Normalize(value, min, max);
-            Assert.Equal(expected, result, 10);
-        }
-
-        [Theory]
-        [InlineData(5.0, 0.0, 10.0, 5.0)]
-        [InlineData(-5.0, 0.0, 10.0, 0.0)]
-        [InlineData(15.0, 0.0, 10.0, 10.0)]
-        [InlineData(10.0, 0.0, 10.0, 10.0)]
-        [InlineData(0.0, 0.0, 10.0, 0.0)]
-        public void Clamp_ShouldLimitToBounds(double value, double min, double max, double expected)
-        {
-            double result = MathHelper.Clamp(value, min, max);
+            double result = ScalingHelper.Normalize(value, min, max);
             Assert.Equal(expected, result, 10);
         }
     }

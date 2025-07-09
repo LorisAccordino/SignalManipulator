@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using SignalManipulator.UI.Scaling;
-using SignalManipulator.UI.Scaling.Curves;
-using SignalManipulator.UI.Helpers;
+using SignalManipulator.Logic.AudioMath.Objects.Scaling.Curves;
 using System.Diagnostics.CodeAnalysis;
+using SignalManipulator.Logic.AudioMath.Scaling;
 
 namespace SignalManipulator.UI.Components.Precision
 {
@@ -100,7 +99,7 @@ namespace SignalManipulator.UI.Components.Precision
 
         protected virtual void SetValue(double newValue, bool fromUser)
         {
-            double clamped = MathHelper.Clamp(newValue, Minimum, Maximum);
+            double clamped = double.Clamp(newValue, Minimum, Maximum);
 
             if (value == clamped)
                 return;

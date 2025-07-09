@@ -153,7 +153,7 @@ namespace SignalManipulator.UI.Components.Precision
             set
             {
                 base.Precision = value;
-                valueLabel.DecimalPlaces = MathHelper.GetDecimalPlaces(base.Precision);
+                valueLabel.DecimalPlaces = ScalingHelper.GetDecimalPlaces(base.Precision);
             }
         }
 
@@ -203,7 +203,7 @@ namespace SignalManipulator.UI.Components.Precision
         }
 
         private int GetValueLabelWidth() =>
-            showValue ? valueLabel.EstimateRequiredWidth(MathHelper.GetIntegerDigits(Maximum), apply: true) : 0;
+            showValue ? valueLabel.EstimateRequiredWidth(ScalingHelper.GetIntegerDigits(Maximum), apply: true) : 0;
 
         private int GetValueLabelHeight() =>
             showValue ? valueLabel.Height : 0;

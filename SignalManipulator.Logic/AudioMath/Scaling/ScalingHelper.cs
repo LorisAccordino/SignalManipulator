@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace SignalManipulator.UI.Helpers
+﻿namespace SignalManipulator.Logic.AudioMath.Scaling
 {
-    public static class MathHelper
+    public static class ScalingHelper
     {
         public static int GetIntegerDigits(double value)
         {
@@ -44,13 +42,6 @@ namespace SignalManipulator.UI.Helpers
         public static double Normalize(double value, double min, double max)
         {
             return InverseLerp(value, min, max); // Alias
-        }
-
-        public static double Clamp(double value, double min, double max)
-        {
-            if (value < min) return min;
-            if (value > max) return max;
-            return value;
         }
     }
 }

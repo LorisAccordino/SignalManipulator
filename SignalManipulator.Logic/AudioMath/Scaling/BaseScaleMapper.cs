@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.UI.Scaling
+﻿namespace SignalManipulator.Logic.AudioMath.Scaling
 {
     public abstract class BaseScaleMapper : IScaleMapper
     {

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SignalManipulator.Logic.AudioMath.Models
+namespace SignalManipulator.Logic.AudioMath.Objects
 {
     public class Cardioid
     {

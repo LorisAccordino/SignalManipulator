@@ -1,4 +1,4 @@
-﻿using SignalManipulator.Logic.AudioMath.Models;
+﻿using SignalManipulator.Logic.AudioMath.Objects;
 
 namespace SignalManipulator.Logic.Models
 {

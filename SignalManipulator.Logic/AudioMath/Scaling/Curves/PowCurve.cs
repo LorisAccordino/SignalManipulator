@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SignalManipulator.UI.Scaling.Curves
+namespace SignalManipulator.Logic.AudioMath.Scaling.Curves
 {
     public class PowCurve : INonLinearCurve
     {

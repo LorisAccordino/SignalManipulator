@@ -1,8 +1,6 @@
-﻿using SignalManipulator.UI.Helpers;
-using SignalManipulator.UI.Scaling.Curves;
-using System;
+﻿using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 
-namespace SignalManipulator.UI.Scaling
+namespace SignalManipulator.Logic.AudioMath.Scaling
 {
     public class NonLinearScaleMapper : BaseScaleMapper
     {
@@ -19,7 +17,7 @@ namespace SignalManipulator.UI.Scaling
 
         public override int ToControlUnits(double realValue)
         {
-            double normalized = MathHelper.InverseLerp(realValue, RealMin, RealMax);
+            double normalized = ScalingHelper.InverseLerp(realValue, RealMin, RealMax);
             double curved = curve.Forward(normalized);
             return (int)Math.Round(curved * resolution);
         }
@@ -28,8 +26,8 @@ namespace SignalManipulator.UI.Scaling
         {
             double normalized = (double)controlUnits / resolution;
             double curved = curve.Inverse(normalized);
-            double realValue = MathHelper.Lerp(curved, RealMin, RealMax);
-            return MathHelper.SnapToPrecision(realValue, Precision);
+            double realValue = ScalingHelper.Lerp(curved, RealMin, RealMax);
+            return ScalingHelper.SnapToPrecision(realValue, Precision);
         }
     }
 }
