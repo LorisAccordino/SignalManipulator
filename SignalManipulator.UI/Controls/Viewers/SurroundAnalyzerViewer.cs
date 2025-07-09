@@ -6,14 +6,21 @@ using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
 using SignalManipulator.UI.Controls.Plottables.Radars;
 using SignalManipulator.UI.Controls.Plottables;
+using System.ComponentModel;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
     [ExcludeFromCodeCoverage]
     public partial class SurroundAnalyzerViewer : BaseViewer
     {
-        //private PolarPanningPlot panningPlot;
         private SurroundAnalyzer surroundAnalyzer;
+
+        // Min size
+        private readonly Size MinSize = new Size(380, 380);
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Size MinimumSize { get => MinSize; set => base.MinimumSize = MinSize; }
+        public override Size GetPreferredSize(Size proposedSize) => MinSize;
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;

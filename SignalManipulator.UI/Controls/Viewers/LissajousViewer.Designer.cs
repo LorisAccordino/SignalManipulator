@@ -35,10 +35,10 @@
             // 
             formsPlot.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             formsPlot.DisplayScale = 0F;
-            formsPlot.Location = new System.Drawing.Point(107, 0);
+            formsPlot.Location = new System.Drawing.Point(57, 3);
             formsPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             formsPlot.Name = "formsPlot";
-            formsPlot.Size = new System.Drawing.Size(394, 378);
+            formsPlot.Size = new System.Drawing.Size(396, 382);
             formsPlot.TabIndex = 0;
             formsPlot.Resize += Plot_Resize;
             // 
@@ -49,7 +49,7 @@
             Controls.Add(formsPlot);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "LissajousViewer";
-            Size = new System.Drawing.Size(601, 382);
+            Size = new System.Drawing.Size(535, 400);
             Text = "XY Mode Stereo Viewer";
             ResumeLayout(false);
         }

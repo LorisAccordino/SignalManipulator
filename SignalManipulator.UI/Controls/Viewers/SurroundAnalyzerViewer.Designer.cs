@@ -38,7 +38,7 @@
             formsPlot.Location = new System.Drawing.Point(107, 0);
             formsPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             formsPlot.Name = "formsPlot";
-            formsPlot.Size = new System.Drawing.Size(394, 378);
+            formsPlot.Size = new System.Drawing.Size(386, 346);
             formsPlot.TabIndex = 0;
             formsPlot.Resize += Plot_Resize;
             // 
@@ -49,7 +49,7 @@
             Controls.Add(formsPlot);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "SurroundAnalyzerViewer";
-            Size = new System.Drawing.Size(601, 382);
+            Size = new System.Drawing.Size(598, 350);
             Text = "Surround Analyzer";
             ResumeLayout(false);
         }

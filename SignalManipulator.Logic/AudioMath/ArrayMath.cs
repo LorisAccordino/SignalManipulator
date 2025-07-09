@@ -34,10 +34,15 @@
             return weightedSum / sumExp;
         }
 
-        public static void Exaggerate(this double[] array, double power = 0.3, double max = 1.0)
+        public static void Exaggerate(this float[] array, double power = 0.3, double scale = 1.0)
         {
             for (int i = 0; i < array.Length; i++)
-                array[i] = Math.Clamp(Math.Pow(Math.Clamp(array[i], 0, 1), power), 0, max);
+                array[i] = Math.Clamp((float)Math.Pow(Math.Clamp(array[i], 0, 1), power), 0, 1) * (float)scale;
+        }
+        public static void Exaggerate(this double[] array, double power = 0.3, double scale = 1.0)
+        {
+            for (int i = 0; i < array.Length; i++)
+                array[i] = Math.Clamp(Math.Pow(Math.Clamp(array[i], 0, 1), power), 0, 1) * scale;
         }
 
         public static void Add(this float[] dest, float[] addend)

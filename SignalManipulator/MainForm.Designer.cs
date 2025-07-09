@@ -41,9 +41,10 @@
             waveformViewer = new UI.Controls.Viewers.WaveformViewer();
             spectrumPage = new TabPage();
             spectrumViewer = new UI.Controls.Viewers.SpectrumViewer();
-            stereoPage = new TabPage();
-            surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
+            stereoXYPage = new TabPage();
             lissajousViewer = new UI.Controls.Viewers.LissajousViewer();
+            surroundAnalyzerPage = new TabPage();
+            surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
             audioPlayer = new UI.Controls.AudioPlayer();
@@ -75,7 +76,8 @@
             viewersTab.SuspendLayout();
             waveformPage.SuspendLayout();
             spectrumPage.SuspendLayout();
-            stereoPage.SuspendLayout();
+            stereoXYPage.SuspendLayout();
+            surroundAnalyzerPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bottomSplitContainer).BeginInit();
             bottomSplitContainer.Panel1.SuspendLayout();
             bottomSplitContainer.Panel2.SuspendLayout();
@@ -203,7 +205,8 @@
             // 
             viewersTab.Controls.Add(waveformPage);
             viewersTab.Controls.Add(spectrumPage);
-            viewersTab.Controls.Add(stereoPage);
+            viewersTab.Controls.Add(stereoXYPage);
+            viewersTab.Controls.Add(surroundAnalyzerPage);
             viewersTab.Dock = DockStyle.Fill;
             viewersTab.Location = new Point(2, 18);
             viewersTab.Margin = new Padding(4, 3, 4, 3);
@@ -232,7 +235,7 @@
             waveformViewer.Name = "waveformViewer";
             waveformViewer.Size = new Size(830, 380);
             waveformViewer.TabIndex = 0;
-            waveformViewer.Text = null;
+            waveformViewer.Text = "Signal Waveform";
             // 
             // spectrumPage
             // 
@@ -254,40 +257,50 @@
             spectrumViewer.Name = "spectrumViewer";
             spectrumViewer.Size = new Size(830, 380);
             spectrumViewer.TabIndex = 0;
-            spectrumViewer.Text = null;
+            spectrumViewer.Text = "FFT Spectrum";
             // 
-            // stereoPage
+            // stereoXYPage
             // 
-            stereoPage.BackColor = SystemColors.Control;
-            stereoPage.Controls.Add(surroundAnalyzer);
-            stereoPage.Controls.Add(lissajousViewer);
-            stereoPage.Location = new Point(4, 24);
-            stereoPage.Margin = new Padding(4, 3, 4, 3);
-            stereoPage.Name = "stereoPage";
-            stereoPage.Padding = new Padding(4, 3, 4, 3);
-            stereoPage.Size = new Size(838, 386);
-            stereoPage.TabIndex = 2;
-            stereoPage.Text = "Stereo Views";
-            // 
-            // surroundAnalyzer
-            // 
-            surroundAnalyzer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            surroundAnalyzer.Location = new Point(440, 0);
-            surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
-            surroundAnalyzer.Name = "surroundAnalyzer";
-            surroundAnalyzer.Size = new Size(366, 380);
-            surroundAnalyzer.TabIndex = 1;
-            surroundAnalyzer.Text = null;
+            stereoXYPage.BackColor = SystemColors.Control;
+            stereoXYPage.Controls.Add(lissajousViewer);
+            stereoXYPage.Location = new Point(4, 24);
+            stereoXYPage.Margin = new Padding(4, 3, 4, 3);
+            stereoXYPage.Name = "stereoXYPage";
+            stereoXYPage.Padding = new Padding(4, 3, 4, 3);
+            stereoXYPage.Size = new Size(838, 386);
+            stereoXYPage.TabIndex = 2;
+            stereoXYPage.Text = "XY Stereo Oscilloscope";
             // 
             // lissajousViewer
             // 
-            lissajousViewer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            lissajousViewer.Location = new Point(34, 0);
+            lissajousViewer.Dock = DockStyle.Fill;
+            lissajousViewer.Location = new Point(4, 3);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(381, 380);
+            lissajousViewer.Size = new Size(830, 380);
             lissajousViewer.TabIndex = 0;
-            lissajousViewer.Text = null;
+            lissajousViewer.Text = "XY Stereo Oscilloscope";
+            // 
+            // surroundAnalyzerPage
+            // 
+            surroundAnalyzerPage.BackColor = SystemColors.Control;
+            surroundAnalyzerPage.Controls.Add(surroundAnalyzer);
+            surroundAnalyzerPage.Location = new Point(4, 24);
+            surroundAnalyzerPage.Name = "surroundAnalyzerPage";
+            surroundAnalyzerPage.Padding = new Padding(3);
+            surroundAnalyzerPage.Size = new Size(838, 386);
+            surroundAnalyzerPage.TabIndex = 3;
+            surroundAnalyzerPage.Text = "Surround Analyzer";
+            // 
+            // surroundAnalyzer
+            // 
+            surroundAnalyzer.Dock = DockStyle.Fill;
+            surroundAnalyzer.Location = new Point(3, 3);
+            surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
+            surroundAnalyzer.Name = "surroundAnalyzer";
+            surroundAnalyzer.Size = new Size(832, 380);
+            surroundAnalyzer.TabIndex = 2;
+            surroundAnalyzer.Text = "Surround Analyzer";
             // 
             // bottomSplitContainer
             // 
@@ -457,7 +470,8 @@
             viewersTab.ResumeLayout(false);
             waveformPage.ResumeLayout(false);
             spectrumPage.ResumeLayout(false);
-            stereoPage.ResumeLayout(false);
+            stereoXYPage.ResumeLayout(false);
+            surroundAnalyzerPage.ResumeLayout(false);
             bottomSplitContainer.Panel1.ResumeLayout(false);
             bottomSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bottomSplitContainer).EndInit();
@@ -489,7 +503,7 @@
         private System.Windows.Forms.TabControl viewersTab;
         private System.Windows.Forms.TabPage waveformPage;
         private System.Windows.Forms.TabPage spectrumPage;
-        private System.Windows.Forms.TabPage stereoPage;
+        private System.Windows.Forms.TabPage stereoXYPage;
         private SignalManipulator.UI.Controls.EffectChainControl effectChain;
         private SignalManipulator.UI.Controls.Viewers.LissajousViewer lissajousViewer;
         private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
@@ -500,6 +514,7 @@
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
         private UI.Controls.Viewers.WaveformViewer waveformViewer;
+        private TabPage surroundAnalyzerPage;
         private UI.Controls.Viewers.SurroundAnalyzerViewer surroundAnalyzer;
     }
 }

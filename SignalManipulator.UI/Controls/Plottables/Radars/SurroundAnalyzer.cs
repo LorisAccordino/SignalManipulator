@@ -48,7 +48,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Radars
 
                 // Apply smoothing (EMA then SMA), and then exaggerate
                 double[] smoothed = smootherSMA.Smooth(smootherEMA.Smooth(rawMagnitudes));
-                smoothed.Exaggerate(max: 0.9);
+                smoothed.Exaggerate(scale: 0.9);
                 magnitudes = smoothed;
                 SetMagnitudes(magnitudes);
             }

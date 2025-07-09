@@ -6,6 +6,7 @@ using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
 using SignalManipulator.UI.Controls.Plottables.Scatters;
 using SignalManipulator.UI.Controls.Plottables;
+using System.ComponentModel;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
@@ -14,6 +15,14 @@ namespace SignalManipulator.UI.Controls.Viewers
     {
         private Lissajous lissajousPlot;
         private const int MAX_SAMPLES = 1024;
+
+        // Min size
+        private readonly Size MinSize = new Size(380, 380);
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Size MinimumSize { get => MinSize; set => base.MinimumSize = MinSize; }
+        public override Size GetPreferredSize(Size proposedSize) => MinSize;
+
 
         // Component references
         protected override FormsPlot FormsPlot => formsPlot;
