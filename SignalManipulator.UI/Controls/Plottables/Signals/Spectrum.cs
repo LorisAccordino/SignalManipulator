@@ -6,7 +6,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class Spectrum : BaseSignalPlot
     {
-        public ChannelMode ChannelMode { get; set; } = ChannelMode.Stereo;
+        public AudioChannel ChannelMode { get; set; } = AudioChannel.Stereo;
 
         private int fftSize;
         private double[] magnitudes = [];

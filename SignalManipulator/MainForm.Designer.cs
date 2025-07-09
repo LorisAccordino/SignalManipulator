@@ -263,17 +263,17 @@
             stereoPage.Margin = new Padding(4, 3, 4, 3);
             stereoPage.Name = "stereoPage";
             stereoPage.Padding = new Padding(4, 3, 4, 3);
-            stereoPage.Size = new Size(838, 386);
+            stereoPage.Size = new Size(192, 72);
             stereoPage.TabIndex = 2;
             stereoPage.Text = "Stereo Views";
             // 
             // surroundAnalyzer
             // 
             surroundAnalyzer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            surroundAnalyzer.Location = new Point(440, 0);
+            surroundAnalyzer.Location = new Point(-206, 0);
             surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
             surroundAnalyzer.Name = "surroundAnalyzer";
-            surroundAnalyzer.Size = new Size(366, 380);
+            surroundAnalyzer.Size = new Size(366, 66);
             surroundAnalyzer.TabIndex = 1;
             // 
             // lissajousViewer
@@ -282,7 +282,7 @@
             lissajousViewer.Location = new Point(34, 0);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(381, 380);
+            lissajousViewer.Size = new Size(381, 66);
             lissajousViewer.TabIndex = 0;
             // 
             // bottomSplitContainer

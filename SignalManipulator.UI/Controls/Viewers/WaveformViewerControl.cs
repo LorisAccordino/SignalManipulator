@@ -45,9 +45,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Right"));
 
             // Set channel modes
-            waveformPlots[0].ChannelMode = ChannelMode.Stereo;
-            waveformPlots[1].ChannelMode = ChannelMode.Left;
-            waveformPlots[2].ChannelMode = ChannelMode.Right;
+            waveformPlots[0].ChannelMode = AudioChannel.Stereo;
+            waveformPlots[1].ChannelMode = AudioChannel.Left;
+            waveformPlots[2].ChannelMode = AudioChannel.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(-1, 1);

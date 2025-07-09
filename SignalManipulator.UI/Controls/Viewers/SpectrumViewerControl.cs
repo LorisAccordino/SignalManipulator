@@ -50,9 +50,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
 
             // Set channel modes
-            spectrumPlots[0].ChannelMode = ChannelMode.Stereo;
-            spectrumPlots[1].ChannelMode = ChannelMode.Left;
-            spectrumPlots[2].ChannelMode = ChannelMode.Right;
+            spectrumPlots[0].ChannelMode = AudioChannel.Stereo;
+            spectrumPlots[1].ChannelMode = AudioChannel.Left;
+            spectrumPlots[2].ChannelMode = AudioChannel.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, AudioEngine.MAX_MAGNITUDE_DB);

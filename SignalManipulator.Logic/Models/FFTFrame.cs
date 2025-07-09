@@ -39,49 +39,49 @@ namespace SignalManipulator.Logic.Models
             return new FFTFrame(freqsL, left: magL, right: magR);
         }
 
-        public double[] Get(ChannelMode mode)
+        public double[] Get(AudioChannel mode)
         {
             TryGet(mode, out var data);
             return data;
         }
 
-        public bool TryGet(ChannelMode mode, out double[] data)
+        public bool TryGet(AudioChannel mode, out double[] data)
         {
             data = mode switch
             {
-                ChannelMode.Stereo when Stereo != null => Stereo,
-                ChannelMode.Left when Left != null => Left,
-                ChannelMode.Right when Right != null => Right,
+                AudioChannel.Stereo when Stereo != null => Stereo,
+                AudioChannel.Left when Left != null => Left,
+                AudioChannel.Right when Right != null => Right,
                 _ => []
             };
 
             return data.Length > 0;
         }
 
-        public double[] GetOrThrow(ChannelMode mode)
+        public double[] GetOrThrow(AudioChannel mode)
         {
             if (!TryGet(mode, out var data))
                 throw new InvalidOperationException($"Channel '{mode}' is not available.");
             return data;
         }
 
-        public IEnumerable<ChannelMode> AvailableChannels
+        public IEnumerable<AudioChannel> AvailableChannels
         {
             get
             {
-                if (Stereo != null) yield return ChannelMode.Stereo;
-                if (Left != null) yield return ChannelMode.Left;
-                if (Right != null) yield return ChannelMode.Right;
+                if (Stereo != null) yield return AudioChannel.Stereo;
+                if (Left != null) yield return AudioChannel.Left;
+                if (Right != null) yield return AudioChannel.Right;
             }
         }
 
-        public bool HasChannel(ChannelMode mode)
+        public bool HasChannel(AudioChannel mode)
         {
             return mode switch
             {
-                ChannelMode.Stereo => Stereo != null,
-                ChannelMode.Left => Left != null,
-                ChannelMode.Right => Right != null,
+                AudioChannel.Stereo => Stereo != null,
+                AudioChannel.Left => Left != null,
+                AudioChannel.Right => Right != null,
                 _ => false
             };
         }

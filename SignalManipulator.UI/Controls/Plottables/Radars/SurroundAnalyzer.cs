@@ -27,7 +27,6 @@ namespace SignalManipulator.UI.Controls.Plottables.Radars
                 // Compute RMS for each channel
                 double leftRMS = volume.LeftRMS;
                 double rightRMS = volume.RightRMS;
-                double centerRMS = volume.StereoRMS;
 
                 // Center (mid) and difference (side)
                 double mid = volume.Mid;
@@ -47,13 +46,9 @@ namespace SignalManipulator.UI.Controls.Plottables.Radars
                     rearR
                 ];
 
-                // Apply smoothing (EMA then SMA)
+                // Apply smoothing (EMA then SMA), and then exaggerate
                 double[] smoothed = smootherSMA.Smooth(smootherEMA.Smooth(rawMagnitudes));
-
-                // Apply exaggeration
-                for (int i = 0; i < smoothed.Length; i++)
-                    smoothed[i] = smoothed[i].ExaggerateRms();
-
+                smoothed.Exaggerate(max: 0.9);
                 magnitudes = smoothed;
                 SetMagnitudes(magnitudes);
             }

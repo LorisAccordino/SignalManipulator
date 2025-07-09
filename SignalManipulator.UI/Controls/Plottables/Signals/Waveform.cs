@@ -4,7 +4,7 @@ namespace SignalManipulator.UI.Controls.Plottables.Signals
 {
     public class Waveform : BaseSignalPlot
     {
-        public ChannelMode ChannelMode { get; set; } = ChannelMode.Stereo;
+        public AudioChannel ChannelMode { get; set; } = AudioChannel.Stereo;
 
         public Waveform(int sampleRate) : this(sampleRate, "") { }
         public Waveform(int sampleRate, string channelName = "") : base(sampleRate, channelName) { }
