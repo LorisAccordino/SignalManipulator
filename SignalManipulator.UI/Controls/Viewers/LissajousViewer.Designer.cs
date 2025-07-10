@@ -38,18 +38,18 @@
             formsPlot.Location = new System.Drawing.Point(57, 3);
             formsPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             formsPlot.Name = "formsPlot";
-            formsPlot.Size = new System.Drawing.Size(396, 382);
+            formsPlot.Size = new System.Drawing.Size(541, 382);
             formsPlot.TabIndex = 0;
-            formsPlot.Resize += Plot_Resize;
             // 
             // LissajousViewer
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(formsPlot);
+            IsSquaredControl = true;
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "LissajousViewer";
-            Size = new System.Drawing.Size(535, 400);
+            Size = new System.Drawing.Size(680, 400);
             Text = "XY Mode Stereo Viewer";
             ResumeLayout(false);
         }

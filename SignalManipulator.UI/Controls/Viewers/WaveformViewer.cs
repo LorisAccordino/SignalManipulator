@@ -4,7 +4,9 @@ using SignalManipulator.UI.Controls.Plottables;
 using SignalManipulator.UI.Controls.Plottables.Signals;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {

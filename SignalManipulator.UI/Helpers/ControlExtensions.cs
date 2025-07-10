@@ -1,5 +1,4 @@
-﻿using SignalManipulator.UI.Controls;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -8,7 +7,7 @@ namespace SignalManipulator.UI.Helpers
     [ExcludeFromCodeCoverage]
     public static class ControlExtensions
     {
-        private static readonly Size SafeBorder = new Size(40, 25);
+        private static readonly Size SafeBorder = new Size(50, 50);
 
         public static void SafeInvoke(this Control control, Action action)
         {
@@ -26,6 +25,23 @@ namespace SignalManipulator.UI.Helpers
                 action();
         }
 
+        public static void AttachContextMenu(this Control control, params (string text, Action action)[] items)
+        {
+            if (control.ContextMenuStrip == null)
+                control.ContextMenuStrip = new ContextMenuStrip();
+
+            foreach (var (text, action) in items)
+            {
+                // Avoid duplications: check if an item with the same text already exists
+                if (!control.ContextMenuStrip.Items.Cast<ToolStripItem>().Any(i => i.Text == text))
+                {
+                    var item = new ToolStripMenuItem(text);
+                    item.Click += (s, e) => action();
+                    control.ContextMenuStrip.Items.Add(item);
+                }
+            }
+        }
+
         public static void FloatControl(this Control control, Action? onDocked = null)
         {
             if (control == null || control.Parent == null)
@@ -39,18 +55,19 @@ namespace SignalManipulator.UI.Helpers
             originalParent.Controls.Remove(control);
 
             // Create a new form
+            var baseSize = control.MinimumSize + SafeBorder;
             Form floatForm = new Form
             {
                 Text = !string.IsNullOrWhiteSpace(control.Text) ? control.Text : control.GetType().Name,
                 FormBorderStyle = FormBorderStyle.SizableToolWindow,
                 StartPosition = FormStartPosition.Manual,
-                Size = control.Size,
-                MinimumSize = control.MinimumSize + SafeBorder,
+                MinimumSize = baseSize,
+                Size = baseSize,
             };
 
             // Position the new window nearby the main form
             if (originalParent.FindForm() is Form mainForm)
-                floatForm.Location = new Point(mainForm.Left + 10, mainForm.Top + 10);
+                floatForm.Location = new Point(mainForm.Left, mainForm.Top) + SafeBorder;
             else
                 floatForm.StartPosition = FormStartPosition.CenterParent;
 
@@ -71,31 +88,6 @@ namespace SignalManipulator.UI.Helpers
             control.Dock = DockStyle.Fill;
             floatForm.Controls.Add(control);
             floatForm.Show();
-        }
-
-        public static void AttachContextMenu(this Control control, params (string text, Action action)[] items)
-        {
-            var menu = new ContextMenuStrip();
-            foreach (var (text, action) in items)
-            {
-                var item = new ToolStripMenuItem(text);
-                item.Click += (s, e) => action();
-                menu.Items.Add(item);
-            }
-            control.ContextMenuStrip = menu;
-        }
-
-        public static void AttachFloatContextMenu(this Control control)
-        {
-            if (control is IFloatableControl floatable)
-            {
-                control.AttachContextMenu(("Undock", () =>
-                {
-                    if (!floatable.IsFloating)
-                        floatable.Float();
-                }
-                ));
-            }
         }
     }
 }

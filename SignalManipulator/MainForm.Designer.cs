@@ -177,7 +177,7 @@
             // 
             rightSideSplitContainer.Panel1.Controls.Add(visualizationGroupBox);
             rightSideSplitContainer.Panel1.Padding = new Padding(0, 0, 5, 0);
-            rightSideSplitContainer.Panel1MinSize = 400;
+            rightSideSplitContainer.Panel1MinSize = 420;
             // 
             // rightSideSplitContainer.Panel2
             // 
@@ -230,6 +230,7 @@
             // waveformViewer
             // 
             waveformViewer.Dock = DockStyle.Fill;
+            waveformViewer.IsFloating = false;
             waveformViewer.Location = new Point(4, 3);
             waveformViewer.Margin = new Padding(2);
             waveformViewer.Name = "waveformViewer";
@@ -245,17 +246,18 @@
             spectrumPage.Margin = new Padding(4, 3, 4, 3);
             spectrumPage.Name = "spectrumPage";
             spectrumPage.Padding = new Padding(4, 3, 4, 3);
-            spectrumPage.Size = new Size(838, 386);
+            spectrumPage.Size = new Size(192, 72);
             spectrumPage.TabIndex = 1;
             spectrumPage.Text = "FFT Spectrum";
             // 
             // spectrumViewer
             // 
             spectrumViewer.Dock = DockStyle.Fill;
+            spectrumViewer.IsFloating = false;
             spectrumViewer.Location = new Point(4, 3);
             spectrumViewer.Margin = new Padding(5);
             spectrumViewer.Name = "spectrumViewer";
-            spectrumViewer.Size = new Size(830, 380);
+            spectrumViewer.Size = new Size(184, 66);
             spectrumViewer.TabIndex = 0;
             spectrumViewer.Text = "FFT Spectrum";
             // 
@@ -267,17 +269,18 @@
             stereoXYPage.Margin = new Padding(4, 3, 4, 3);
             stereoXYPage.Name = "stereoXYPage";
             stereoXYPage.Padding = new Padding(4, 3, 4, 3);
-            stereoXYPage.Size = new Size(838, 386);
+            stereoXYPage.Size = new Size(192, 72);
             stereoXYPage.TabIndex = 2;
             stereoXYPage.Text = "XY Stereo Oscilloscope";
             // 
             // lissajousViewer
             // 
             lissajousViewer.Dock = DockStyle.Fill;
+            lissajousViewer.IsFloating = false;
             lissajousViewer.Location = new Point(4, 3);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(830, 380);
+            lissajousViewer.Size = new Size(380, 380);
             lissajousViewer.TabIndex = 0;
             lissajousViewer.Text = "XY Stereo Oscilloscope";
             // 
@@ -288,17 +291,18 @@
             surroundAnalyzerPage.Location = new Point(4, 24);
             surroundAnalyzerPage.Name = "surroundAnalyzerPage";
             surroundAnalyzerPage.Padding = new Padding(3);
-            surroundAnalyzerPage.Size = new Size(838, 386);
+            surroundAnalyzerPage.Size = new Size(192, 72);
             surroundAnalyzerPage.TabIndex = 3;
             surroundAnalyzerPage.Text = "Surround Analyzer";
             // 
             // surroundAnalyzer
             // 
             surroundAnalyzer.Dock = DockStyle.Fill;
+            surroundAnalyzer.IsFloating = false;
             surroundAnalyzer.Location = new Point(3, 3);
             surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
             surroundAnalyzer.Name = "surroundAnalyzer";
-            surroundAnalyzer.Size = new Size(832, 380);
+            surroundAnalyzer.Size = new Size(380, 380);
             surroundAnalyzer.TabIndex = 2;
             surroundAnalyzer.Text = "Surround Analyzer";
             // 

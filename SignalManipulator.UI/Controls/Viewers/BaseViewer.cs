@@ -3,13 +3,40 @@ using ScottPlot.WinForms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Models;
+using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
     public class BaseViewer : FloatableControl
     {
+        public static readonly int MIN_WIDTH = 680;
+        public static readonly int MIN_HEIGHT = 370;
+
+        // Min size
+        private Size MinSize => IsSquaredControl ? new Size(MIN_HEIGHT, MIN_HEIGHT) : new Size(MIN_WIDTH, MIN_HEIGHT);
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Size MinimumSize { get => MinSize; set => base.MinimumSize = MinSize; }
+        public override Size GetPreferredSize(Size proposedSize) => MinSize;
+        
+        private bool isSquaredControl = false;
+        public bool IsSquaredControl
+        {
+            get => isSquaredControl;
+            set
+            {
+                isSquaredControl = value;
+
+                // Keep a square aspect ratio
+                if (isSquaredControl) SquareControlHelper.Attach(this, FormsPlot);
+            }
+        }
+
+
+
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -20,7 +47,7 @@ namespace SignalManipulator.UI.Controls.Viewers
         // Common services and events
         protected IAudioEventDispatcher AudioEvents;
         protected UIUpdateService UIUpdate;
-
+        
         // Other commons
         protected int SampleRate { get; private set; } = AudioEngine.SAMPLE_RATE;
         protected readonly object RenderLock = new();

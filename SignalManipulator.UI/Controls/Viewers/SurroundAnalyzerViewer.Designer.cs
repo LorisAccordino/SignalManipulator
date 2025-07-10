@@ -38,18 +38,18 @@
             formsPlot.Location = new System.Drawing.Point(107, 0);
             formsPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             formsPlot.Name = "formsPlot";
-            formsPlot.Size = new System.Drawing.Size(386, 346);
+            formsPlot.Size = new System.Drawing.Size(468, 366);
             formsPlot.TabIndex = 0;
-            formsPlot.Resize += Plot_Resize;
             // 
             // SurroundAnalyzerViewer
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(formsPlot);
+            IsSquaredControl = true;
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "SurroundAnalyzerViewer";
-            Size = new System.Drawing.Size(598, 350);
+            Size = new System.Drawing.Size(680, 370);
             Text = "Surround Analyzer";
             ResumeLayout(false);
         }

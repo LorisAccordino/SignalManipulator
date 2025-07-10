@@ -50,7 +50,7 @@
             formsPlot.Location = new System.Drawing.Point(2, 2);
             formsPlot.Margin = new System.Windows.Forms.Padding(2);
             formsPlot.Name = "formsPlot";
-            formsPlot.Size = new System.Drawing.Size(682, 283);
+            formsPlot.Size = new System.Drawing.Size(676, 279);
             formsPlot.TabIndex = 0;
             // 
             // mainPanelTableLayout
@@ -66,7 +66,7 @@
             mainPanelTableLayout.RowCount = 2;
             mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
-            mainPanelTableLayout.Size = new System.Drawing.Size(686, 374);
+            mainPanelTableLayout.Size = new System.Drawing.Size(680, 370);
             mainPanelTableLayout.TabIndex = 1;
             // 
             // settingsPanel
@@ -77,11 +77,11 @@
             settingsPanel.Controls.Add(navigator, 0, 0);
             settingsPanel.Controls.Add(displaySettingsGroupBox, 1, 0);
             settingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            settingsPanel.Location = new System.Drawing.Point(3, 290);
+            settingsPanel.Location = new System.Drawing.Point(3, 286);
             settingsPanel.Name = "settingsPanel";
             settingsPanel.RowCount = 1;
             settingsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            settingsPanel.Size = new System.Drawing.Size(680, 81);
+            settingsPanel.Size = new System.Drawing.Size(674, 81);
             settingsPanel.TabIndex = 1;
             // 
             // navigator
@@ -92,7 +92,7 @@
             navigator.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             navigator.Name = "navigator";
             navigator.Pan = 0D;
-            navigator.Size = new System.Drawing.Size(490, 61);
+            navigator.Size = new System.Drawing.Size(484, 61);
             navigator.TabIndex = 11;
             navigator.Zoom = 1D;
             navigator.ZoomMax = 100D;
@@ -105,7 +105,7 @@
             displaySettingsGroupBox.Controls.Add(stereoSplitRadBtn);
             displaySettingsGroupBox.Controls.Add(stereoMixRadBtn);
             displaySettingsGroupBox.Controls.Add(secLbl);
-            displaySettingsGroupBox.Location = new System.Drawing.Point(503, 3);
+            displaySettingsGroupBox.Location = new System.Drawing.Point(497, 3);
             displaySettingsGroupBox.Name = "displaySettingsGroupBox";
             displaySettingsGroupBox.Size = new System.Drawing.Size(173, 75);
             displaySettingsGroupBox.TabIndex = 12;
@@ -160,7 +160,7 @@
             Controls.Add(mainPanelTableLayout);
             Margin = new System.Windows.Forms.Padding(2);
             Name = "WaveformViewer";
-            Size = new System.Drawing.Size(686, 374);
+            Size = new System.Drawing.Size(680, 370);
             Text = "Waveform Viewer";
             mainPanelTableLayout.ResumeLayout(false);
             settingsPanel.ResumeLayout(false);
