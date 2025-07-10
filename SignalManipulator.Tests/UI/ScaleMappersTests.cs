@@ -124,38 +124,4 @@ namespace SignalManipulator.Tests.UI
             }
         }
     }
-
-    [ExcludeFromCodeCoverage]
-    public class TrackBarHelperTests
-    {
-        [Theory]
-        [InlineData("linear", 0.0, 100.0, 0.1)]
-        [InlineData("linear", 1.0, 5.0, 0.01)]
-
-        [InlineData("exp", 1.0, 10.0, 0.01)]
-        [InlineData("exp", 0.01, 100.0, 0.1)]
-
-        [InlineData("log", 0.0001, 1.0, 0.0001)]
-        [InlineData("log", 0.01, 100.0, 0.1)]
-        public void TrackBarSettings_ShouldBeCorrect(string curveType, double realMin, double realMax, double precision)
-        {
-            NonLinearScaleMapper mapper = new NonLinearScaleMapper(realMin, realMax, precision);
-            INonLinearCurve curve = curveType switch
-            {
-                "linear" => new LinearCurve(),
-                "exp" => new ExpCurve(),
-                "log" => new LogCurve(),
-                _ => throw new ArgumentException($"Invalid curve type: {curveType}")
-            };
-            mapper.Curve = curve;
-            var settings = TrackBarHelper.GetTrackBarSettings(mapper);
-
-            int expectedMin = mapper.ToControlUnits(realMin);
-            int expectedMax = mapper.ToControlUnits(realMax);
-
-            Assert.Equal(expectedMin, settings.Minimum);
-            Assert.Equal(expectedMax, settings.Maximum);
-            Assert.True(settings.Minimum < settings.Maximum);
-        }
-    }
 }

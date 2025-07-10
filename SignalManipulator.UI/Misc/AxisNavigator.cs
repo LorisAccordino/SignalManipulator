@@ -13,6 +13,7 @@ namespace SignalManipulator.UI.Misc
         public int Capacity { get; private set; } = 1;
         public bool NeedsUpdate { get; private set; }
 
+        public AxisNavigator() : this(0) { }
         public AxisNavigator(int capacity)
         {
             SetCapacity(capacity);
