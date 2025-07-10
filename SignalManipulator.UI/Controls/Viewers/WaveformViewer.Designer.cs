@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             formsPlot = new ScottPlot.WinForms.FormsPlot();
-            mainPanelTableLayout = new System.Windows.Forms.TableLayoutPanel();
             settingsPanel = new System.Windows.Forms.TableLayoutPanel();
             navigator = new Misc.ZoomPanControl();
             displaySettingsGroupBox = new System.Windows.Forms.GroupBox();
@@ -37,10 +36,11 @@
             stereoSplitRadBtn = new System.Windows.Forms.RadioButton();
             stereoMixRadBtn = new System.Windows.Forms.RadioButton();
             secLbl = new System.Windows.Forms.Label();
-            mainPanelTableLayout.SuspendLayout();
+            mainPanelTableLayout = new System.Windows.Forms.TableLayoutPanel();
             settingsPanel.SuspendLayout();
             displaySettingsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)secNum).BeginInit();
+            mainPanelTableLayout.SuspendLayout();
             SuspendLayout();
             // 
             // formsPlot
@@ -52,22 +52,6 @@
             formsPlot.Name = "formsPlot";
             formsPlot.Size = new System.Drawing.Size(676, 279);
             formsPlot.TabIndex = 0;
-            // 
-            // mainPanelTableLayout
-            // 
-            mainPanelTableLayout.ColumnCount = 1;
-            mainPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            mainPanelTableLayout.Controls.Add(formsPlot, 0, 0);
-            mainPanelTableLayout.Controls.Add(settingsPanel, 0, 1);
-            mainPanelTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            mainPanelTableLayout.Location = new System.Drawing.Point(0, 0);
-            mainPanelTableLayout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            mainPanelTableLayout.Name = "mainPanelTableLayout";
-            mainPanelTableLayout.RowCount = 2;
-            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
-            mainPanelTableLayout.Size = new System.Drawing.Size(680, 370);
-            mainPanelTableLayout.TabIndex = 1;
             // 
             // settingsPanel
             // 
@@ -153,6 +137,22 @@
             secLbl.TabIndex = 7;
             secLbl.Text = "Window seconds:";
             // 
+            // mainPanelTableLayout
+            // 
+            mainPanelTableLayout.ColumnCount = 1;
+            mainPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainPanelTableLayout.Controls.Add(formsPlot, 0, 0);
+            mainPanelTableLayout.Controls.Add(settingsPanel, 0, 1);
+            mainPanelTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainPanelTableLayout.Location = new System.Drawing.Point(0, 0);
+            mainPanelTableLayout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            mainPanelTableLayout.Name = "mainPanelTableLayout";
+            mainPanelTableLayout.RowCount = 2;
+            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            mainPanelTableLayout.Size = new System.Drawing.Size(680, 370);
+            mainPanelTableLayout.TabIndex = 1;
+            // 
             // WaveformViewer
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -162,18 +162,17 @@
             Name = "WaveformViewer";
             Size = new System.Drawing.Size(680, 370);
             Text = "Waveform Viewer";
-            mainPanelTableLayout.ResumeLayout(false);
             settingsPanel.ResumeLayout(false);
             displaySettingsGroupBox.ResumeLayout(false);
             displaySettingsGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)secNum).EndInit();
+            mainPanelTableLayout.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private ScottPlot.WinForms.FormsPlot formsPlot;
-        private System.Windows.Forms.TableLayoutPanel mainPanelTableLayout;
         private System.Windows.Forms.TableLayoutPanel settingsPanel;
         private Misc.ZoomPanControl navigator;
         private System.Windows.Forms.GroupBox displaySettingsGroupBox;
@@ -181,5 +180,6 @@
         private System.Windows.Forms.RadioButton stereoMixRadBtn;
         private System.Windows.Forms.Label secLbl;
         private System.Windows.Forms.NumericUpDown secNum;
+        private System.Windows.Forms.TableLayoutPanel mainPanelTableLayout;
     }
 }
