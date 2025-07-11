@@ -2,98 +2,103 @@
 {
     public static class ArrayMath
     {
-        public static void Clear(this float[] array) => Clear(array, 0, array.Length);
-        public static void Clear(this float[] array, int index, int length)
-        {
-            Array.Clear(array, index, length);
-        }
+        // --- Clear ---
+        public static void Clear(this float[] array) => Array.Clear(array);
+        public static void Clear(this double[] array) => Array.Clear(array);
 
-        public static void Clear(this double[] array) => Clear(array, 0, array.Length);
-        public static void Clear(this double[] array, int index, int length)
-        {
-            Array.Clear(array, index, length);
-        }
+        public static void Clear(this float[] array, int index, int length) => Array.Clear(array, index, length);
+        public static void Clear(this double[] array, int index, int length) => Array.Clear(array, index, length);
 
+
+        // --- Add/Sub ---
         public static void Add(this float[] dest, float[] addend)
         {
             int len = Math.Min(dest.Length, addend.Length);
+            var spanDest = dest.AsSpan(0, len);
+            var spanAdd = addend.AsSpan(0, len);
+
             for (int i = 0; i < len; i++)
-                dest[i] += addend[i];
+                spanDest[i] += spanAdd[i];
         }
 
         public static void Sub(this float[] dest, float[] subtrahend)
         {
             int len = Math.Min(dest.Length, subtrahend.Length);
+            var spanDest = dest.AsSpan(0, len);
+            var spanSub = subtrahend.AsSpan(0, len);
+
             for (int i = 0; i < len; i++)
-                dest[i] -= subtrahend[i];
+                spanDest[i] -= spanSub[i];
         }
 
+
+        // --- Scalar ops ---
         public static void Mul(this float[] array, float scalar)
         {
-            for (int i = 0; i < array.Length; i++)
-                array[i] *= scalar;
+            var span = array.AsSpan();
+            for (int i = 0; i < span.Length; i++)
+                span[i] *= scalar;
         }
 
-        public static void Div(this float[] array, float div)
+        public static void Div(this float[] array, float divisor)
         {
-            if (div == 0) throw new ArithmeticException(nameof(div));
+            if (divisor == 0f)
+                throw new DivideByZeroException(nameof(divisor));
 
-            for (int i = 0; i < array.Length; i++)
-                array[i] /= div;
+            var span = array.AsSpan();
+            for (int i = 0; i < span.Length; i++)
+                span[i] /= divisor;
         }
 
+
+        // --- Normalize ---
         public static void Normalize(this float[] array)
         {
-            float max = 0f;
-            for (int i = 0; i < array.Length; i++)
-            {
-                float absVal = Math.Abs(array[i]);
-                if (absVal > max)
-                    max = absVal;
-            }
-            if (max > 0)
+            if (array.Length == 0)
+                return;
+
+            float max = array.Max(MathF.Abs);
+            if (max > 0f)
             {
                 float invMax = 1f / max;
-                Mul(array, invMax);
+                array.Mul(invMax);
             }
         }
 
+
+        // --- Fades ---
         public static void FadeIn(this float[] array)
         {
             int len = array.Length;
+            if (len <= 1) return;
+
             for (int i = 0; i < len; i++)
-            {
-                float gain = (float)i / (len - 1);
-                array[i] *= gain;
-            }
+                array[i] *= i / (float)(len - 1);
         }
 
         public static void FadeOut(this float[] array)
         {
             int len = array.Length;
+            if (len <= 1) return;
+
             for (int i = 0; i < len; i++)
-            {
-                float gain = 1f - ((float)i / (len - 1));
-                array[i] *= gain;
-            }
+                array[i] *= 1f - i / (float)(len - 1);
         }
 
+
+        // --- Clamp ---
         public static void Clamp(this float[] array, float min, float max)
         {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] < min) array[i] = min;
-                else if (array[i] > max) array[i] = max;
-            }
+            var span = array.AsSpan();
+            for (int i = 0; i < span.Length; i++)
+                span[i] = Math.Clamp(span[i], min, max);
         }
 
         public static void Clamp(this double[] array, double min, double max)
         {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] < min) array[i] = min;
-                else if (array[i] > max) array[i] = max;
-            }
+            var span = array.AsSpan();
+            for (int i = 0; i < span.Length; i++)
+                span[i] = Math.Clamp(span[i], min, max);
         }
     }
 }

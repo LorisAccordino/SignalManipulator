@@ -1,6 +1,6 @@
 ﻿namespace SignalManipulator.Logic.AudioMath
 {
-    public static class StereoMonoConversions
+    public static class StereoConversions
     {
         public static double[] ToDouble(this float[] input)
         {
@@ -43,9 +43,7 @@
 
 
         public static void SplitStereo(this float[] stereo, float[] left, float[] right)
-        {
-            SplitStereo(stereo, left, right, stereo.Length / 2);
-        }
+            => SplitStereo(stereo, left, right, stereo.Length / 2);
 
         public static void SplitStereo(this float[] stereo, float[] left, float[] right, int length)
         {
@@ -60,9 +58,7 @@
         }
 
         public static void SplitStereo(this double[] stereo, double[] left, double[] right)
-        {
-            SplitStereo(stereo, left, right, stereo.Length / 2);
-        }
+            => SplitStereo(stereo, left, right, stereo.Length / 2);
 
         public static void SplitStereo(this double[] stereo, double[] left, double[] right, int length)
         {
@@ -78,14 +74,10 @@
 
 
         public static void CombineStereo(this (float[] Left, float[] Right) channels, float[] stereo)
-        {
-            CombineStereo(stereo, channels.Left, channels.Right, stereo.Length / 2);
-        }
+            => CombineStereo(stereo, channels.Left, channels.Right, stereo.Length / 2);
 
         public static void CombineStereo(this float[] stereo, float[] left, float[] right)
-        {
-            CombineStereo(left, right, stereo, stereo.Length / 2);
-        }
+            => CombineStereo(stereo, left, right, stereo.Length / 2);
 
         public static void CombineStereo(this float[] stereo, float[] left, float[] right, int length)
         {

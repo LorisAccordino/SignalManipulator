@@ -17,7 +17,7 @@
 
         public override double[] Smooth(double[] input)
         {
-            if (previous == null || previous.Length != input.Length)
+            if (previous.Length != input.Length)
                 previous = (double[])input.Clone();
 
             double[] output = new double[input.Length];
