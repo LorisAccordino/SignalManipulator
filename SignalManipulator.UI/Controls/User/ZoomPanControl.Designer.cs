@@ -30,8 +30,8 @@ namespace SignalManipulator.UI.Controls.User
         /// </summary>
         private void InitializeComponent()
         {
-            this.panSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
-            this.zoomSlider = new SignalManipulator.UI.Components.Precision.PrecisionSlider();
+            this.panSlider = new PrecisionSlider();
+            this.zoomSlider = new PrecisionSlider();
             this.SuspendLayout();
             // 
             // panSlider

@@ -1,4 +1,7 @@
-﻿namespace SignalManipulator
+﻿using SignalManipulator.UI.Controls.User;
+using SignalManipulator.UI.Controls.Viewers;
+
+namespace SignalManipulator
 {
     partial class MainForm
     {
@@ -33,7 +36,7 @@
             leftSideSplitContainer = new SplitContainer();
             importGroupBox = new GroupBox();
             effectsGroupBox = new GroupBox();
-            effectChain = new UI.Controls.EffectChainControl();
+            effectChain = new EffectChainControl();
             rightSideSplitContainer = new SplitContainer();
             visualizationGroupBox = new GroupBox();
             viewersTab = new TabControl();
@@ -47,9 +50,9 @@
             surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
-            audioPlayer = new UI.Controls.AudioPlayer();
+            audioPlayer = new AudioPlayer();
             routingGroupBox = new GroupBox();
-            audioRouter = new UI.Controls.AudioRouterControl();
+            audioRouter = new AudioRouterControl();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openAudioToolStripMenuItem = new ToolStripMenuItem();
@@ -508,11 +511,11 @@
         private System.Windows.Forms.TabPage waveformPage;
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoXYPage;
-        private SignalManipulator.UI.Controls.EffectChainControl effectChain;
-        private SignalManipulator.UI.Controls.Viewers.LissajousViewer lissajousViewer;
-        private SignalManipulator.UI.Controls.AudioRouterControl audioRouter;
-        private UI.Controls.Viewers.SpectrumViewer spectrumViewer;
-        private UI.Controls.AudioPlayer audioPlayer;
+        private EffectChainControl effectChain;
+        private LissajousViewer lissajousViewer;
+        private AudioRouterControl audioRouter;
+        private SpectrumViewer spectrumViewer;
+        private AudioPlayer audioPlayer;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;

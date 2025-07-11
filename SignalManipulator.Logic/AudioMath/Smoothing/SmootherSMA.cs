@@ -1,36 +1,37 @@
-﻿using SignalManipulator.Logic.AudioMath.Smoothing;
-
-public class SmootherSMA : Smoother
+﻿namespace SignalManipulator.Logic.AudioMath.Smoothing
 {
-    private readonly Queue<double[]> history = new Queue<double[]>();
-    private int maxHistory;
-
-    public SmootherSMA(int historyLength)
+    public class SmootherSMA : Smoother
     {
-        if (historyLength < 1)
-            throw new ArgumentOutOfRangeException(nameof(historyLength), "History length must be ≥ 1");
+        private readonly Queue<double[]> history = new Queue<double[]>();
+        private int maxHistory;
 
-        maxHistory = historyLength;
-    }
+        public SmootherSMA(int historyLength)
+        {
+            if (historyLength < 1)
+                throw new ArgumentOutOfRangeException(nameof(historyLength), "History length must be ≥ 1");
 
-    public override void Set(double alpha) => maxHistory = (int)alpha; // History length
+            maxHistory = historyLength;
+        }
 
-    public override double[] Smooth(double[] input)
-    {
-        history.Enqueue((double[])input.Clone());
-        while (history.Count > maxHistory)
-            history.Dequeue();
+        public override void Set(double alpha) => maxHistory = (int)alpha; // History length
 
-        int length = input.Length;
-        double[] result = new double[length];
+        public override double[] Smooth(double[] input)
+        {
+            history.Enqueue((double[])input.Clone());
+            while (history.Count > maxHistory)
+                history.Dequeue();
 
-        foreach (var arr in history)
-            for (int i = 0; i < Math.Min(length, arr.Length); i++)
-                result[i] += arr[i];
+            int length = input.Length;
+            double[] result = new double[length];
 
-        for (int i = 0; i < length; i++)
-            result[i] /= history.Count;
+            foreach (var arr in history)
+                for (int i = 0; i < Math.Min(length, arr.Length); i++)
+                    result[i] += arr[i];
 
-        return result;
+            for (int i = 0; i < length; i++)
+                result[i] /= history.Count;
+
+            return result;
+        }
     }
 }

@@ -3,7 +3,7 @@
     public class SmootherEMA : Smoother
     {
         private double alpha;
-        private double[] previous;
+        private double[] previous = [];
 
         public SmootherEMA(double alpha)
         {
