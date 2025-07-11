@@ -1,4 +1,4 @@
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Info;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.User.Dialogs

@@ -2,7 +2,7 @@
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Sourcing;
 using SignalManipulator.Logic.Effects;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Info;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback

@@ -1,7 +1,7 @@
 ﻿using SignalManipulator.Logic.AudioMath.Objects;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SignalManipulator.Tests.AudioMath
+namespace SignalManipulator.Tests.Logic.AudioMath
 {
     [ExcludeFromCodeCoverage]
     public class DecibelValueTests

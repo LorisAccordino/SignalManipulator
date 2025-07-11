@@ -1,7 +1,7 @@
-﻿using SignalManipulator.Logic.Models;
-using SignalManipulator.Logic.Core.Playback;
+﻿using SignalManipulator.Logic.Core.Playback;
+using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Info;
 using SignalManipulator.Logic.Providers;
-using System;
 
 namespace SignalManipulator.Logic.Events
 {
@@ -14,7 +14,7 @@ namespace SignalManipulator.Logic.Events
         public event EventHandler? OnStopped;
         public event EventHandler<bool>? OnPlaybackStateChanged;
 
-        public event EventHandler<CompositeAudioFrame>? AudioFrameReady;
+        public event EventHandler<AnalyzedAudioSlice>? AudioFrameReady;
 
         public AudioEventDispatcher(IPlaybackService playbackService, AudioDataProvider dataProvider)
         {

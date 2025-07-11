@@ -3,7 +3,7 @@ using SignalManipulator.Logic.AudioMath.Objects;
 using MathNet.Numerics.IntegralTransforms;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SignalManipulator.Tests.AudioMath
+namespace SignalManipulator.Tests.Logic.AudioMath
 {
     [ExcludeFromCodeCoverage]
     public class FFTTests

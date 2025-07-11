@@ -1,7 +1,8 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Providers;
 using System.Drawing;
-namespace SignalManipulator.Logic.Models
+
+namespace SignalManipulator.Logic.Info
 {
     public struct AudioInfo
     {

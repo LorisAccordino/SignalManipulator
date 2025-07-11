@@ -1,8 +1,9 @@
 ﻿using SignalManipulator.Logic.AudioMath;
+using SignalManipulator.Logic.Data.Channels;
 
-namespace SignalManipulator.Logic.Models
+namespace SignalManipulator.Logic.Data
 {
-    public class WaveformFrame : IChannelProvider
+    public class WaveformSlice : IChannelDataProvider
     {
         private readonly float[] stereo;
         private double[]? cachedDoubleStereo;
@@ -11,7 +12,7 @@ namespace SignalManipulator.Logic.Models
         private (float[] Left, float[] Right) cachedSplitStereo;
         private (double[] Left, double[] Right) cachedDoubleSplitStereo;
 
-        public WaveformFrame(float[] stereoSamples)
+        public WaveformSlice(float[] stereoSamples)
         {
             stereo = stereoSamples;
         }

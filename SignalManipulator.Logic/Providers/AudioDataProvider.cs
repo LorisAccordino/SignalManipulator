@@ -1,8 +1,8 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Models;
 using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Utils;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Data;
 
 namespace SignalManipulator.Logic.Providers
 {
@@ -13,7 +13,7 @@ namespace SignalManipulator.Logic.Providers
 
         public event EventHandler<byte[]>? OnBytes;
         public event EventHandler<float[]>? OnSamples;
-        public event EventHandler<CompositeAudioFrame>? AudioFrameReady;
+        public event EventHandler<AnalyzedAudioSlice>? AudioFrameReady;
         public WaveFormat WaveFormat => source.WaveFormat;
 
         public AudioDataProvider(ISampleProvider source) : this(source.ToWaveProvider()) { }
@@ -42,7 +42,7 @@ namespace SignalManipulator.Logic.Providers
             fftBuffer.AddRange(samples);
 
             // Audio frame delivering
-            AudioFrameReady?.Invoke(this, new CompositeAudioFrame(fftBuffer.ToArray(), WaveFormat.SampleRate));
+            AudioFrameReady?.Invoke(this, new AnalyzedAudioSlice(fftBuffer.ToArray(), WaveFormat.SampleRate));
 
             return read;
         }

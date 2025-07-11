@@ -1,4 +1,5 @@
-﻿using SignalManipulator.Logic.Models;
+﻿using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.UI.Controls.User.Plottables.Signals
 {
@@ -9,7 +10,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
         public Waveform(int sampleRate) : this(sampleRate, "") { }
         public Waveform(int sampleRate, string channelName = "") : base(sampleRate, channelName) { }
 
-        public void AddData(WaveformFrame waveform)
+        public void AddData(WaveformSlice waveform)
         {
             lock (lockObject)
             {

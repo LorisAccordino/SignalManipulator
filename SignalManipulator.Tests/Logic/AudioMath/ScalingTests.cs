@@ -2,7 +2,7 @@
 using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SignalManipulator.Tests.AudioMath
+namespace SignalManipulator.Tests.Logic.AudioMath
 {
     [ExcludeFromCodeCoverage]
     public class NonLinearScaleMapperTests

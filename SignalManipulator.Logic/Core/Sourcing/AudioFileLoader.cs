@@ -1,5 +1,5 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Info;
 
 namespace SignalManipulator.Logic.Core.Sourcing
 {

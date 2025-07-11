@@ -1,8 +1,9 @@
 ﻿using ScottPlot;
 using ScottPlot.WinForms;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Events;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Info;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.ComponentModel;
@@ -104,7 +105,7 @@ namespace SignalManipulator.UI.Controls.User.Viewers
             UIUpdate.Enqueue(RenderPlot);
         }
 
-        private void ProcessFrameDispatch(object? s, CompositeAudioFrame frame)
+        private void ProcessFrameDispatch(object? s, AnalyzedAudioSlice frame)
         {
             lock (RenderLock)
             {
@@ -136,7 +137,7 @@ namespace SignalManipulator.UI.Controls.User.Viewers
         protected virtual void ClearBuffers() { }
         protected virtual void ResetUI() { }
         protected virtual void UpdateDataPeriod() { }
-        protected virtual void ProcessFrame(CompositeAudioFrame frame) { }
+        protected virtual void ProcessFrame(AnalyzedAudioSlice frame) { }
         protected virtual void EnableUI(bool enable) { }
     }
 }

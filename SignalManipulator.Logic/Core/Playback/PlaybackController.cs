@@ -1,7 +1,6 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Routing;
-using SignalManipulator.Logic.Models;
-using System;
+using SignalManipulator.Logic.Info;
 
 namespace SignalManipulator.Logic.Core.Playback
 {

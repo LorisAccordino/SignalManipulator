@@ -1,6 +1,7 @@
 ﻿using ScottPlot.DataSources;
 using SignalManipulator.Logic.AudioMath.Smoothing;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.UI.Controls.User.Plottables.Signals
 {
@@ -34,7 +35,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
             }
         }
 
-        public void AddData(FFTFrame fft)
+        public void AddData(FFTSlice fft)
         {
             lock (lockObject)
             {

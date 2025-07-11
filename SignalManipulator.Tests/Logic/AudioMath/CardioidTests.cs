@@ -2,7 +2,7 @@
 using System.Numerics;
 using SignalManipulator.Logic.AudioMath.Objects;
 
-namespace SignalManipulator.Tests.AudioMath
+namespace SignalManipulator.Tests.Logic.AudioMath
 {
     [ExcludeFromCodeCoverage]
     public class CardioidTests

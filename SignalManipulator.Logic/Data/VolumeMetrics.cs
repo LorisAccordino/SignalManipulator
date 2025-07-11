@@ -1,11 +1,11 @@
 ﻿using MathNet.Numerics.Statistics;
 
-namespace SignalManipulator.Logic.Models
+namespace SignalManipulator.Logic.Data
 {
-    public class VolumeFrame
+    public class VolumeMetrics
     {
-        public WaveformFrame Waveform => waveform;
-        private readonly WaveformFrame waveform;
+        public WaveformSlice Waveform => waveform;
+        private readonly WaveformSlice waveform;
 
         private double? cachedRMSLeft;
         private double? cachedRMSRight;
@@ -16,12 +16,12 @@ namespace SignalManipulator.Logic.Models
         private double? cachedMid;
         private double? cachedSide;
 
-        public VolumeFrame(float[] samples)
+        public VolumeMetrics(float[] samples)
         {
-            waveform = new WaveformFrame(samples);
+            waveform = new WaveformSlice(samples);
         }
 
-        public VolumeFrame(WaveformFrame waveform)
+        public VolumeMetrics(WaveformSlice waveform)
         {
             this.waveform = waveform;
         }

@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Helpers;
 using SignalManipulator.Logic.Providers;
+using SignalManipulator.Logic.Utils;
 using System.Collections.Generic;
 using System.Linq;
 

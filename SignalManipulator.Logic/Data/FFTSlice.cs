@@ -1,43 +1,30 @@
-﻿using SignalManipulator.Logic.AudioMath.Objects;
+﻿using SignalManipulator.Logic.AudioMath;
+using SignalManipulator.Logic.AudioMath.Objects;
+using SignalManipulator.Logic.Data.Channels;
 
-namespace SignalManipulator.Logic.Models
+namespace SignalManipulator.Logic.Data
 {
-    public class FFTFrame : IChannelProvider
+    public class FFTSlice : IChannelDataProvider
     {
         public double[] Frequencies { get; }
 
         // Magnitudes
-        public double[]? Stereo { get; }
-        public double[]? Left { get; }
-        public double[]? Right { get; }
+        public double[] Stereo { get; }
+        public double[] Left { get; }
+        public double[] Right { get; }
 
-        public FFTFrame(WaveformFrame frame, int sampleRate)
+        public FFTSlice(WaveformSlice frame, int sampleRate)
         {
             (Stereo, Frequencies) = FFT.CalculateMagnitudeSpectrum(frame.DoubleStereo, sampleRate);
             Left = FFT.CalculateMagnitudeSpectrum(frame.DoubleSplitStereo.Left, sampleRate).Magnitudes;
             Right = FFT.CalculateMagnitudeSpectrum(frame.DoubleSplitStereo.Right, sampleRate).Magnitudes;
         }
 
-        private FFTFrame(double[] frequencies, double[]? stereo = null, double[]? left = null, double[]? right = null)
-        {
-            Frequencies = frequencies;
-            Stereo = stereo;
-            Left = left;
-            Right = right;
-        }
+        public FFTSlice(float[] stereoSamples, int sampleRate) 
+            : this(new WaveformSlice(stereoSamples), sampleRate) { }
 
-        public static FFTFrame FromStereo(double[] stereoSamples, int sampleRate)
-        {
-            var (magnitudes, freqs) = FFT.CalculateMagnitudeSpectrum(stereoSamples, sampleRate);
-            return new FFTFrame(freqs, stereo: magnitudes);
-        }
-
-        public static FFTFrame FromSplit(double[] left, double[] right, int sampleRate)
-        {
-            var (magL, freqsL) = FFT.CalculateMagnitudeSpectrum(left, sampleRate);
-            var magR = FFT.CalculateMagnitudeSpectrum(right, sampleRate).Magnitudes;
-            return new FFTFrame(freqsL, left: magL, right: magR);
-        }
+        public FFTSlice(float[] left, float[] right, int sampleRate) 
+            : this(new WaveformSlice((left, right).ToStereo()), sampleRate) { }
 
         public double[] Get(AudioChannel mode)
         {

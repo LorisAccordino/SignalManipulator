@@ -1,11 +1,11 @@
 ﻿using SignalManipulator.UI.Helpers;
 using System.Diagnostics.CodeAnalysis;
-using SignalManipulator.Logic.Models;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
 using SignalManipulator.UI.Controls.User.Plottables;
 using SignalManipulator.UI.Controls.User.Plottables.Radars;
 using SignalManipulator.UI.Controls.User.Viewers;
+using SignalManipulator.Logic.Data;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
@@ -46,7 +46,7 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(CompositeAudioFrame frame)
+        protected override void ProcessFrame(AnalyzedAudioSlice frame)
         {
             surroundAnalyzer.AddData(frame.Volume);
         }

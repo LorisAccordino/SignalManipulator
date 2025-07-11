@@ -1,5 +1,6 @@
 ﻿using ScottPlot.WinForms;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Data.Channels;
 using SignalManipulator.UI.Controls.User.Plottables;
 using SignalManipulator.UI.Controls.User.Plottables.Signals;
 using SignalManipulator.UI.Controls.User.Viewers;
@@ -105,7 +106,7 @@ namespace SignalManipulator.UI.Controls.Viewers
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(CompositeAudioFrame frame)
+        protected override void ProcessFrame(AnalyzedAudioSlice frame)
         {
             // Add samples to each channel
             waveformPlots.ForEach(w => w.AddData(frame.Waveform));

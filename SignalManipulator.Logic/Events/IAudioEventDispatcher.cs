@@ -1,4 +1,5 @@
-﻿using SignalManipulator.Logic.Models;
+﻿using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Info;
 
 namespace SignalManipulator.Logic.Events
 {
@@ -11,6 +12,6 @@ namespace SignalManipulator.Logic.Events
         event EventHandler? OnStopped;
         event EventHandler<bool>? OnPlaybackStateChanged; // bool: isPlaying?
 
-        event EventHandler<CompositeAudioFrame>? AudioFrameReady;
+        event EventHandler<AnalyzedAudioSlice>? AudioFrameReady;
     }
 }

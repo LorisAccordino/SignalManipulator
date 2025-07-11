@@ -2,7 +2,7 @@
 using SignalManipulator.Logic.AudioMath.Scaling;
 using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 using SignalManipulator.Logic.AudioMath.Smoothing;
-using SignalManipulator.Logic.Models;
+using SignalManipulator.Logic.Data;
 
 namespace SignalManipulator.UI.Controls.User.Plottables.Radars
 {
@@ -23,7 +23,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Radars
             Rotation = Angle.FromFraction(2.0 / 5.0) + Angle.FromDegrees(90); // Rotate 2/5 + 90°
         }
 
-        public void AddData(VolumeFrame volume)
+        public void AddData(VolumeMetrics volume)
         {
             lock (lockObject)
             {

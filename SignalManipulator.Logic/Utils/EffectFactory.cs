@@ -1,8 +1,7 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Effects;
-using System;
 
-namespace SignalManipulator.Logic.Helpers
+namespace SignalManipulator.Logic.Utils
 {
     public static class EffectFactory
     {
@@ -10,11 +9,11 @@ namespace SignalManipulator.Logic.Helpers
         {
             return previous =>
             {
-                var constructor = typeof(T).GetConstructor(new[] { typeof(ISampleProvider) });
+                var constructor = typeof(T).GetConstructor([typeof(ISampleProvider)]);
                 if (constructor == null)
                     throw new InvalidOperationException($"The type {typeof(T).Name} hasn't a constructor with the parameter ISampleProvider.");
 
-                return (IAudioEffect)constructor.Invoke(new object[] { previous });
+                return (IAudioEffect)constructor.Invoke([previous]);
             };
         }
     }

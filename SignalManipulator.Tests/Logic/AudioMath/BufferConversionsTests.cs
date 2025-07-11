@@ -1,7 +1,7 @@
 ﻿using SignalManipulator.Logic.AudioMath;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SignalManipulator.Tests.AudioMath
+namespace SignalManipulator.Tests.Logic.AudioMath
 {
     [ExcludeFromCodeCoverage]
     public class BufferConversionsTests
