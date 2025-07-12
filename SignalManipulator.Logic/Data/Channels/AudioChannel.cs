@@ -2,6 +2,7 @@
 {
     public enum AudioChannel
     {
+        None,
         Stereo,
         Mono,  // Mono == Mid
         Left,

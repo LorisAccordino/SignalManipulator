@@ -6,13 +6,12 @@
         public FFTSlice FFT { get; }
         public VolumeMetrics Volume { get; }
 
-        public AnalyzedAudioSlice(float[] stereoSamples, int sampleRate) : this(new WaveformSlice(stereoSamples), sampleRate) { }
+        public AnalyzedAudioSlice(float[] stereoSamples, int sampleRate) 
+            : this(new WaveformSlice(stereoSamples), sampleRate) { }
+
         public AnalyzedAudioSlice(WaveformSlice waveform, int sampleRate)
-        {
-            Waveform = waveform;
-            FFT = new FFTSlice(waveform, sampleRate);
-            Volume = new VolumeMetrics(waveform);
-        }
+            : this(waveform, new FFTSlice(waveform, sampleRate), new VolumeMetrics(waveform)) { }
+
         public AnalyzedAudioSlice(WaveformSlice waveform, FFTSlice fft, VolumeMetrics volume)
         {
             Waveform = waveform;

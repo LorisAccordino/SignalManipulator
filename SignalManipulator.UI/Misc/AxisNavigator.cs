@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SignalManipulator.UI.Misc
+﻿namespace SignalManipulator.UI.Misc
 {
     public class AxisNavigator
     {

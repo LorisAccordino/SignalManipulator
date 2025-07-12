@@ -1,5 +1,6 @@
-﻿using SignalManipulator.UI.Controls.User;
-using SignalManipulator.UI.Controls.Viewers;
+﻿using SignalManipulator.Controls;
+using SignalManipulator.UI.Controls.User;
+using SignalManipulator.ViewModels;
 
 namespace SignalManipulator
 {
@@ -41,16 +42,16 @@ namespace SignalManipulator
             visualizationGroupBox = new GroupBox();
             viewersTab = new TabControl();
             waveformPage = new TabPage();
-            waveformViewer = new UI.Controls.Viewers.WaveformViewer();
+            waveformViewer = new WaveformViewModel();
             spectrumPage = new TabPage();
-            spectrumViewer = new UI.Controls.Viewers.SpectrumViewer();
+            spectrumViewer = new SpectrumViewModel();
             stereoXYPage = new TabPage();
-            lissajousViewer = new UI.Controls.Viewers.LissajousViewer();
+            lissajousViewer = new LissajousViewModel();
             surroundAnalyzerPage = new TabPage();
-            surroundAnalyzer = new UI.Controls.Viewers.SurroundAnalyzerViewer();
+            surroundAnalyzer = new SurroundAnalyzerViewModel();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
-            audioPlayer = new AudioPlayer();
+            audioPlayer = new AudioPlayerControl();
             routingGroupBox = new GroupBox();
             audioRouter = new AudioRouterControl();
             menuStrip1 = new MenuStrip();
@@ -512,16 +513,16 @@ namespace SignalManipulator
         private System.Windows.Forms.TabPage spectrumPage;
         private System.Windows.Forms.TabPage stereoXYPage;
         private EffectChainControl effectChain;
-        private LissajousViewer lissajousViewer;
+        private LissajousViewModel lissajousViewer;
         private AudioRouterControl audioRouter;
-        private SpectrumViewer spectrumViewer;
-        private AudioPlayer audioPlayer;
+        private SpectrumViewModel spectrumViewer;
+        private AudioPlayerControl audioPlayer;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;
         private ToolStripMenuItem routingToolStripMenuItem;
-        private UI.Controls.Viewers.WaveformViewer waveformViewer;
+        private WaveformViewModel waveformViewer;
         private TabPage surroundAnalyzerPage;
-        private UI.Controls.Viewers.SurroundAnalyzerViewer surroundAnalyzer;
+        private SurroundAnalyzerViewModel surroundAnalyzer;
     }
 }

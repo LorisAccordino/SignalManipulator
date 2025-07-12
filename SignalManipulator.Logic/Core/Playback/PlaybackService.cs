@@ -1,22 +1,22 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Routing;
-using SignalManipulator.Logic.Core.Sourcing;
+using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Info;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
-    public class PlaybackService : IPlaybackService
+    public class PlaybackService
     {
-        private readonly IAudioSource source;
-        private readonly IAudioRouter router;
+        private readonly FileAudioSource audioSource = new FileAudioSource();
+        private readonly AudioRouter router;
         private readonly EffectChain effects;
         private readonly AudioDataProvider audioDataProvider;
 
         // Properties
         private readonly PlaybackModifiers modifiers;
-        public AudioInfo Info => source.Info;
+        public AudioInfo Info => audioSource.Info;
         public double Speed { get => modifiers.Speed; set => modifiers.Speed = value; }
         public bool PreservePitch { get => modifiers.PreservePitch; set => modifiers.PreservePitch = value; }
         public double Volume { get => modifiers.Volume; set => modifiers.Volume = value; }
@@ -29,9 +29,9 @@ namespace SignalManipulator.Logic.Core.Playback
         public event EventHandler OnStopped;
         public event EventHandler<bool> OnPlaybackStateChanged; // bool: playing?
 
-        public PlaybackService(IAudioSource source, IAudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
+        public PlaybackService(FileAudioSource audioSource, AudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
         {
-            this.source = source;
+            this.audioSource = audioSource;
             this.router = router;
             this.effects = effects;
             this.audioDataProvider = audioDataProvider;
@@ -44,8 +44,8 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public void Load(string path)
         {
-            source.Load(path);
-            modifiers.SetSource(source.Info.SourceProvider);
+            audioSource.Load(path);
+            modifiers.SetSource(audioSource.Info.SourceProvider);
             router.InitOutputs(audioDataProvider as IWaveProvider);
             Stop();
             LoadCompleted?.Invoke(this, Info);
@@ -75,13 +75,13 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public void _Stop()
         {
-            source.Seek(TimeSpan.Zero);
+            audioSource.Seek(TimeSpan.Zero);
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
             effects.ResetAll();
             modifiers.Reset();
         }
 
-        public void Seek(TimeSpan pos) => source.Seek(pos);
+        public void Seek(TimeSpan pos) => audioSource.Seek(pos);
     }
 }

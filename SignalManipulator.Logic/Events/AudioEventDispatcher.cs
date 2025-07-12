@@ -14,9 +14,9 @@ namespace SignalManipulator.Logic.Events
         public event EventHandler? OnStopped;
         public event EventHandler<bool>? OnPlaybackStateChanged;
 
-        public event EventHandler<AnalyzedAudioSlice>? AudioFrameReady;
+        public event EventHandler<AnalyzedAudioSlice>? AudioDataReady;
 
-        public AudioEventDispatcher(IPlaybackService playbackService, AudioDataProvider dataProvider)
+        public AudioEventDispatcher(PlaybackService playbackService, AudioDataProvider audioDataProvider)
         {
             // File loading
             playbackService.LoadCompleted += (s, info) => OnLoad?.Invoke(s, info);
@@ -29,7 +29,7 @@ namespace SignalManipulator.Logic.Events
             playbackService.OnPlaybackStateChanged += (s, playing) => OnPlaybackStateChanged?.Invoke(s, playing);
 
             // Frame & update
-            dataProvider.AudioFrameReady += (s, frame) => AudioFrameReady?.Invoke(s, frame);
+            audioDataProvider.AudioDataReady += (s, frame) => AudioDataReady?.Invoke(s, frame);
         }
     }
 }

@@ -14,4 +14,30 @@
     <ProjectReference Include="..\SignalManipulator.UI\SignalManipulator.UI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Controls\AudioPlayerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\AudioRouterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\EffectChainControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\AudioInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ViewModels\BaseViewModel.cs" />
+    <Compile Update="Controls\FloatableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="ViewModels\LissajousViewModel.cs" />
+    <Compile Update="ViewModels\SpectrumViewModel.cs" />
+    <Compile Update="ViewModels\SurroundAnalyzerViewModel.cs" />
+    <Compile Update="ViewModels\WaveformViewModel.cs" />
+    <Compile Update="Controls\ZoomPanControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

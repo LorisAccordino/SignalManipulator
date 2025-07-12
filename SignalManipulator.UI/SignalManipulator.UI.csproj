@@ -18,34 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\Components\Labels\DescriptorLabel.cs">
+    <Compile Update="Components\Labels\DescriptorLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\Components\Sliders\Precision\PrecisionControl.cs">
+    <Compile Update="Components\Sliders\Precision\PrecisionControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\Components\Labels\ValueLabel.cs">
+    <Compile Update="Components\Labels\ValueLabel.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Controls\User\AudioPlayer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\User\AudioRouterControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\User\EffectChainControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Controls\User\Viewers\SurroundAnalyzerViewer.cs" />
-    <Compile Update="Controls\User\Viewers\LissajousViewer.cs" />
-    <Compile Update="Controls\User\Viewers\SpectrumViewer.cs" />
-    <Compile Update="Controls\User\Viewers\BaseViewer.cs" />
-    <Compile Update="Controls\User\Viewers\WaveformViewer.cs" />
-    <Compile Update="Controls\User\Dialogs\AudioInfoDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Controls\User\ZoomPanControl.cs">
-      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
 

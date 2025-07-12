@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
-using SignalManipulator.Logic.Core.Sourcing;
+using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Providers;
@@ -29,26 +29,26 @@ namespace SignalManipulator.Logic.Core
         public static AudioEngine Instance => instance;
 
         // --- Core modules (private) ---
-        private readonly IAudioSource audioLoader = new AudioFileLoader();
-        private readonly IAudioRouter audioRouter = new AudioRouter();
+        private readonly FileAudioSource audioFileLoader = new FileAudioSource();
+        private readonly AudioRouter audioRouter = new AudioRouter();
         private readonly EffectChain effectChain = new EffectChain();
         private readonly AudioDataProvider audioDataProvider;
-        private readonly IPlaybackService playbackService;
-        private readonly IPlaybackController playbackController;
+        private readonly PlaybackService playbackService;
+        private readonly AudioPlayer playbackController;
         private readonly IAudioEventDispatcher audioEventDispatcher;
 
         // --- Public modules (exposed) ---
-        public IAudioRouter AudioRouter => audioRouter;
+        public AudioRouter AudioRouter => audioRouter;
         public EffectChain EffectChain => effectChain;
-        public IPlaybackController PlaybackController => playbackController;
+        public AudioPlayer PlaybackController => playbackController;
         public IAudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
 
         // --- Instance constructor ---
         private AudioEngine()
         {
             audioDataProvider = new AudioDataProvider(effectChain);
-            playbackService = new PlaybackService(audioLoader, audioRouter, effectChain, audioDataProvider);
-            playbackController = new PlaybackController(playbackService, audioRouter);
+            playbackService = new PlaybackService(audioFileLoader, audioRouter, effectChain, audioDataProvider);
+            playbackController = new AudioPlayer(playbackService, audioRouter);
             audioEventDispatcher = new AudioEventDispatcher(playbackService, audioDataProvider);
         }
     }

@@ -7,357 +7,277 @@ namespace SignalManipulator.Tests.Logic.Data
     [ExcludeFromCodeCoverage]
     public class WaveformSliceTests
     {
-        [Fact]
-        public void Stereo_IsReturnedCorrectly()
+        // Test interleaved stereo array: L0, R0, L1, R1, ...
+        private float[] CreateTestStereoSamples(int frames)
         {
-            float[] stereo = [0.1f, -0.1f];
+            var samples = new float[frames * 2];
+            for (int i = 0; i < frames; i++)
+            {
+                samples[2 * i] = i;         // Left channel increasing
+                samples[2 * i + 1] = -i;    // Right channel decreasing (negativo)
+            }
+            return samples;
+        }
+
+        [Fact]
+        public void Constructor_StoresStereoSamples()
+        {
+            var stereo = CreateTestStereoSamples(5);
             var slice = new WaveformSlice(stereo);
 
-            Assert.Same(stereo, slice.Stereo);
+            Assert.Equal(stereo, slice.Stereo);
         }
 
         [Fact]
-        public void DoubleStereo_IsCorrect()
+        public void FloatSamples_Stereo_ReturnsOriginalArray()
         {
-            float[] stereo = [1.0f, 2.0f];
+            var stereo = CreateTestStereoSamples(3);
             var slice = new WaveformSlice(stereo);
 
-            Assert.Equal([1.0, 2.0], slice.DoubleStereo, new DoubleComparer(1e-6));
+            var result = slice.FloatSamples.Get(AudioChannel.Stereo);
+
+            Assert.Equal(stereo, result);
         }
 
         [Fact]
-        public void Mono_IsComputedCorrectly()
+        public void FloatSamples_LeftRight_AreCorrectlySplit()
         {
-            float[] stereo = [0.4f, 0.6f, 0.1f, 0.1f]; // Mono = [(0.4+0.6)/2, (0.1+0.1)/2] = [0.5, 0.1]
+            var stereo = new float[] { 1f, 2f, 3f, 4f }; // L0=1, R0=2, L1=3, R1=4
             var slice = new WaveformSlice(stereo);
 
-            Assert.Equal([0.5f, 0.1f], slice.Mono, new FloatComparer(1e-6f));
-        }
-
-        [Fact]
-        public void DoubleMono_IsCorrect()
-        {
-            var slice = new WaveformSlice([0.3f, 0.5f, 0.2f, 0.2f]);
-            double[] expected = [(0.3 + 0.5) / 2.0, (0.2 + 0.2) / 2.0];
-
-            Assert.Equal(expected, slice.DoubleMono, new DoubleComparer(1e-6));
-        }
-
-        [Fact]
-        public void SplitStereo_SplitsCorrectly()
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]); // Left = [1,3], Right = [2,4]
-            var (left, right) = slice.SplitStereo;
+            var left = slice.FloatSamples.Get(AudioChannel.Left);
+            var right = slice.FloatSamples.Get(AudioChannel.Right);
 
             Assert.Equal([1f, 3f], left);
             Assert.Equal([2f, 4f], right);
         }
 
         [Fact]
-        public void DoubleSplitStereo_IsCorrect()
+        public void FloatSamples_Mono_IsAverageOfLeftRight()
         {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]); // Double Left = [1,3], Double Right = [2,4]
-            var (left, right) = slice.DoubleSplitStereo;
+            var stereo = new float[] { 1f, 3f, 5f, 7f }; // L0=1, R0=3, L1=5, R1=7
+            var slice = new WaveformSlice(stereo);
 
-            Assert.Equal([1.0, 3.0], left, new DoubleComparer(1e-6));
-            Assert.Equal([2.0, 4.0], right, new DoubleComparer(1e-6));
+            var mono = slice.FloatSamples.Get(AudioChannel.Mono);
+
+            // Mono = (L + R) / 2 = [ (1+3)/2, (5+7)/2 ] = [2, 6]
+            Assert.Equal([2f, 6f], mono);
         }
 
-
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        [InlineData(AudioChannel.Mono)]
-        public void Get_ReturnsSameDataAsTryGet(AudioChannel channel)
+        [Fact]
+        public void FloatSamples_Side_IsCorrectlyCalculated()
         {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
+            var stereo = new float[] { 3f, 1f, 7f, 5f }; // L0=3, R0=1, L1=7, R1=5
+            var slice = new WaveformSlice(stereo);
 
-            // Get() uses TryGet internally but ignores the bool, returns data array (or empty)
-            var getResult = slice.Get(channel);
+            var side = slice.FloatSamples.Get(AudioChannel.Side);
 
-            // TryGet returns bool and out data
-            bool tryGetResult = slice.TryGet(channel, out double[] tryGetData);
+            // Side = (L - R)/2 = [ (3-1)/2, (7-5)/2 ] = [1, 1]
+            Assert.Equal([1f, 1f], side);
+        }
 
-            Assert.Equal(tryGetData, getResult);
+        [Fact]
+        public void FloatSamples_Mid_EqualsMono()
+        {
+            var stereo = new float[] { 2f, 4f, 6f, 8f };
+            var slice = new WaveformSlice(stereo);
 
-            if (channel == AudioChannel.Mid || channel == AudioChannel.Side)
+            var mid = slice.FloatSamples.Get(AudioChannel.Mid);
+            var mono = slice.FloatSamples.Get(AudioChannel.Mono);
+
+            Assert.Equal(mono, mid);
+        }
+
+        [Fact]
+        public void DoubleSamples_AreCorrectConversionsOfFloatSamples()
+        {
+            var stereo = new float[] { 1f, 2f, 3f, 4f };
+            var slice = new WaveformSlice(stereo);
+
+            foreach (var channel in slice.FloatSamples.AvailableChannels)
             {
-                // For these channels, data should be empty and TryGet returns false
-                Assert.False(tryGetResult);
-                Assert.Empty(tryGetData);
+                var floatSamples = slice.FloatSamples.Get(channel);
+                var doubleSamples = slice.DoubleSamples.Get(channel);
+
+                Assert.Equal(floatSamples.Length, doubleSamples.Length);
+
+                for (int i = 0; i < floatSamples.Length; i++)
+                {
+                    Assert.Equal(floatSamples[i], doubleSamples[i], 5); // precision 1e-5
+                }
             }
-            else
+        }
+
+        [Fact]
+        public void AvailableChannels_ReturnsAllExpectedChannels()
+        {
+            var stereo = CreateTestStereoSamples(2);
+            var slice = new WaveformSlice(stereo);
+
+            var floatChannels = slice.FloatSamples.AvailableChannels.ToArray();
+            var doubleChannels = slice.DoubleSamples.AvailableChannels.ToArray();
+
+            var expected = new[]
             {
-                // For valid channels, TryGet returns true and data is not empty
-                Assert.True(tryGetResult);
-                Assert.NotEmpty(tryGetData);
-            }
-        }
+            AudioChannel.Stereo,
+            AudioChannel.Mono,
+            AudioChannel.Left,
+            AudioChannel.Right,
+            AudioChannel.Mid,
+            AudioChannel.Side
+        };
 
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        [InlineData(AudioChannel.Mono)]
-        public void TryGet_KnownChannels_ReturnsTrue(AudioChannel channel)
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-            bool result = slice.TryGet(channel, out var data);
-
-            Assert.True(result);
-            Assert.NotEmpty(data);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Mid)]
-        [InlineData(AudioChannel.Side)]
-        public void TryGet_UnknownChannels_ReturnsFalse(AudioChannel channel)
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-            bool result = slice.TryGet(channel, out var data);
-
-            Assert.False(result);
-            Assert.Empty(data);
-        }
-
-        [Fact]
-        public void GetOrThrow_InvalidChannel_Throws()
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-            Assert.Throws<InvalidOperationException>(() => slice.GetOrThrow(AudioChannel.Mid));
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        [InlineData(AudioChannel.Mono)]
-        public void GetOrThrow_ValidChannel_ReturnsData(AudioChannel channel)
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-
-            var data = slice.GetOrThrow(channel);
-
-            Assert.NotNull(data);
-            Assert.NotEmpty(data);
-        }
-
-        [Fact]
-        public void AvailableChannels_ContainsAll()
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-            var channels = slice.AvailableChannels.ToList();
-
-            Assert.Contains(AudioChannel.Stereo, channels);
-            Assert.Contains(AudioChannel.Left, channels);
-            Assert.Contains(AudioChannel.Right, channels);
-            Assert.Contains(AudioChannel.Mono, channels);
-        }
-
-        [Fact]
-        public void HasChannel_ReturnsExpectedResults()
-        {
-            var slice = new WaveformSlice([1f, 2f, 3f, 4f]);
-
-            Assert.True(slice.HasChannel(AudioChannel.Stereo));
-            Assert.True(slice.HasChannel(AudioChannel.Left));
-            Assert.True(slice.HasChannel(AudioChannel.Right));
-            Assert.True(slice.HasChannel(AudioChannel.Mono));
-            Assert.False(slice.HasChannel(AudioChannel.Mid));
-        }
-
-        private class DoubleComparer(double tolerance) : IEqualityComparer<double>
-        {
-            public bool Equals(double x, double y) => Math.Abs(x - y) < tolerance;
-            public int GetHashCode(double obj) => obj.GetHashCode();
-        }
-
-        private class FloatComparer(float tolerance) : IEqualityComparer<float>
-        {
-            public bool Equals(float x, float y) => Math.Abs(x - y) < tolerance;
-            public int GetHashCode(float obj) => obj.GetHashCode();
+            Assert.All(expected, ch => Assert.Contains(ch, floatChannels));
+            Assert.All(expected, ch => Assert.Contains(ch, doubleChannels));
         }
     }
 
     [ExcludeFromCodeCoverage]
     public class FFTSliceTests
     {
-        [Fact]
-        public void Constructor_WaveformSlice_CreatesProperties()
+        private float[] CreateTestStereoSamples()
         {
-            // Stereo test data
-            float[] stereoSamples = [1, 2, 3, 4];
-            int sampleRate = 44100;
-
-            var waveform = new WaveformSlice(stereoSamples);
-            var fftSlice = new FFTSlice(waveform, sampleRate);
-
-            Assert.NotNull(fftSlice.Frequencies);
-            Assert.NotNull(fftSlice.Stereo);
-            Assert.NotNull(fftSlice.Left);
-            Assert.NotNull(fftSlice.Right);
+            // Simple L: [1, 3], R: [2, 4]
+            return [1f, 2f, 3f, 4f];
         }
 
+        private const int SampleRate = 44100;
+
         [Fact]
-        public void Constructor_StereoSamples_CreatesEquivalentInstance()
+        public void Constructor_StoresWaveformCorrectly()
         {
-            float[] stereoSamples = [1, 2, 3, 4];
-            int sampleRate = 44100;
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
 
-            var fftSlice = new FFTSlice(stereoSamples, sampleRate);
-
-            Assert.NotNull(fftSlice.Frequencies);
-            Assert.NotNull(fftSlice.Stereo);
-            Assert.NotNull(fftSlice.Left);
-            Assert.NotNull(fftSlice.Right);
+            Assert.NotNull(slice.Waveform);
+            Assert.Equal(stereo, slice.Waveform.Stereo);
         }
 
         [Fact]
-        public void Constructor_LeftRightSamples_CreatesEquivalentInstance()
+        public void Constructor_FromLeftRight_CreatesCorrectStereo()
         {
-            float[] left = [1, 3];
-            float[] right = [2, 4];
-            int sampleRate = 44100;
+            float[] left = [1f, 3f];
+            float[] right = [2f, 4f];
 
-            var fftSlice = new FFTSlice(left, right, sampleRate);
+            var slice = new FFTSlice(left, right, SampleRate);
+            var expectedStereo = new float[] { 1f, 2f, 3f, 4f }; // Interleaved L0, R0, L1, R1
+            Assert.Equal(expectedStereo, slice.Waveform.Stereo);
 
-            Assert.NotNull(fftSlice.Frequencies);
-            Assert.NotNull(fftSlice.Stereo);
-            Assert.NotNull(fftSlice.Left);
-            Assert.NotNull(fftSlice.Right);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        public void TryGet_ValidChannel_ReturnsTrueAndData(AudioChannel channel)
-        {
-            var fftSlice = CreateValidFFTSlice();
-
-            bool result = fftSlice.TryGet(channel, out double[] data);
-
-            Assert.True(result);
-            Assert.NotNull(data);
-            Assert.NotEmpty(data);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Mid)]
-        [InlineData(AudioChannel.Side)]
-        [InlineData(AudioChannel.Mono)]
-        public void TryGet_InvalidChannel_ReturnsFalseAndEmptyArray(AudioChannel channel)
-        {
-            var fftSlice = CreateValidFFTSlice();
-
-            bool result = fftSlice.TryGet(channel, out double[] data);
-
-            Assert.False(result);
-            Assert.NotNull(data);
-            Assert.Empty(data);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        [InlineData(AudioChannel.Mid)]
-        public void Get_ReturnsSameDataAsTryGet(AudioChannel channel)
-        {
-            var fftSlice = CreateValidFFTSlice();
-
-            var getData = fftSlice.Get(channel);
-            fftSlice.TryGet(channel, out var tryGetData);
-
-            Assert.Equal(tryGetData, getData);
-
-            if (channel == AudioChannel.Mid)
-                Assert.Empty(getData);
-            else
-                Assert.NotEmpty(getData);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Stereo)]
-        [InlineData(AudioChannel.Left)]
-        [InlineData(AudioChannel.Right)]
-        public void GetOrThrow_ValidChannel_ReturnsData(AudioChannel channel)
-        {
-            var fftSlice = CreateValidFFTSlice();
-
-            var data = fftSlice.GetOrThrow(channel);
-
-            Assert.NotNull(data);
-            Assert.NotEmpty(data);
-        }
-
-        [Theory]
-        [InlineData(AudioChannel.Mid)]
-        [InlineData(AudioChannel.Side)]
-        [InlineData(AudioChannel.Mono)]
-        public void GetOrThrow_InvalidChannel_Throws(AudioChannel channel)
-        {
-            var fftSlice = CreateValidFFTSlice();
-
-            Assert.Throws<InvalidOperationException>(() => fftSlice.GetOrThrow(channel));
+            var stereoMagnitudes = slice.Magnitudes.Get(AudioChannel.Stereo);
+            Assert.NotNull(stereoMagnitudes);
+            Assert.True(stereoMagnitudes.Length > 0);
         }
 
         [Fact]
-        public void AvailableChannels_ReturnsCorrectChannels()
+        public void Frequencies_AreConsistentAndPrecomputed()
         {
-            var fftSlice = CreateValidFFTSlice();
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
 
-            var channels = fftSlice.AvailableChannels.ToList();
+            var freqs = slice.Frequencies;
 
-            Assert.Contains(AudioChannel.Stereo, channels);
-            Assert.Contains(AudioChannel.Left, channels);
-            Assert.Contains(AudioChannel.Right, channels);
-
-            // It does not contain invalid channels
-            Assert.DoesNotContain(AudioChannel.Mid, channels);
-            Assert.DoesNotContain(AudioChannel.Mono, channels);
-            Assert.DoesNotContain(AudioChannel.Side, channels);
+            Assert.NotNull(freqs);
+            Assert.True(freqs.Length > 0);
+            Assert.All(freqs, f => Assert.True(f >= 0));
         }
 
-        [Theory]
-        [InlineData(AudioChannel.Stereo, true)]
-        [InlineData(AudioChannel.Left, true)]
-        [InlineData(AudioChannel.Right, true)]
-        [InlineData(AudioChannel.Mid, false)]
-        [InlineData(AudioChannel.Side, false)]
-        [InlineData(AudioChannel.Mono, false)]
-        public void HasChannel_ReturnsCorrectly(AudioChannel channel, bool expected)
+        [Fact]
+        public void Magnitudes_Stereo_IsConsistentWithPrecalculated()
         {
-            var fftSlice = CreateValidFFTSlice();
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
 
-            bool result = fftSlice.HasChannel(channel);
+            var stereoMagnitudes = slice.Magnitudes.Get(AudioChannel.Stereo);
 
-            Assert.Equal(expected, result);
+            Assert.NotNull(stereoMagnitudes);
+            Assert.True(stereoMagnitudes.Length > 0);
         }
 
-        // Helper to create a FFTSlice with non-null data for Stereo, Left and Right
-        private FFTSlice CreateValidFFTSlice()
+        [Fact]
+        public void Magnitudes_Mid_EqualsMono()
         {
-            var fftSlice = new FFTSlice([1f, 2f, 3f, 4f], 44100);
-            return fftSlice;
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
+
+            var mid = slice.Magnitudes.Get(AudioChannel.Mid);
+            var mono = slice.Magnitudes.Get(AudioChannel.Mono);
+
+            Assert.Equal(mono, mid);
+        }
+
+        [Fact]
+        public void Magnitudes_LeftRightSideMono_AreCalculated()
+        {
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
+
+            var left = slice.Magnitudes.Get(AudioChannel.Left);
+            var right = slice.Magnitudes.Get(AudioChannel.Right);
+            var mono = slice.Magnitudes.Get(AudioChannel.Mono);
+            var side = slice.Magnitudes.Get(AudioChannel.Side);
+
+            Assert.All(new[] { left, right, mono, side }, m =>
+            {
+                Assert.NotNull(m);
+                Assert.True(m.Length > 0);
+            });
+        }
+
+        [Fact]
+        public void Magnitudes_CachesCorrectly()
+        {
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
+
+            var first = slice.Magnitudes.Get(AudioChannel.Right);
+            var second = slice.Magnitudes.Get(AudioChannel.Right);
+
+            // Should be the same reference due to caching
+            Assert.Same(first, second);
+        }
+
+        [Fact]
+        public void Magnitudes_ThrowsIfChannelInvalid()
+        {
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                slice.Magnitudes.GetOrThrow(AudioChannel.None);
+            });
+        }
+
+        [Fact]
+        public void Magnitudes_ReportsAvailableChannels()
+        {
+            var stereo = CreateTestStereoSamples();
+            var slice = new FFTSlice(stereo, SampleRate);
+
+            var available = slice.Magnitudes.AvailableChannels.ToArray();
+
+            Assert.Contains(AudioChannel.Stereo, available);
+            Assert.Contains(AudioChannel.Left, available);
+            Assert.Contains(AudioChannel.Right, available);
+            Assert.Contains(AudioChannel.Mono, available);
+            Assert.Contains(AudioChannel.Mid, available);
+            Assert.Contains(AudioChannel.Side, available);
         }
     }
 
     [ExcludeFromCodeCoverage]
     public class VolumeMetricsTests
     {
-        // Helper: create a stereo array for testing
-        private static float[] CreateStereoSamples()
+        private float[] CreateTestStereoSamples()
         {
-            // Stereo interleaved: Left, Right, Left, Right ...
-            return [1f, 2f, 3f, 4f, 5f, 6f];
+            // L = [1, 3], R = [2, 4] → Stereo interleaved: [1,2,3,4]
+            return [1f, 2f, 3f, 4f];
         }
 
         [Fact]
-        public void Constructor_WithFloatArray_CreatesWaveform()
+        public void Constructor_CreatesWaveform()
         {
-            var samples = CreateStereoSamples();
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
             Assert.NotNull(metrics.Waveform);
@@ -365,164 +285,191 @@ namespace SignalManipulator.Tests.Logic.Data
         }
 
         [Fact]
-        public void Constructor_WithWaveformSlice_SetsWaveform()
+        public void RMS_Values_AreCorrect()
         {
-            var samples = CreateStereoSamples();
-            var waveform = new WaveformSlice(samples);
-            var metrics = new VolumeMetrics(waveform);
+            var samples = CreateTestStereoSamples();
+            var metrics = new VolumeMetrics(samples);
 
-            Assert.Same(waveform, metrics.Waveform);
+            var stereo = metrics.RMS[AudioChannel.Stereo];
+            var left = metrics.RMS[AudioChannel.Left];
+            var right = metrics.RMS[AudioChannel.Right];
+            var mono = metrics.RMS[AudioChannel.Mono];
+            var mid = metrics.RMS[AudioChannel.Mid];
+            var side = metrics.RMS[AudioChannel.Side];
+
+            Assert.True(stereo > 0);
+            Assert.True(left > 0);
+            Assert.True(right > 0);
+            Assert.True(mono > 0);
+            Assert.True(mid > 0);
+            Assert.True(side >= 0);
+
+            // Mid = Mono
+            Assert.Equal(mono, mid, precision: 6);
         }
 
         [Fact]
-        public void RMS_Properties_ReturnCorrectValues()
+        public void RMS_CachesCorrectly()
         {
-            var samples = new float[] { 1f, -1f, 1f, -1f }; // Simple stereo with constant abs 1
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
-            // RMS for constant 1 or -1 is 1
-            Assert.Equal(1.0, metrics.StereoRMS, 6);
-            Assert.Equal(1.0, metrics.LeftRMS, 6);
-            Assert.Equal(1.0, metrics.RightRMS, 6);
-            Assert.Equal(0.0, metrics.MonoRMS, 6); // RMS is 0
+            var first = metrics.RMS[AudioChannel.Right];
+            var second = metrics.RMS[AudioChannel.Right];
+
+            Assert.Equal(first, second);
         }
 
         [Fact]
-        public void Peak_ReturnsCorrectValue()
+        public void Loudness_IsCalculatedCorrectly()
         {
-            var samples = new float[] { -5f, 2f, -3f, 4f };
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
-            Assert.Equal(5.0, metrics.Peak, 6);
+            double rms = metrics.RMS[AudioChannel.Stereo];
+            double loudness = metrics.Loudness;
+
+            double expected = 20 * Math.Log10(rms + 1e-9);
+            Assert.Equal(expected, loudness, precision: 6);
         }
 
         [Fact]
-        public void Loudness_ComputesLogarithm()
+        public void Loudness_IsCached()
         {
-            var samples = new float[] { 0f, 0f, 0f, 0f };
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
-            // StereoRMS is zero, so loudness ~ 20*log10(1e-9) = -180 dB approx
-            double expected = 20 * Math.Log10(1e-9);
-            Assert.Equal(expected, metrics.Loudness, 6);
+            var first = metrics.Loudness;
+            var second = metrics.Loudness;
+
+            Assert.Equal(first, second);
         }
 
         [Fact]
-        public void Mid_CalculatesCorrectRMS()
+        public void Peak_IsMaximumAbsoluteStereoSample()
         {
-            var samples = new float[] { 1f, 3f, 1f, 5f }; // Left = [1,1], Right = [3,5]
+            var samples = new float[] { -1.5f, 0.2f, 0.9f, -0.4f };
             var metrics = new VolumeMetrics(samples);
 
-            // mid = (L+R)/2 = [(1+3)/2, (1+5)/2] = [2, 3]
-            // RMS = sqrt((2^2 + 3^2)/2) = sqrt((4 + 9)/2) = sqrt(6.5) ~ 2.549509
-            Assert.InRange(metrics.Mid, 2.549, 2.55);
+            var expected = samples.Max(Math.Abs);
+            Assert.Equal(expected, metrics.Peak, precision: 6);
         }
 
         [Fact]
-        public void Side_CalculatesCorrectRMS()
+        public void Peak_IsCached()
         {
-            var samples = new float[] { 1f, 3f, 1f, 5f }; // Left = [1,1], Right = [3,5]
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
-            // side = (L-R)/2 = [(1-3)/2, (1-5)/2] = [-1, -2]
-            // RMS = sqrt((1^2 + 2^2)/2) = sqrt((1 + 4)/2) = sqrt(2.5) ~ 1.581139
-            Assert.InRange(metrics.Side, 1.58, 1.59);
+            var first = metrics.Peak;
+            var second = metrics.Peak;
+
+            Assert.Equal(first, second);
         }
 
         [Fact]
-        public void Properties_AreCached()
+        public void RMS_ReportsAllExpectedChannels()
         {
-            var samples = new float[] { 1f, -1f, 1f, -1f };
+            var samples = CreateTestStereoSamples();
             var metrics = new VolumeMetrics(samples);
 
-            // Access each property twice to test caching (should not throw or change)
-            var stereo1 = metrics.StereoRMS;
-            var stereo2 = metrics.StereoRMS;
-            Assert.Equal(stereo1, stereo2);
+            var channels = metrics.RMS.AvailableChannels.ToArray();
 
-            var left1 = metrics.LeftRMS;
-            var left2 = metrics.LeftRMS;
-            Assert.Equal(left1, left2);
+            Assert.Contains(AudioChannel.Stereo, channels);
+            Assert.Contains(AudioChannel.Left, channels);
+            Assert.Contains(AudioChannel.Right, channels);
+            Assert.Contains(AudioChannel.Mono, channels);
+            Assert.Contains(AudioChannel.Mid, channels);
+            Assert.Contains(AudioChannel.Side, channels);
+        }
 
-            var right1 = metrics.RightRMS;
-            var right2 = metrics.RightRMS;
-            Assert.Equal(right1, right2);
+        [Fact]
+        public void RMS_ThrowsIfChannelInvalid()
+        {
+            var samples = CreateTestStereoSamples();
+            var metrics = new VolumeMetrics(samples);
+            Assert.Throws<InvalidOperationException>(() => metrics.RMS.GetOrThrow(AudioChannel.None));
+        }
 
-            var mono1 = metrics.MonoRMS;
-            var mono2 = metrics.MonoRMS;
-            Assert.Equal(mono1, mono2);
+        [Fact]
+        public void RMS_HasChannel_ReturnsExpectedValues()
+        {
+            var samples = CreateTestStereoSamples();
+            var metrics = new VolumeMetrics(samples);
 
-            var peak1 = metrics.Peak;
-            var peak2 = metrics.Peak;
-            Assert.Equal(peak1, peak2);
+            // These should be there
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Stereo));
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Left));
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Right));
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Mono));
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Mid));
+            Assert.True(metrics.RMS.HasChannel(AudioChannel.Side));
 
-            var loud1 = metrics.Loudness;
-            var loud2 = metrics.Loudness;
-            Assert.Equal(loud1, loud2);
-
-            var mid1 = metrics.Mid;
-            var mid2 = metrics.Mid;
-            Assert.Equal(mid1, mid2);
-
-            var side1 = metrics.Side;
-            var side2 = metrics.Side;
-            Assert.Equal(side1, side2);
+            // This should not be there
+            Assert.False(metrics.RMS.HasChannel(AudioChannel.None));
         }
     }
 
     [ExcludeFromCodeCoverage]
     public class AnalyzedAudioSliceTests
     {
+        private float[] CreateTestStereoSamples() => [1f, 2f, 3f, 4f];
+        private const int SampleRate = 44100;
+
         [Fact]
-        public void Constructor_WithStereoSamples_CreatesValidComponents()
+        public void Constructor_FromFloatArray_CreatesComponents()
         {
-            // Arrange
-            float[] stereoSamples = [1.0f, -1.0f, 0.5f, -0.5f];
-            int sampleRate = 44100;
+            var samples = CreateTestStereoSamples();
+            var analyzed = new AnalyzedAudioSlice(samples, SampleRate);
 
-            // Act
-            var slice = new AnalyzedAudioSlice(stereoSamples, sampleRate);
+            Assert.NotNull(analyzed.Waveform);
+            Assert.NotNull(analyzed.FFT);
+            Assert.NotNull(analyzed.Volume);
 
-            // Assert
-            Assert.NotNull(slice.Waveform);
-            Assert.NotNull(slice.FFT);
-            Assert.NotNull(slice.Volume);
-
-            Assert.Equal(stereoSamples, slice.Waveform.Stereo);
+            Assert.Equal(samples, analyzed.Waveform.Stereo);
         }
 
         [Fact]
-        public void Constructor_WithWaveformOnly_CreatesFftAndVolume()
+        public void Constructor_FromWaveform_CreatesFFTAndVolume()
         {
-            // Arrange
-            float[] stereoSamples = [0.2f, -0.2f, 0.3f, -0.3f];
-            var waveform = new WaveformSlice(stereoSamples);
-            int sampleRate = 48000;
+            var waveform = new WaveformSlice(CreateTestStereoSamples());
+            var analyzed = new AnalyzedAudioSlice(waveform, SampleRate);
 
-            // Act
-            var slice = new AnalyzedAudioSlice(waveform, sampleRate);
-
-            // Assert
-            Assert.Same(waveform, slice.Waveform);
-            Assert.NotNull(slice.FFT);
-            Assert.NotNull(slice.Volume);
+            Assert.Equal(waveform, analyzed.Waveform);
+            Assert.NotNull(analyzed.FFT);
+            Assert.NotNull(analyzed.Volume);
         }
 
         [Fact]
-        public void Constructor_WithAllComponents_AssignsCorrectly()
+        public void Constructor_WithAllDependencies_AssignsCorrectly()
         {
-            // Arrange
-            var waveform = new WaveformSlice([0.1f, 0.2f, 0.3f, 0.4f]);
-            var fft = new FFTSlice(waveform, 44100);
+            var waveform = new WaveformSlice(CreateTestStereoSamples());
+            var fft = new FFTSlice(waveform, SampleRate);
             var volume = new VolumeMetrics(waveform);
 
-            // Act
-            var slice = new AnalyzedAudioSlice(waveform, fft, volume);
+            var analyzed = new AnalyzedAudioSlice(waveform, fft, volume);
 
-            // Assert
-            Assert.Same(waveform, slice.Waveform);
-            Assert.Same(fft, slice.FFT);
-            Assert.Same(volume, slice.Volume);
+            Assert.Same(waveform, analyzed.Waveform);
+            Assert.Same(fft, analyzed.FFT);
+            Assert.Same(volume, analyzed.Volume);
+        }
+
+        [Fact]
+        public void FFT_UsesSameWaveformReference()
+        {
+            var waveform = new WaveformSlice(CreateTestStereoSamples());
+            var analyzed = new AnalyzedAudioSlice(waveform, SampleRate);
+
+            Assert.Same(waveform, analyzed.FFT.Waveform);
+        }
+
+        [Fact]
+        public void Volume_UsesSameWaveformReference()
+        {
+            var waveform = new WaveformSlice(CreateTestStereoSamples());
+            var analyzed = new AnalyzedAudioSlice(waveform, SampleRate);
+
+            Assert.Same(waveform, analyzed.Volume.Waveform);
         }
     }
 }

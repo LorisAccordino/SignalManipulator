@@ -12,6 +12,6 @@ namespace SignalManipulator.Logic.Events
         event EventHandler? OnStopped;
         event EventHandler<bool>? OnPlaybackStateChanged; // bool: isPlaying?
 
-        event EventHandler<AnalyzedAudioSlice>? AudioFrameReady;
+        event EventHandler<AnalyzedAudioSlice>? AudioDataReady;
     }
 }

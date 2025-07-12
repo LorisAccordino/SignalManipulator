@@ -2,7 +2,7 @@
 
 namespace SignalManipulator.Logic.Core.Routing
 {
-    public class AudioRouter : IAudioRouter
+    public class AudioRouter
     {
         public event EventHandler PlaybackStopped;
 
