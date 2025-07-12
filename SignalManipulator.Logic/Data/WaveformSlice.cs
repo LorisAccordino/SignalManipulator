@@ -3,7 +3,7 @@ using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.Logic.Data
 {
-    public class WaveformSlice : IChannelDataProvider
+    public class WaveformSlice : IChannelDataProvider<double[]>
     {
         private readonly float[] stereo;
         private double[]? cachedDoubleStereo;

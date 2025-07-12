@@ -4,7 +4,7 @@ using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.Logic.Data
 {
-    public class FFTSlice : IChannelDataProvider
+    public class FFTSlice : IChannelDataProvider<double[]>
     {
         public double[] Frequencies { get; }
 

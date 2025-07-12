@@ -7,6 +7,6 @@
         Right,
         Mid,
         Side,
-        Mono // Meant as sum L+R/2
+        Mono // Meant as mid alias
     }
 }

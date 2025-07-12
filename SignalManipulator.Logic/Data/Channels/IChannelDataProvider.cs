@@ -1,11 +1,11 @@
 ﻿namespace SignalManipulator.Logic.Data.Channels
 {
-    public interface IChannelDataProvider
+    public interface IChannelDataProvider<T>
     {
         IEnumerable<AudioChannel> AvailableChannels { get; }
-        double[] Get(AudioChannel mode);
-        double[] GetOrThrow(AudioChannel mode);
-        bool TryGet(AudioChannel mode, out double[] data);
-        bool HasChannel(AudioChannel mode);
+        T Get(AudioChannel channel);
+        T GetOrThrow(AudioChannel channel);
+        bool TryGet(AudioChannel channel, out T data);
+        bool HasChannel(AudioChannel channel);
     }
 }
