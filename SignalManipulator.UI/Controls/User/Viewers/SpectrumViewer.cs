@@ -8,11 +8,9 @@ using SignalManipulator.UI.Controls.User.Plottables.Signals;
 using SignalManipulator.UI.Controls.User.Viewers;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    [ExcludeFromCodeCoverage]
     public partial class SpectrumViewer : BaseViewer
     {
         // Spectrum plots
@@ -52,9 +50,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
 
             // Set channel modes
-            spectrumPlots[0].ChannelMode = AudioChannel.Stereo;
-            spectrumPlots[1].ChannelMode = AudioChannel.Left;
-            spectrumPlots[2].ChannelMode = AudioChannel.Right;
+            spectrumPlots[0].Channel = AudioChannel.Stereo;
+            spectrumPlots[1].Channel = AudioChannel.Left;
+            spectrumPlots[2].Channel = AudioChannel.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(0, AudioEngine.MAX_MAGNITUDE_DB);

@@ -3,10 +3,10 @@
     public enum AudioChannel
     {
         Stereo,
+        Mono,  // Mono == Mid
         Left,
         Right,
         Mid,
         Side,
-        Mono // Meant as mid alias
     }
 }

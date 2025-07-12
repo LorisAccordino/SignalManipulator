@@ -7,7 +7,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
 {
     public class Spectrum : BaseSignalPlot
     {
-        public AudioChannel ChannelMode { get; set; } = AudioChannel.Stereo;
+        public AudioChannel Channel { get; set; } = AudioChannel.Stereo;
 
         private int fftSize;
         private double[] magnitudes = [];
@@ -39,12 +39,9 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
         {
             lock (lockObject)
             {
-                if (fft.TryGet(ChannelMode, out var mags))
-                {
-                    double[] ema = smootherEMA.Smooth(mags);
-                    double[] sma = smootherSMA.Smooth(ema);
-                    sma.CopyTo(magnitudes, 0);
-                }
+                double[] ema = smootherEMA.Smooth(fft.Magnitudes[Channel]);
+                double[] sma = smootherSMA.Smooth(ema);
+                sma.CopyTo(magnitudes, 0);
             }
         }
 

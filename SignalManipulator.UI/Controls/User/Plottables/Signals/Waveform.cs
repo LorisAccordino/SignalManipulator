@@ -5,7 +5,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
 {
     public class Waveform : BaseSignalPlot
     {
-        public AudioChannel ChannelMode { get; set; } = AudioChannel.Stereo;
+        public AudioChannel Channel { get; set; } = AudioChannel.Stereo;
 
         public Waveform(int sampleRate) : this(sampleRate, "") { }
         public Waveform(int sampleRate, string channelName = "") : base(sampleRate, channelName) { }
@@ -14,8 +14,7 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Signals
         {
             lock (lockObject)
             {
-                waveform.TryGet(ChannelMode, out var samples);
-                buffer.AddRange(samples);
+                buffer.AddRange(waveform.DoubleSamples[Channel]);
                 buffer.CopyTo(data, 0);
             }
         }

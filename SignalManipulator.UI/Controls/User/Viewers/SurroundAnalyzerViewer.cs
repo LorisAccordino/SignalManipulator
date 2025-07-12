@@ -1,5 +1,4 @@
 ﻿using SignalManipulator.UI.Helpers;
-using System.Diagnostics.CodeAnalysis;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
 using SignalManipulator.UI.Controls.User.Plottables;
@@ -9,7 +8,6 @@ using SignalManipulator.Logic.Data;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    [ExcludeFromCodeCoverage]
     public partial class SurroundAnalyzerViewer : BaseViewer
     {
         // Component references

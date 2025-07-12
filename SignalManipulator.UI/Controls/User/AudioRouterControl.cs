@@ -1,12 +1,10 @@
 ﻿using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.UI.Helpers;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.User
 {
-    [ExcludeFromCodeCoverage]
     public partial class AudioRouterControl : UserControl
     {
         private IAudioRouter audioRouter;

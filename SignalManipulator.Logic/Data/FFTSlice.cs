@@ -4,73 +4,36 @@ using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.Logic.Data
 {
-    public class FFTSlice : IChannelDataProvider<double[]>
+    public class FFTSlice
     {
+        public WaveformSlice Waveform { get; }
+
         public double[] Frequencies { get; }
+        public IChannelDataProvider<double[]> Magnitudes { get; }
 
-        // Magnitudes
-        public double[] Stereo { get; }
-        public double[] Left { get; }
-        public double[] Right { get; }
-
-        public FFTSlice(WaveformSlice frame, int sampleRate)
+        public FFTSlice(WaveformSlice waveform, int sampleRate)
         {
-            (Stereo, Frequencies) = FFT.CalculateMagnitudeSpectrum(frame.DoubleStereo, sampleRate);
-            Left = FFT.CalculateMagnitudeSpectrum(frame.DoubleSplitStereo.Left, sampleRate).Magnitudes;
-            Right = FFT.CalculateMagnitudeSpectrum(frame.DoubleSplitStereo.Right, sampleRate).Magnitudes;
+            Waveform = waveform;
+
+            // Computer Frequencies one time: through lazy Stereo
+            var stereoSpectrum = FFT.CalculateMagnitudeSpectrum(waveform.DoubleSamples[AudioChannel.Stereo], sampleRate);
+            Frequencies = stereoSpectrum.Frequencies;
+
+            // Lazy registration for magnitudes of the channels
+            var magnitudesCache = new ChannelCache<double[]>();
+            magnitudesCache.Register(AudioChannel.Stereo, () => stereoSpectrum.Magnitudes);
+            magnitudesCache.Register(AudioChannel.Mono, () => FFT.CalculateMagnitudeSpectrum(waveform.DoubleSamples[AudioChannel.Mono], sampleRate).Magnitudes);
+            magnitudesCache.Register(AudioChannel.Left, () => FFT.CalculateMagnitudeSpectrum(waveform.DoubleSamples[AudioChannel.Left], sampleRate).Magnitudes);
+            magnitudesCache.Register(AudioChannel.Right, () => FFT.CalculateMagnitudeSpectrum(waveform.DoubleSamples[AudioChannel.Right], sampleRate).Magnitudes);
+            magnitudesCache.Register(AudioChannel.Mid, () => magnitudesCache[AudioChannel.Mono]);
+            magnitudesCache.Register(AudioChannel.Side, () => FFT.CalculateMagnitudeSpectrum(waveform.DoubleSamples[AudioChannel.Side], sampleRate).Magnitudes);
+            Magnitudes = magnitudesCache;
         }
 
-        public FFTSlice(float[] stereoSamples, int sampleRate) 
+        public FFTSlice(float[] stereoSamples, int sampleRate)
             : this(new WaveformSlice(stereoSamples), sampleRate) { }
 
-        public FFTSlice(float[] left, float[] right, int sampleRate) 
+        public FFTSlice(float[] left, float[] right, int sampleRate)
             : this(new WaveformSlice((left, right).ToStereo()), sampleRate) { }
-
-        public double[] Get(AudioChannel mode)
-        {
-            TryGet(mode, out var data);
-            return data;
-        }
-
-        public bool TryGet(AudioChannel mode, out double[] data)
-        {
-            data = mode switch
-            {
-                AudioChannel.Stereo when Stereo != null => Stereo,
-                AudioChannel.Left when Left != null => Left,
-                AudioChannel.Right when Right != null => Right,
-                _ => []
-            };
-
-            return data.Length > 0;
-        }
-
-        public double[] GetOrThrow(AudioChannel mode)
-        {
-            if (!TryGet(mode, out var data))
-                throw new InvalidOperationException($"Channel '{mode}' is not available.");
-            return data;
-        }
-
-        public IEnumerable<AudioChannel> AvailableChannels
-        {
-            get
-            {
-                if (Stereo != null) yield return AudioChannel.Stereo;
-                if (Left != null) yield return AudioChannel.Left;
-                if (Right != null) yield return AudioChannel.Right;
-            }
-        }
-
-        public bool HasChannel(AudioChannel mode)
-        {
-            return mode switch
-            {
-                AudioChannel.Stereo => Stereo != null,
-                AudioChannel.Left => Left != null,
-                AudioChannel.Right => Right != null,
-                _ => false
-            };
-        }
     }
 }

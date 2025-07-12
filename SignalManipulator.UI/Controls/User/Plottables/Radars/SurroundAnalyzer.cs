@@ -3,6 +3,7 @@ using SignalManipulator.Logic.AudioMath.Scaling;
 using SignalManipulator.Logic.AudioMath.Scaling.Curves;
 using SignalManipulator.Logic.AudioMath.Smoothing;
 using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.UI.Controls.User.Plottables.Radars
 {
@@ -28,23 +29,23 @@ namespace SignalManipulator.UI.Controls.User.Plottables.Radars
             lock (lockObject)
             {
                 // Compute RMS for each channel
-                double leftRMS = volume.LeftRMS;
-                double rightRMS = volume.RightRMS;
+                double leftRMS = volume.RMS[AudioChannel.Left];
+                double rightRMS = volume.RMS[AudioChannel.Right];
 
-                // Center (mid) and difference (side)
-                double mid = volume.Mid;
-                double side = volume.Side;
+                // Center (midRMS) and difference (sideRMS)
+                double midRMS = volume.RMS[AudioChannel.Mid];
+                double sideRMS = volume.RMS[AudioChannel.Side];
 
                 // Rear channels attenuated
-                double rearL = side * leftRMS;
-                double rearR = side * rightRMS;
+                double rearL = sideRMS * leftRMS;
+                double rearR = sideRMS * rightRMS;
 
                 // Recostruction of values in this order: rL, L, C, R, rR
                 double[] rawMagnitudes =
                 [
                     rearL,
                     leftRMS,
-                    mid,
+                    midRMS,
                     rightRMS,
                     rearR
                 ];

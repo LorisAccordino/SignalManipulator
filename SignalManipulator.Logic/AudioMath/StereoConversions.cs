@@ -21,6 +21,7 @@
         }
 
 
+        public static float[] ToMid(this float[] stereo) => ToMono(stereo);
         public static float[] ToMono(this float[] stereo)
         {
             float[] mono = new float[stereo.Length / 2];
@@ -31,12 +32,34 @@
             return mono;
         }
 
+        public static double[] ToMid(this double[] stereo) => ToMono(stereo);
         public static double[] ToMono(this double[] stereo)
         {
             double[] mono = new double[stereo.Length / 2];
             for (int i = 0; i < mono.Length; i++)
             {
                 mono[i] = (stereo[i * 2] + stereo[i * 2 + 1]) / 2.0f;
+            }
+            return mono;
+        }
+
+
+        public static float[] ToSide(this float[] stereo)
+        {
+            float[] mono = new float[stereo.Length / 2];
+            for (int i = 0; i < mono.Length; i++)
+            {
+                mono[i] = (stereo[i * 2] - stereo[i * 2 + 1]) / 2.0f;
+            }
+            return mono;
+        }
+
+        public static double[] ToSide(this double[] stereo)
+        {
+            double[] mono = new double[stereo.Length / 2];
+            for (int i = 0; i < mono.Length; i++)
+            {
+                mono[i] = (stereo[i * 2] - stereo[i * 2 + 1]) / 2.0f;
             }
             return mono;
         }

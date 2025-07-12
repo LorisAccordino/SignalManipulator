@@ -1,15 +1,14 @@
 ﻿using SignalManipulator.UI.Helpers;
-using System.Diagnostics.CodeAnalysis;
 using ScottPlot.WinForms;
 using SignalManipulator.UI.Misc;
 using SignalManipulator.UI.Controls.User.Plottables;
 using SignalManipulator.UI.Controls.User.Plottables.Scatters;
 using SignalManipulator.UI.Controls.User.Viewers;
 using SignalManipulator.Logic.Data;
+using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    [ExcludeFromCodeCoverage]
     public partial class LissajousViewer : BaseViewer
     {
         
@@ -51,7 +50,7 @@ namespace SignalManipulator.UI.Controls.Viewers
 
         protected override void ProcessFrame(AnalyzedAudioSlice frame)
         {
-            lissajousPlot.AddSamples(frame.Waveform.DoubleStereo);
+            lissajousPlot.AddSamples(frame.Waveform.DoubleSamples[AudioChannel.Stereo]);
         }
     }
 }

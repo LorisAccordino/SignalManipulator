@@ -4,12 +4,10 @@ using SignalManipulator.Logic.Events;
 using SignalManipulator.UI.Controls.User.Dialogs;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 namespace SignalManipulator.UI.Controls.User
 {
-    [ExcludeFromCodeCoverage]
     public partial class AudioPlayer : UserControl
     {
         private IPlaybackController playback;

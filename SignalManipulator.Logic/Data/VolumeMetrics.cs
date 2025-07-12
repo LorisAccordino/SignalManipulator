@@ -1,87 +1,36 @@
 ﻿using MathNet.Numerics.Statistics;
+using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.Logic.Data
 {
     public class VolumeMetrics
     {
-        public WaveformSlice Waveform => waveform;
-        private readonly WaveformSlice waveform;
-
-        private double? cachedRMSLeft;
-        private double? cachedRMSRight;
-        private double? cachedRMSStereo;
-        private double? cachedRMSMono;
-        private double? cachedPeak;
-        private double? cachedLoudness;
-        private double? cachedMid;
-        private double? cachedSide;
-
-        public VolumeMetrics(float[] samples)
-        {
-            waveform = new WaveformSlice(samples);
-        }
-
-        public VolumeMetrics(WaveformSlice waveform)
-        {
-            this.waveform = waveform;
-        }
+        public WaveformSlice Waveform { get; }
 
         // === RMS ===
-        public double StereoRMS => cachedRMSStereo ??= waveform.Stereo.RootMeanSquare();
-        public double LeftRMS => cachedRMSLeft ??= waveform.DoubleSplitStereo.Left.RootMeanSquare();
-        public double RightRMS => cachedRMSRight ??= waveform.DoubleSplitStereo.Right.RootMeanSquare();
-        public double MonoRMS => cachedRMSMono ??= waveform.DoubleMono.RootMeanSquare();
-
-        // === PEAK ===
-        public double Peak => cachedPeak ??= waveform.Stereo.Max(Math.Abs);
+        public IChannelDataProvider<double> RMS { get; }
 
         // === LOUDNESS ===
-        public double Loudness => cachedLoudness ??= 20 * Math.Log10(StereoRMS + 1e-9); // avoid log(0)
+        private double? cachedLoudness;
+        public double Loudness => cachedLoudness ??= 20 * Math.Log10(RMS[AudioChannel.Stereo] + 1e-9);
 
+        // === PEAK ===
+        private double? cachedPeak;
+        public double Peak => cachedPeak ??= Waveform.FloatSamples[AudioChannel.Stereo].Max(Math.Abs);
 
-
-        // === MID ===
-        public double Mid
+        public VolumeMetrics(float[] samples) : this(new WaveformSlice(samples)) { }
+        public VolumeMetrics(WaveformSlice waveform)
         {
-            get
-            {
-                if (cachedMid.HasValue)
-                    return cachedMid.Value;
+            Waveform = waveform;
 
-                double[] L = waveform.DoubleSplitStereo.Left;
-                double[] R = waveform.DoubleSplitStereo.Right;
-
-                int len = Math.Min(L.Length, R.Length);
-                double[] mid = new double[len];
-
-                for (int i = 0; i < len; i++)
-                    mid[i] = (L[i] + R[i]) / 2.0;
-
-                cachedMid = mid.RootMeanSquare();
-                return cachedMid.Value;
-            }
-        }
-
-        // === SIDE ===
-        public double Side
-        {
-            get
-            {
-                if (cachedSide.HasValue)
-                    return cachedSide.Value;
-
-                double[] L = waveform.DoubleSplitStereo.Left;
-                double[] R = waveform.DoubleSplitStereo.Right;
-
-                int len = Math.Min(L.Length, R.Length);
-                double[] side = new double[len];
-
-                for (int i = 0; i < len; i++)
-                    side[i] = (L[i] - R[i]) / 2.0;
-
-                cachedSide = side.RootMeanSquare();
-                return cachedSide.Value;
-            }
+            var volumeCache = new ChannelCache<double>();
+            volumeCache.Register(AudioChannel.Stereo, () => Waveform.FloatSamples[AudioChannel.Stereo].RootMeanSquare());
+            volumeCache.Register(AudioChannel.Left, () => Waveform.FloatSamples[AudioChannel.Left].RootMeanSquare());
+            volumeCache.Register(AudioChannel.Right, () => Waveform.FloatSamples[AudioChannel.Right].RootMeanSquare());
+            volumeCache.Register(AudioChannel.Mono, () => Waveform.FloatSamples[AudioChannel.Mono].RootMeanSquare());
+            volumeCache.Register(AudioChannel.Mid, () => volumeCache[AudioChannel.Mono]);
+            volumeCache.Register(AudioChannel.Side, () => Waveform.FloatSamples[AudioChannel.Side].RootMeanSquare());
+            RMS = volumeCache;
         }
     }
 }

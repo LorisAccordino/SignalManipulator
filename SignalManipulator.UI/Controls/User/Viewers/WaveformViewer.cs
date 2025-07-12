@@ -6,11 +6,9 @@ using SignalManipulator.UI.Controls.User.Plottables.Signals;
 using SignalManipulator.UI.Controls.User.Viewers;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.UI.Controls.Viewers
 {
-    [ExcludeFromCodeCoverage]
     public partial class WaveformViewer : BaseViewer
     {
         // Waveform plots
@@ -47,9 +45,9 @@ namespace SignalManipulator.UI.Controls.Viewers
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Right"));
 
             // Set channel modes
-            waveformPlots[0].ChannelMode = AudioChannel.Stereo;
-            waveformPlots[1].ChannelMode = AudioChannel.Left;
-            waveformPlots[2].ChannelMode = AudioChannel.Right;
+            waveformPlots[0].Channel = AudioChannel.Stereo;
+            waveformPlots[1].Channel = AudioChannel.Left;
+            waveformPlots[2].Channel = AudioChannel.Right;
 
             // Set the bounds
             Plot.Axes.SetLimitsY(-1, 1);
