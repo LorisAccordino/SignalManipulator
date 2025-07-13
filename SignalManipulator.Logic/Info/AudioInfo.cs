@@ -1,16 +1,18 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Providers;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 namespace SignalManipulator.Logic.Info
 {
+    [ExcludeFromCodeCoverage]
     public struct AudioInfo
     {
         private const string DEFAULT_MESSAGE = "No info available";
 
 
         /*** TECHNICAL DATA ***/
-        public ISampleProvider SourceProvider { get; } = new DefaultSampleProvider();
+        public ISampleProvider SourceProvider { get; } = new DefaultAudioProvider();
         public WaveStream? WaveStream { get; } = null;
 
         public string FileName { get; } = DEFAULT_MESSAGE;
@@ -102,6 +104,6 @@ namespace SignalManipulator.Logic.Info
             FileName = reader.FileName;
         }
 
-        public AudioInfo(ISampleProvider? provider) => SourceProvider = provider ?? new DefaultSampleProvider();
+        public AudioInfo(ISampleProvider? provider) => SourceProvider = provider ?? new DefaultAudioProvider();
     }
 }

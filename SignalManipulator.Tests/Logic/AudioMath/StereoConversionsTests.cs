@@ -142,5 +142,63 @@ namespace SignalManipulator.Tests.Logic.AudioMath
 
             Assert.Equal([5f, 6f, 7f, 8f], stereo);
         }
+
+        [Fact]
+        public void ToMid_Float_IsAliasOfToMono()
+        {
+            float[] stereo = { 1f, 3f, 5f, 7f };
+            var mid = stereo.ToMid();
+            var mono = stereo.ToMono();
+
+            Assert.Equal(mono, mid);
+        }
+
+        [Fact]
+        public void ToMid_Double_IsAliasOfToMono()
+        {
+            double[] stereo = { 4.0, 2.0, 10.0, 6.0 };
+            var mid = stereo.ToMid();
+            var mono = stereo.ToMono();
+
+            Assert.Equal(mono, mid);
+        }
+
+        [Fact]
+        public void ToSide_Float_CorrectlyCalculatesDifference()
+        {
+            float[] stereo = { 3f, 1f, 7f, 5f }; // (3-1)/2 = 1; (7-5)/2 = 1
+            float[] expected = { 1f, 1f };
+
+            var side = stereo.ToSide();
+
+            Assert.Equal(expected, side);
+        }
+
+        [Fact]
+        public void ToSide_Double_CorrectlyCalculatesDifference()
+        {
+            double[] stereo = { 10.0, 6.0, 8.0, 4.0 }; // (10-6)/2 = 2, (8-4)/2 = 2
+            double[] expected = { 2.0, 2.0 };
+
+            var side = stereo.ToSide();
+
+            Assert.Equal(expected, side);
+        }
+
+        [Fact]
+        public void ToMono_ToSide_EmptyArray_ReturnsEmpty()
+        {
+            float[] empty = [];
+
+            Assert.Empty(empty.ToMono());
+            Assert.Empty(empty.ToSide());
+            Assert.Empty(empty.ToMid());
+
+            double[] emptyD = [];
+
+            Assert.Empty(emptyD.ToMono());
+            Assert.Empty(emptyD.ToSide());
+            Assert.Empty(emptyD.ToMid());
+        }
     }
 }

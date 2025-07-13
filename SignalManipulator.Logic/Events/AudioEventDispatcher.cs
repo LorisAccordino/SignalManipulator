@@ -2,9 +2,11 @@
 using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Info;
 using SignalManipulator.Logic.Providers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.Logic.Events
 {
+    [ExcludeFromCodeCoverage]
     public class AudioEventDispatcher : IAudioEventDispatcher
     {
         public event EventHandler<AudioInfo>? OnLoad;

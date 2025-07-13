@@ -18,7 +18,7 @@ namespace SignalManipulator.Logic.Effects
         // Audio modules references
         //private AudioEngine audioEngine;
         //public DynamicWaveProvider SourceProvider { get; private set; } = new DynamicWaveProvider();
-        public ISampleProvider SourceProvider { get; private set; } = new DefaultSampleProvider();
+        public ISampleProvider SourceProvider { get; private set; } = new DefaultAudioProvider();
 
         //public EffectChain(AudioEngine audioEngine)
         public EffectChain()
@@ -52,7 +52,7 @@ namespace SignalManipulator.Logic.Effects
 
         public void RebuildChain()
         {
-            ISampleProvider current = SourceProvider ?? new DefaultSampleProvider();
+            ISampleProvider current = SourceProvider ?? new DefaultAudioProvider();
 
             foreach (var effect in effectList)
             {

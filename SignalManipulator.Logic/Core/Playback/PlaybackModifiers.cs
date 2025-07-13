@@ -12,7 +12,7 @@ namespace SignalManipulator.Logic.Core.Playback
 
         public ISampleProvider Output => TimeStretchEffect;
 
-        public PlaybackModifiers() : this(DefaultSampleProvider.Empty) { }
+        public PlaybackModifiers() : this(DefaultAudioProvider.Empty) { }
         public PlaybackModifiers(ISampleProvider sourceProvider)
         {
             VolumeEffect = new VolumeEffect(sourceProvider);
