@@ -103,10 +103,10 @@ namespace SignalManipulator.ViewModels
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(AnalyzedAudioSlice frame)
+        protected override void ProcessData(AnalyzedAudioSlice data)
         {
             // Add samples to each channel
-            waveformPlots.ForEach(w => w.AddData(frame.Waveform));
+            waveformPlots.ForEach(w => w.AddData(data.Waveform));
         }
 
         protected override void UpdateDataPeriod()

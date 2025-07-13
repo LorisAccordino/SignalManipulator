@@ -46,7 +46,10 @@ namespace SignalManipulator.Logic.Providers
 
             if (AudioDataReady != null)
             {
-                var data = new AnalyzedAudioSlice(fftBuffer.ToArray(), WaveFormat.SampleRate);
+                var waveform = new WaveformSlice(samples);
+                var fft = new FFTSlice(fftBuffer.ToArray(), WaveFormat.SampleRate);
+                var volume = new VolumeMetrics(samples);
+                var data = new AnalyzedAudioSlice(waveform, fft, volume);
                 AudioDataReady.Invoke(this, data);
             }
 
@@ -60,5 +63,7 @@ namespace SignalManipulator.Logic.Providers
             buffer.CopyToFloats(samples, offset, read / 4);
             return read / 4;
         }
+
+        public void ClearBuffer() => fftBuffer.Clear();
     }
 }

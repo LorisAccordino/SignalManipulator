@@ -104,9 +104,9 @@ namespace SignalManipulator.ViewModels
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(AnalyzedAudioSlice frame)
+        protected override void ProcessData(AnalyzedAudioSlice data)
         {
-            spectrumPlots.ForEach(s => s.AddData(frame.FFT));
+            spectrumPlots.ForEach(s => s.AddData(data.FFT));
         }
 
         protected override void UpdateDataPeriod()

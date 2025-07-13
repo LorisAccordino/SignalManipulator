@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace SignalManipulator.Logic.Events
 {
     [ExcludeFromCodeCoverage]
-    public class AudioEventDispatcher : IAudioEventDispatcher
+    public class AudioEventDispatcher
     {
         public event EventHandler<AudioInfo>? OnLoad;
         public event EventHandler? OnStarted;

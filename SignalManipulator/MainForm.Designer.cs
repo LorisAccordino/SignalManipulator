@@ -1,5 +1,4 @@
 ﻿using SignalManipulator.Controls;
-using SignalManipulator.UI.Controls.User;
 using SignalManipulator.ViewModels;
 
 namespace SignalManipulator
@@ -51,7 +50,7 @@ namespace SignalManipulator
             surroundAnalyzer = new SurroundAnalyzerViewModel();
             bottomSplitContainer = new SplitContainer();
             playbackGroupBox = new GroupBox();
-            audioPlayer = new AudioPlayerControl();
+            audioPlayerControl = new AudioPlayerControl();
             routingGroupBox = new GroupBox();
             audioRouter = new AudioRouterControl();
             menuStrip1 = new MenuStrip();
@@ -334,7 +333,7 @@ namespace SignalManipulator
             // 
             // playbackGroupBox
             // 
-            playbackGroupBox.Controls.Add(audioPlayer);
+            playbackGroupBox.Controls.Add(audioPlayerControl);
             playbackGroupBox.Dock = DockStyle.Fill;
             playbackGroupBox.Location = new Point(0, 0);
             playbackGroupBox.Margin = new Padding(2);
@@ -345,15 +344,15 @@ namespace SignalManipulator
             playbackGroupBox.TabStop = false;
             playbackGroupBox.Text = "Playback:";
             // 
-            // audioPlayer
+            // audioPlayerControl
             // 
-            audioPlayer.Dock = DockStyle.Fill;
-            audioPlayer.Location = new Point(2, 18);
-            audioPlayer.Margin = new Padding(2);
-            audioPlayer.MinimumSize = new Size(306, 170);
-            audioPlayer.Name = "audioPlayer";
-            audioPlayer.Size = new Size(456, 175);
-            audioPlayer.TabIndex = 0;
+            audioPlayerControl.Dock = DockStyle.Fill;
+            audioPlayerControl.Location = new Point(2, 18);
+            audioPlayerControl.Margin = new Padding(2);
+            audioPlayerControl.MinimumSize = new Size(306, 170);
+            audioPlayerControl.Name = "audioPlayerControl";
+            audioPlayerControl.Size = new Size(456, 175);
+            audioPlayerControl.TabIndex = 0;
             // 
             // routingGroupBox
             // 
@@ -516,7 +515,7 @@ namespace SignalManipulator
         private LissajousViewModel lissajousViewer;
         private AudioRouterControl audioRouter;
         private SpectrumViewModel spectrumViewer;
-        private AudioPlayerControl audioPlayer;
+        private AudioPlayerControl audioPlayerControl;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem effectsToolStripMenuItem;
         private ToolStripMenuItem playbackToolStripMenuItem;

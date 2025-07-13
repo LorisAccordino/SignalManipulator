@@ -1,3 +1,5 @@
+using SignalManipulator.Logic.Core;
+
 namespace SignalManipulator
 {
     public partial class MainForm : Form
@@ -5,13 +7,19 @@ namespace SignalManipulator
         public MainForm()
         {
             InitializeComponent();
+            InitializeEvents();
+        }
+
+        public void InitializeEvents()
+        {
+            
         }
 
         private void openAudioToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (audioOFD.ShowDialog() == DialogResult.OK)
             {
-                audioPlayer.LoadAudio(audioOFD.FileName);
+                audioPlayerControl.LoadAudio(audioOFD.FileName);
             }
         }
 

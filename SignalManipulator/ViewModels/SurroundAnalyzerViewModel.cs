@@ -43,9 +43,9 @@ namespace SignalManipulator.ViewModels
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(AnalyzedAudioSlice frame)
+        protected override void ProcessData(AnalyzedAudioSlice data)
         {
-            surroundAnalyzer.AddData(frame.Volume);
+            surroundAnalyzer.AddData(data.Volume);
         }
     }
 }

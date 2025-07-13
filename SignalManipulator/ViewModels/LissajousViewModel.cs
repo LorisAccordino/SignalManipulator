@@ -47,9 +47,9 @@ namespace SignalManipulator.ViewModels
             NeedsRender = true;
         }
 
-        protected override void ProcessFrame(AnalyzedAudioSlice frame)
+        protected override void ProcessData(AnalyzedAudioSlice data)
         {
-            lissajousPlot.AddSamples(frame.Waveform.DoubleSamples[AudioChannel.Stereo]);
+            lissajousPlot.AddSamples(data.Waveform.DoubleSamples[AudioChannel.Stereo]);
         }
     }
 }

@@ -73,13 +73,14 @@ namespace SignalManipulator.Logic.Core.Playback
             router.CurrentDevice.Stop();
         }
 
-        public void _Stop()
+        public void _Stop() // Always called after Stop()
         {
             audioSource.Seek(TimeSpan.Zero);
             OnStopped?.Invoke(this, EventArgs.Empty);
             OnPlaybackStateChanged?.Invoke(this, false);
             effects.ResetAll();
             modifiers.Reset();
+            audioDataProvider.ClearBuffer();
         }
 
         public void Seek(TimeSpan pos) => audioSource.Seek(pos);

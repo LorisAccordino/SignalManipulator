@@ -34,21 +34,22 @@ namespace SignalManipulator.Logic.Core
         private readonly EffectChain effectChain = new EffectChain();
         private readonly AudioDataProvider audioDataProvider;
         private readonly PlaybackService playbackService;
-        private readonly AudioPlayer playbackController;
-        private readonly IAudioEventDispatcher audioEventDispatcher;
+        private readonly AudioPlayer audioPlayer;
+        private readonly AudioEventDispatcher audioEventDispatcher;
 
         // --- Public modules (exposed) ---
         public AudioRouter AudioRouter => audioRouter;
         public EffectChain EffectChain => effectChain;
-        public AudioPlayer PlaybackController => playbackController;
-        public IAudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
+        public AudioPlayer AudioPlayer => audioPlayer;
+        public AudioDataProvider AudioDataProvider => audioDataProvider;
+        public AudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
 
         // --- Instance constructor ---
         private AudioEngine()
         {
             audioDataProvider = new AudioDataProvider(effectChain);
             playbackService = new PlaybackService(audioFileLoader, audioRouter, effectChain, audioDataProvider);
-            playbackController = new AudioPlayer(playbackService, audioRouter);
+            audioPlayer = new AudioPlayer(playbackService, audioRouter);
             audioEventDispatcher = new AudioEventDispatcher(playbackService, audioDataProvider);
         }
     }

@@ -9,8 +9,8 @@ namespace SignalManipulator.Controls
 {
     public partial class AudioPlayerControl : UserControl
     {
-        private AudioPlayer playback;
-        private IAudioEventDispatcher audioEventDispatcher;
+        private AudioPlayer audioPlayer;
+        private AudioEventDispatcher audioEventDispatcher;
         private AudioInfoDialog audioInfoDialog = new AudioInfoDialog();
 
         public AudioPlayerControl()
@@ -19,9 +19,12 @@ namespace SignalManipulator.Controls
 
             if (!DesignModeHelper.IsDesignMode)
             {
-                playback = AudioEngine.Instance.PlaybackController;
+                audioPlayer = AudioEngine.Instance.AudioPlayer;
                 audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
                 InitializePlaybackEvents();
+
+                // Ensure to disable UI initially
+                Enabled = false;
 
                 // Initialize stuff
                 LoadAudio(null);
@@ -42,18 +45,18 @@ namespace SignalManipulator.Controls
             OnStopped(this, EventArgs.Empty);
 
             // Other events
-            playbackSpeedSlider.ValueChanged += (s, speed) => playback.PlaybackSpeed = speed;
-            timeSlider.OnSeek += playback.Seek;
-            volumeSlider.ValueChanged += (s, volume) => playback.Volume = volume;
-            pitchCheckBox.CheckedChanged += (s, e) => playback.PreservePitch = pitchCheckBox.Checked;
+            playbackSpeedSlider.ValueChanged += (s, speed) => audioPlayer.PlaybackSpeed = speed;
+            timeSlider.OnSeek += audioPlayer.Seek;
+            volumeSlider.ValueChanged += (s, volume) => audioPlayer.Volume = volume;
+            pitchCheckBox.CheckedChanged += (s, e) => audioPlayer.PreservePitch = pitchCheckBox.Checked;
         }
 
-        public void OnStarted(object? sender, EventArgs e)
+        private void OnStarted(object? sender, EventArgs e)
         {
             settingsPanel.Enabled = true;
         }
 
-        public void OnStopped(object? sender, EventArgs e)
+        private void OnStopped(object? sender, EventArgs e)
         {
             volumeSlider.Value = 1.0;
             playbackSpeedSlider.Value = 1.0;
@@ -62,7 +65,7 @@ namespace SignalManipulator.Controls
             settingsPanel.Enabled = false;
         }
 
-        public void OnPlaybackStateChanged(object? sender, bool playing)
+        private void OnPlaybackStateChanged(object? sender, bool playing)
         {
             playBtn.Visible = !playing;
             pauseBtn.Visible = playing;
@@ -70,7 +73,7 @@ namespace SignalManipulator.Controls
 
         private void OnUpdate()
         {
-            timeSlider.SyncWith(playback.Info.CurrentTime);
+            timeSlider.SyncWith(audioPlayer.Info.CurrentTime);
         }
 
 
@@ -78,28 +81,29 @@ namespace SignalManipulator.Controls
         {
             if (!string.IsNullOrEmpty(path))
             {
-                playback.Load(path);
-                audioInfoDialog.SetInfo(playback.Info);
+                audioPlayer.Load(path);
+                audioInfoDialog.SetInfo(audioPlayer.Info);
                 moreInfoLbl.Visible = true;
+                Enabled = true; // Ensure to enable UI after loading audio
             }
 
             // Update UI
-            playingAudioLbl.Value = playback.Info.FileName;
-            waveFmtLbl.Text = playback.Info.WaveFormatDescription;
-            timeSlider.TotalTime = playback.Info.TotalTime;
+            playingAudioLbl.Value = audioPlayer.Info.FileName;
+            waveFmtLbl.Text = audioPlayer.Info.WaveFormatDescription;
+            timeSlider.TotalTime = audioPlayer.Info.TotalTime;
         }
 
         private void OnPlay(object sender, EventArgs e)
         {
             UIUpdateService.Instance.Start();
-            playback.Play();
+            audioPlayer.Play();
         }
 
-        private void OnPause(object sender, EventArgs e) => playback.Pause();
+        private void OnPause(object sender, EventArgs e) => audioPlayer.Pause();
 
         private void OnStop(object sender, EventArgs e)
         {
-            playback.Stop();
+            audioPlayer.Stop();
             UIUpdateService.Instance.Stop();
         }
 

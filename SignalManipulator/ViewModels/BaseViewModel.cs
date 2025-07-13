@@ -46,7 +46,7 @@ namespace SignalManipulator.ViewModels
 
 
         // Common services and events
-        protected IAudioEventDispatcher AudioEvents;
+        protected AudioEventDispatcher AudioEvents;
         protected UIUpdateService UIUpdate;
 
         // Other commons
@@ -109,7 +109,7 @@ namespace SignalManipulator.ViewModels
         {
             lock (RenderLock)
             {
-                ProcessFrame(data);
+                ProcessData(data);
                 NeedsRender = true;
             }
         }
@@ -137,7 +137,7 @@ namespace SignalManipulator.ViewModels
         protected virtual void ClearBuffers() { }
         protected virtual void ResetUI() { }
         protected virtual void UpdateDataPeriod() { }
-        protected virtual void ProcessFrame(AnalyzedAudioSlice frame) { }
+        protected virtual void ProcessData(AnalyzedAudioSlice frame) { }
         protected virtual void EnableUI(bool enable) { }
     }
 }

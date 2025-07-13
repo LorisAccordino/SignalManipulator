@@ -85,5 +85,82 @@ namespace SignalManipulator.Tests.Logic.Providers
             Exception? ex = Record.Exception(resampleProvider.Reset);
             Assert.Null(ex);
         }
+
+        [Fact]
+        public void Reset_WithAudioFileReader_ResetsPosition()
+        {
+            // Arrange
+            var reader = new AudioFileReader(CreateSilentWavFile());
+            reader.Position = 1000; // move cursor
+            var provider = new ResampleSpeedProvider(reader);
+
+            // Act
+            provider.Reset();
+
+            // Assert
+            Assert.Equal(0, reader.Position);
+        }
+
+        private class DummyWaveStream : WaveStream, ISampleProvider
+        {
+            public override WaveFormat WaveFormat => WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+            public override long Length => 44100 * 4;
+            public override long Position { get; set; }
+            public int Read(float[] buffer, int offset, int count)
+            {
+                Array.Clear(buffer, offset, count);
+                return count;
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                Array.Clear(buffer, offset, count);
+                return count;
+            }
+        }
+
+        [Fact]
+        public void Reset_WithWaveStreamSampleProvider_ResetsPosition()
+        {
+            // Arrange
+            var dummy = new DummyWaveStream();
+            dummy.Position = 5000;
+            var provider = new ResampleSpeedProvider(dummy);
+
+            // Act
+            provider.Reset();
+
+            // Assert
+            Assert.Equal(0, dummy.Position);
+        }
+
+        private class DummyUnsupportedProvider : ISampleProvider
+        {
+            public WaveFormat WaveFormat => WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+            public int Read(float[] buffer, int offset, int count) => 0;
+        }
+
+        [Fact]
+        public void Reset_WithUnsupportedSource_DoesNotThrow()
+        {
+            // Arrange
+            var dummy = new DummyUnsupportedProvider();
+            var provider = new ResampleSpeedProvider(dummy);
+
+            // Act & Assert (no exception)
+            var ex = Record.Exception(() => provider.Reset());
+            Assert.Null(ex); // Ensure it doesn’t throw
+        }
+
+        // Helper to create an in-memory silent WAV file for testing
+        private static string CreateSilentWavFile()
+        {
+            var path = Path.GetTempFileName();
+            using var writer = new WaveFileWriter(path, WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
+            float[] silence = new float[44100];
+            writer.WriteSamples(silence, 0, silence.Length);
+            writer.Flush();
+            return path;
+        }
     }
 }

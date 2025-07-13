@@ -1,6 +1,7 @@
 ﻿using NAudio.Wave;
 using RubberBandSharp;
 using SignalManipulator.Logic.AudioMath;
+using SignalManipulator.Logic.Core;
 
 namespace SignalManipulator.Logic.Providers
 {
@@ -25,7 +26,7 @@ namespace SignalManipulator.Logic.Providers
         public RubberBandProvider(ISampleProvider source)
         {
             sourceProvider = source;
-            waveFormat = source.WaveFormat;
+            waveFormat = source?.WaveFormat ?? AudioEngine.WAVE_FORMAT;
 
             if (waveFormat.Channels != 2)
                 throw new NotSupportedException("RubberBandProvider currently only supports stereo audio");

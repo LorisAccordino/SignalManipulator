@@ -150,26 +150,14 @@ namespace SignalManipulator.Tests.Logic.Providers
             }
         }
 
-        public class RubberBandProvider_Testable : RubberBandProvider
+        [Fact]
+        public void ReadFloat_EndsWhenLeftOrRightBufferEmpty()
         {
-            public RubberBandProvider_Testable(ISampleProvider provider) : base(provider)
-            {
-            }
+            var rubber = new RubberBandProvider((ISampleProvider)null); // Not very safe :,)
 
-            public void SimulateEmptyBuffersAfterRead()
-            {
-                var leftField = typeof(RubberBandProvider)
-                    .GetField("leftBuffer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-                var rightField = typeof(RubberBandProvider)
-                    .GetField("rightBuffer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-                if (leftField?.GetValue(this) is Queue<float> left)
-                    left.Clear();
-
-                if (rightField?.GetValue(this) is Queue<float> right)
-                    right.Clear();
-            }
+            float[] buffer = new float[256];
+            int read = rubber.Read(buffer, 0, buffer.Length);
+            Assert.Equal(0, read); // It should reach immediately EOF
         }
     }
 }
