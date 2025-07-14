@@ -63,7 +63,7 @@ namespace SignalManipulator.Logic.Core.Routing
                              .ToArray();
         }
 
-        private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
         {
             PlaybackStopped?.Invoke(sender, e);
         }

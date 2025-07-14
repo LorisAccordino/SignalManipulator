@@ -1,52 +1,57 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
-using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Info;
-using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
-    public class PlaybackService
+    public class PlaybackService : ISampleProvider
     {
+        // References
         private readonly FileAudioSource audioSource = new FileAudioSource();
         private readonly AudioRouter router;
-        private readonly EffectChain effects;
-        private readonly AudioDataProvider audioDataProvider;
 
         // Properties
-        private readonly PlaybackModifiers modifiers;
+        private readonly PlaybackModifiers modifiers = new PlaybackModifiers();
+        public WaveFormat WaveFormat => Info.WaveFormat;
         public AudioInfo Info => audioSource.Info;
         public double Speed { get => modifiers.Speed; set => modifiers.Speed = value; }
         public bool PreservePitch { get => modifiers.PreservePitch; set => modifiers.PreservePitch = value; }
         public double Volume { get => modifiers.Volume; set => modifiers.Volume = value; }
 
         // Events
-        public event EventHandler<AudioInfo> LoadCompleted;
-        public event EventHandler OnStarted;
-        public event EventHandler OnResume;
-        public event EventHandler OnPaused;
-        public event EventHandler OnStopped;
-        public event EventHandler<bool> OnPlaybackStateChanged; // bool: playing?
+        public event EventHandler<AudioInfo>? LoadCompleted;
+        public event EventHandler? OnStarted;
+        public event EventHandler? OnResume;
+        public event EventHandler? OnPaused;
+        public event EventHandler? OnStopped;
+        public event EventHandler<bool>? OnPlaybackStateChanged; // bool: playing?
 
-        public PlaybackService(FileAudioSource audioSource, AudioRouter router, EffectChain effects, AudioDataProvider audioDataProvider)
+        public event EventHandler<AnalyzedAudioSlice>? AudioDataReady;
+
+        public PlaybackService(FileAudioSource audioSource, AudioRouter router)
         {
             this.audioSource = audioSource;
             this.router = router;
-            this.effects = effects;
-            this.audioDataProvider = audioDataProvider;
 
-            modifiers = new PlaybackModifiers();
+            InitializeEvents();
+        }
 
-            effects.SetSource(modifiers.Output);
+        private void InitializeEvents()
+        {
             router.PlaybackStopped += (s, e) => _Stop();
+
+            OnStarted += (s, e) => OnPlaybackStateChanged?.Invoke(s, true);
+            OnResume += (s, e) => OnPlaybackStateChanged?.Invoke(s, true);
+            OnPaused += (s, e) => OnPlaybackStateChanged?.Invoke(s, false);
+            OnStopped += (s, e) => OnPlaybackStateChanged?.Invoke(s, false);
         }
 
         public void Load(string path)
         {
             audioSource.Load(path);
             modifiers.SetSource(audioSource.Info.SourceProvider);
-            router.InitOutputs(audioDataProvider as IWaveProvider);
             Stop();
             LoadCompleted?.Invoke(this, Info);
         }
@@ -57,32 +62,26 @@ namespace SignalManipulator.Logic.Core.Playback
                 OnStarted?.Invoke(this, EventArgs.Empty);
 
             router.CurrentDevice.Play();
-            OnResume?.Invoke(this, EventArgs.Empty);
-            OnPlaybackStateChanged?.Invoke(this, true);
+            OnResume?.Invoke(this, EventArgs.Empty);;
         }
 
         public void Pause()
         {
             router.CurrentDevice.Pause();
             OnPaused?.Invoke(this, EventArgs.Empty);
-            OnPlaybackStateChanged?.Invoke(this, false);
         }
 
-        public void Stop()
-        {
-            router.CurrentDevice.Stop();
-        }
+        public void Stop() => router.CurrentDevice.Stop();
 
-        public void _Stop() // Always called after Stop()
+        private void _Stop() // Always called after Stop()
         {
             audioSource.Seek(TimeSpan.Zero);
             OnStopped?.Invoke(this, EventArgs.Empty);
-            OnPlaybackStateChanged?.Invoke(this, false);
-            effects.ResetAll();
             modifiers.Reset();
-            audioDataProvider.ClearBuffer();
         }
 
         public void Seek(TimeSpan pos) => audioSource.Seek(pos);
+
+        public int Read(float[] samples, int offset, int count) => modifiers.Read(samples, offset, count);
     }
 }

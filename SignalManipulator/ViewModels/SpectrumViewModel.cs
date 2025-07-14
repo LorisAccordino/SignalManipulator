@@ -49,7 +49,7 @@ namespace SignalManipulator.ViewModels
             spectrumPlots.Add(Plot.Add.Spectrum(SampleRate, AudioEngine.FFT_SIZE, "Right"));
 
             // Set channel modes
-            spectrumPlots[0].Channel = AudioChannel.Stereo;
+            spectrumPlots[0].Channel = AudioChannel.Mono;
             spectrumPlots[1].Channel = AudioChannel.Left;
             spectrumPlots[2].Channel = AudioChannel.Right;
 

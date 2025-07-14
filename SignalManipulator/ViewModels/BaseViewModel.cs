@@ -2,9 +2,10 @@
 using ScottPlot.WinForms;
 using SignalManipulator.Controls;
 using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Data;
-using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Info;
+using SignalManipulator.Logic.Providers;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 using System.ComponentModel;
@@ -45,9 +46,10 @@ namespace SignalManipulator.ViewModels
         public override string Text { get; set; }
 
 
-        // Common services and events
-        protected AudioEventDispatcher AudioEvents;
-        protected UIUpdateService UIUpdate;
+        // Common services exposed
+        private AudioPlayer AudioPlayer;
+        private AudioDataProvider AudioDataProvider;
+        private UIUpdateService UIUpdate;
 
         // Other commons
         protected int SampleRate { get; private set; } = AudioEngine.SAMPLE_RATE;
@@ -63,7 +65,8 @@ namespace SignalManipulator.ViewModels
 
         public void InitializeViewer()
         {
-            AudioEvents = AudioEngine.Instance.AudioEventDispatcher;
+            AudioPlayer = AudioEngine.Instance.AudioPlayer;
+            AudioDataProvider = AudioEngine.Instance.AudioDataProvider;
             UIUpdate = UIUpdateService.Instance;
             InitializeCommon();
         }
@@ -71,9 +74,9 @@ namespace SignalManipulator.ViewModels
 
         private void InitializeCommon()
         {
-            AudioEvents.OnLoad += OnLoad;
-            AudioEvents.OnStarted += OnStarted;
-            AudioEvents.OnStopped += OnStopped;
+            AudioPlayer.OnLoad += OnLoad;
+            AudioPlayer.OnStarted += OnStarted;
+            AudioPlayer.OnStopped += OnStopped;
             UIUpdate.Register(RenderPlot);
 
             FormsPlot.UserInputProcessor.Disable();
@@ -92,13 +95,13 @@ namespace SignalManipulator.ViewModels
 
         private void OnStarted(object? s, EventArgs e)
         {
-            AudioEvents.AudioDataReady += ProcessDataDispatch;
+            AudioDataProvider.AudioDataReady += ProcessDataDispatch;
             EnableUI(true);
         }
 
         private void OnStopped(object? s, EventArgs e)
         {
-            AudioEvents.AudioDataReady -= ProcessDataDispatch;
+            AudioDataProvider.AudioDataReady -= ProcessDataDispatch;
             ClearBuffers();
             ResetUI();
             EnableUI(false);

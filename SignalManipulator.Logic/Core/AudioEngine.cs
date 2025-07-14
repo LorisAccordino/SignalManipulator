@@ -2,8 +2,6 @@
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
-using SignalManipulator.Logic.Effects;
-using SignalManipulator.Logic.Events;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core
@@ -31,26 +29,40 @@ namespace SignalManipulator.Logic.Core
         // --- Core modules (private) ---
         private readonly FileAudioSource audioFileLoader = new FileAudioSource();
         private readonly AudioRouter audioRouter = new AudioRouter();
-        private readonly EffectChain effectChain = new EffectChain();
+        private readonly EffectChain effectChain;
         private readonly AudioDataProvider audioDataProvider;
         private readonly PlaybackService playbackService;
         private readonly AudioPlayer audioPlayer;
-        private readonly AudioEventDispatcher audioEventDispatcher;
 
         // --- Public modules (exposed) ---
         public AudioRouter AudioRouter => audioRouter;
         public EffectChain EffectChain => effectChain;
         public AudioPlayer AudioPlayer => audioPlayer;
         public AudioDataProvider AudioDataProvider => audioDataProvider;
-        public AudioEventDispatcher AudioEventDispatcher => audioEventDispatcher;
 
         // --- Instance constructor ---
         private AudioEngine()
         {
+            // Instantiate references
+            playbackService = new PlaybackService(audioFileLoader, audioRouter);
+            effectChain = new EffectChain(playbackService);
             audioDataProvider = new AudioDataProvider(effectChain);
-            playbackService = new PlaybackService(audioFileLoader, audioRouter, effectChain, audioDataProvider);
             audioPlayer = new AudioPlayer(playbackService, audioRouter);
-            audioEventDispatcher = new AudioEventDispatcher(playbackService, audioDataProvider);
+
+            // Init events
+            InitializeEvents();
+        }
+
+        private void InitializeEvents()
+        {
+            audioRouter.InitOutputs(audioDataProvider as IWaveProvider);
+            audioPlayer.OnStopped += OnStopped;
+        }
+
+        private void OnStopped(object? sender,  EventArgs e)
+        {
+            effectChain.Reset();
+            audioDataProvider.ClearBuffer();
         }
     }
 }

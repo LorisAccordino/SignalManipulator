@@ -1,5 +1,4 @@
 ﻿using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Effects;
 using SignalManipulator.UI.Helpers;
 
 namespace SignalManipulator.Controls

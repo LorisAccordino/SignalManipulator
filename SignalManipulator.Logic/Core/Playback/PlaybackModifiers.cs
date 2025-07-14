@@ -5,29 +5,13 @@ using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
-    public class PlaybackModifiers
+    // TODO: Exclude from effect plugin loader
+    public class PlaybackModifiers : AudioEffect
     {
+        public override string Name => "Playback Modifiers";
+
         public VolumeEffect VolumeEffect { get; }
         public RBTimeStretchEffect TimeStretchEffect { get; }
-
-        public ISampleProvider Output => TimeStretchEffect;
-
-        public PlaybackModifiers() : this(DefaultAudioProvider.Empty) { }
-        public PlaybackModifiers(ISampleProvider sourceProvider)
-        {
-            VolumeEffect = new VolumeEffect(sourceProvider);
-            TimeStretchEffect = new RBTimeStretchEffect(VolumeEffect);
-        }
-
-        public void SetSource(ISampleProvider source)
-        {
-            VolumeEffect.SetSource(source); // FIRST
-        }
-
-        public void Reset()
-        {
-            TimeStretchEffect?.Reset(); // LAST
-        }
 
         public double Speed
         {
@@ -45,6 +29,31 @@ namespace SignalManipulator.Logic.Core.Playback
         {
             get => VolumeEffect.Volume;
             set => VolumeEffect.Volume = value;
+        }
+
+
+        public PlaybackModifiers() : this(DefaultAudioProvider.Empty) { }
+        public PlaybackModifiers(ISampleProvider sourceProvider) : base(sourceProvider)
+        {
+            VolumeEffect = new VolumeEffect(sourceProvider);
+            TimeStretchEffect = new RBTimeStretchEffect(VolumeEffect);
+        }
+
+        public override void SetSource(ISampleProvider source)
+        {
+            base.SetSource(source);
+            VolumeEffect.SetSource(source); // FIRST
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            TimeStretchEffect?.Reset(); // LAST
+        }
+
+        public override int Read(float[] buffer, int offset, int count)
+        {
+            return TimeStretchEffect.Read(buffer, offset, count);
         }
     }
 }

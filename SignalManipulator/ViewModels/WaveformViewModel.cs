@@ -44,7 +44,7 @@ namespace SignalManipulator.ViewModels
             waveformPlots.Add(Plot.Add.Waveform(SampleRate, "Right"));
 
             // Set channel modes
-            waveformPlots[0].Channel = AudioChannel.Stereo;
+            waveformPlots[0].Channel = AudioChannel.Mono;
             waveformPlots[1].Channel = AudioChannel.Left;
             waveformPlots[2].Channel = AudioChannel.Right;
 

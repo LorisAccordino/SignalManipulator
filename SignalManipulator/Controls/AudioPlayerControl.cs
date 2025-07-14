@@ -1,7 +1,6 @@
 ﻿using SignalManipulator.Forms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Playback;
-using SignalManipulator.Logic.Events;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 
@@ -9,8 +8,8 @@ namespace SignalManipulator.Controls
 {
     public partial class AudioPlayerControl : UserControl
     {
-        private AudioPlayer audioPlayer;
-        private AudioEventDispatcher audioEventDispatcher;
+        private AudioPlayer AudioPlayer;
+        private UIUpdateService UIUpdate;
         private AudioInfoDialog audioInfoDialog = new AudioInfoDialog();
 
         public AudioPlayerControl()
@@ -19,9 +18,9 @@ namespace SignalManipulator.Controls
 
             if (!DesignModeHelper.IsDesignMode)
             {
-                audioPlayer = AudioEngine.Instance.AudioPlayer;
-                audioEventDispatcher = AudioEngine.Instance.AudioEventDispatcher;
-                InitializePlaybackEvents();
+                AudioPlayer = AudioEngine.Instance.AudioPlayer;
+                UIUpdate = UIUpdateService.Instance;
+                InitializeEvents();
 
                 // Ensure to disable UI initially
                 Enabled = false;
@@ -31,24 +30,24 @@ namespace SignalManipulator.Controls
             }
         }
 
-        private void InitializePlaybackEvents()
+        private void InitializeEvents()
         {
             // Main events
-            audioEventDispatcher.OnStarted += OnStarted;
-            audioEventDispatcher.OnStopped += OnStopped;
-            audioEventDispatcher.OnPlaybackStateChanged += OnPlaybackStateChanged;
+            AudioPlayer.OnStarted += OnStarted;
+            AudioPlayer.OnStopped += OnStopped;
+            AudioPlayer.OnPlaybackStateChanged += OnPlaybackStateChanged;
 
             // Update event
-            UIUpdateService.Instance.Register(OnUpdate);
+            UIUpdate.Register(OnUpdate);
 
             // Force stop event to init purpose
             OnStopped(this, EventArgs.Empty);
 
             // Other events
-            playbackSpeedSlider.ValueChanged += (s, speed) => audioPlayer.PlaybackSpeed = speed;
-            timeSlider.OnSeek += audioPlayer.Seek;
-            volumeSlider.ValueChanged += (s, volume) => audioPlayer.Volume = volume;
-            pitchCheckBox.CheckedChanged += (s, e) => audioPlayer.PreservePitch = pitchCheckBox.Checked;
+            playbackSpeedSlider.ValueChanged += (s, speed) => AudioPlayer.PlaybackSpeed = speed;
+            timeSlider.OnSeek += AudioPlayer.Seek;
+            volumeSlider.ValueChanged += (s, volume) => AudioPlayer.Volume = volume;
+            pitchCheckBox.CheckedChanged += (s, e) => AudioPlayer.PreservePitch = pitchCheckBox.Checked;
         }
 
         private void OnStarted(object? sender, EventArgs e)
@@ -73,7 +72,7 @@ namespace SignalManipulator.Controls
 
         private void OnUpdate()
         {
-            timeSlider.SyncWith(audioPlayer.Info.CurrentTime);
+            timeSlider.SyncWith(AudioPlayer.Info.CurrentTime);
         }
 
 
@@ -81,30 +80,30 @@ namespace SignalManipulator.Controls
         {
             if (!string.IsNullOrEmpty(path))
             {
-                audioPlayer.Load(path);
-                audioInfoDialog.SetInfo(audioPlayer.Info);
+                AudioPlayer.Load(path);
+                audioInfoDialog.SetInfo(AudioPlayer.Info);
                 moreInfoLbl.Visible = true;
                 Enabled = true; // Ensure to enable UI after loading audio
             }
 
             // Update UI
-            playingAudioLbl.Value = audioPlayer.Info.FileName;
-            waveFmtLbl.Text = audioPlayer.Info.WaveFormatDescription;
-            timeSlider.TotalTime = audioPlayer.Info.TotalTime;
+            playingAudioLbl.Value = AudioPlayer.Info.FileName;
+            waveFmtLbl.Text = AudioPlayer.Info.WaveFormatDescription;
+            timeSlider.TotalTime = AudioPlayer.Info.TotalTime;
         }
 
         private void OnPlay(object sender, EventArgs e)
         {
-            UIUpdateService.Instance.Start();
-            audioPlayer.Play();
+            UIUpdate.Start();
+            AudioPlayer.Play();
         }
 
-        private void OnPause(object sender, EventArgs e) => audioPlayer.Pause();
+        private void OnPause(object sender, EventArgs e) => AudioPlayer.Pause();
 
         private void OnStop(object sender, EventArgs e)
         {
-            audioPlayer.Stop();
-            UIUpdateService.Instance.Stop();
+            AudioPlayer.Stop();
+            UIUpdate.Stop();
         }
 
         private void OnShowMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
