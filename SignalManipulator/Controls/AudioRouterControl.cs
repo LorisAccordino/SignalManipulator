@@ -21,7 +21,7 @@ namespace SignalManipulator.Controls
 
         private void LoadOutputDevices()
         {
-            devicesCmbx.Items.Clear(); // Clear list
+            devicesCmbx.Items.Clear(); // Clear effectList
             devicesCmbx.Items.AddRange(audioRouter.GetOutputDevices()); // Add devices
             devicesCmbx.SelectedIndex = 0; // Select the first one as default
         }

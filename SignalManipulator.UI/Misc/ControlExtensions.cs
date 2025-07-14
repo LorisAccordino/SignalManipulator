@@ -52,7 +52,7 @@ namespace SignalManipulator.UI.Misc
             // Remove from the parent container
             originalParent.Controls.Remove(control);
 
-            // Create a new form
+            // CreateInstance a new form
             var baseSize = control.MinimumSize + SafeBorder;
             Form floatForm = new Form
             {

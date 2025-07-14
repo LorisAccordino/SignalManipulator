@@ -1,15 +1,15 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Effects.RubberBand;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
-    // TODO: Exclude from effect plugin loader
+    [ExcludeFromEffectLoader]
+    [Effect("Playback Modifiers")]
     public class PlaybackModifiers : AudioEffect
     {
-        public override string Name => "Playback Modifiers";
-
         public VolumeEffect VolumeEffect { get; }
         public RBTimeStretchEffect TimeStretchEffect { get; }
 

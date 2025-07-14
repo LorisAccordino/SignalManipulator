@@ -1,11 +1,11 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 
 namespace SignalManipulator.Logic.Effects.RubberBand
 {
+    [Effect("[RubberBand] Time Strech")]
     public class RBTimeStretchEffect : RubberBandEffect
     {
-        public override string Name => "[RubberBand] Time Strech";
-
         private VariSpeedEffect variSpeed;
         
         public double Speed

@@ -1,11 +1,11 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 
 namespace SignalManipulator.Logic.Effects
 {
+    [Effect("Echo")]
     public class EchoEffect : AudioEffect
     {
-        public override string Name => "Echo";
-
         // Customizable parameters
         public int DelayMs { get; set; } = 300;           // Delay in ms
         public float Feedback { get; set; } = 0.5f;       // Amount of "feedback"
@@ -34,7 +34,7 @@ namespace SignalManipulator.Logic.Effects
                 echoIndex = 0;
             }
 
-            for (int i = 0; i < samples.Length; i++)
+            for (int i = 0; i < offset + samplesRead; i++)
             {
                 float dry = samples[i];
                 float delayedSample = echoBuffer[echoIndex];
@@ -42,10 +42,7 @@ namespace SignalManipulator.Logic.Effects
                 float wet = delayedSample * WetMix;
                 samples[i] = dry * DryMix + wet;
 
-                // Write in the echo fftBuffer
                 echoBuffer[echoIndex] = dry + delayedSample * Feedback;
-
-                // Increment and loop
                 echoIndex = (echoIndex + 1) % echoBuffer.Length;
             }
 

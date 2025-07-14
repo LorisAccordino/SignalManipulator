@@ -65,7 +65,7 @@ namespace SignalManipulator.UI.Components.Labels
 
         public int EstimateRequiredWidth(int maxDigits = 3, int extraPixels = 6, bool apply = false)
         {
-            // Create a dummy string that simulates the max value visualizable
+            // CreateInstance a dummy string that simulates the max value visualizable
             string fakeValue = new string('9', maxDigits) + "." + new string('9', decimalPlaces);
             string fullText = fakeValue + suffix;
 

@@ -32,7 +32,7 @@
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.removeEffectButton = new System.Windows.Forms.Button();
             this.addEffectButton = new System.Windows.Forms.Button();
-            this.list = new System.Windows.Forms.CheckedListBox();
+            this.effectList = new System.Windows.Forms.CheckedListBox();
             this.panel.SuspendLayout();
             this.buttonPanel.SuspendLayout();
             this.SuspendLayout();
@@ -42,7 +42,7 @@
             this.panel.ColumnCount = 1;
             this.panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.panel.Controls.Add(this.buttonPanel, 0, 1);
-            this.panel.Controls.Add(this.list, 0, 0);
+            this.panel.Controls.Add(this.effectList, 0, 0);
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
@@ -72,7 +72,7 @@
             this.removeEffectButton.TabIndex = 2;
             this.removeEffectButton.Text = "Remove";
             this.removeEffectButton.UseVisualStyleBackColor = true;
-            this.removeEffectButton.Click += new System.EventHandler(this.removeEffectButton_Click);
+            this.removeEffectButton.Click += new System.EventHandler(this.OnRemoveEffect);
             // 
             // addEffectButton
             // 
@@ -83,16 +83,16 @@
             this.addEffectButton.TabIndex = 1;
             this.addEffectButton.Text = "Add";
             this.addEffectButton.UseVisualStyleBackColor = true;
-            this.addEffectButton.Click += new System.EventHandler(this.addEffectButton_Click);
+            this.addEffectButton.Click += new System.EventHandler(this.OnAddEffect);
             // 
-            // list
+            // effectList
             // 
-            this.list.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.list.FormattingEnabled = true;
-            this.list.Location = new System.Drawing.Point(3, 3);
-            this.list.Name = "list";
-            this.list.Size = new System.Drawing.Size(794, 409);
-            this.list.TabIndex = 0;
+            this.effectList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.effectList.FormattingEnabled = true;
+            this.effectList.Location = new System.Drawing.Point(3, 3);
+            this.effectList.Name = "effectList";
+            this.effectList.Size = new System.Drawing.Size(794, 409);
+            this.effectList.TabIndex = 0;
             // 
             // EffectChainControl
             // 
@@ -112,6 +112,6 @@
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Button removeEffectButton;
         private System.Windows.Forms.Button addEffectButton;
-        private System.Windows.Forms.CheckedListBox list;
+        private System.Windows.Forms.CheckedListBox effectList;
     }
 }

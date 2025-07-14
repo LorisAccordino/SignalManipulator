@@ -1,11 +1,12 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 
 namespace SignalManipulator.Logic.Effects.SoundTouch
 {
+    [ExcludeFromEffectLoader]
+    [Effect("[SoundTouch] Time Strech")]
     public class STTimeStretchEffect : SoundTouchEffect
     {
-        public override string Name => "[SoundTouch] Time Strech";
-
         public double Speed
         {
             get => preservePitch ? Processor.Tempo : Processor.Rate;

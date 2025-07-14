@@ -21,7 +21,7 @@ namespace SignalManipulator.Benchmarks
             // Generate a test signal: sum of two sines
             sampledSignal = GenerateTestSignal(SampleSize);
 
-            // Create the complex version
+            // CreateInstance the complex version
             complexSignal = sampledSignal.Select(s => new Complex(s, 0)).ToArray();
 
             // Pre-compute the FFT to use in the inverse one

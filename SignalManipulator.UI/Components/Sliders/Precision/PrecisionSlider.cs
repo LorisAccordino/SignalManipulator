@@ -179,7 +179,7 @@ namespace SignalManipulator.UI.Components.Sliders.Precision
 
         public PrecisionSlider()
         {
-            // Create controls
+            // CreateInstance controls
             trackBar = new TrackBar();
             descriptionLabel = new Label { AutoSize = true };
             valueLabel = new ValueLabel();

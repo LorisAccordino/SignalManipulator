@@ -6,7 +6,6 @@ namespace SignalManipulator.Logic.Effects
     {
         protected ISampleProvider sourceProvider;
 
-        public abstract string Name { get; }
         public WaveFormat WaveFormat => sourceProvider.WaveFormat;
         public bool Bypass { get; set; } = false;
 

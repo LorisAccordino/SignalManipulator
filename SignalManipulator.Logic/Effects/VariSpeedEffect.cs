@@ -1,12 +1,12 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Effects
 {
+    [Effect("VariSpeed")]
     public class VariSpeedEffect : AudioEffect
     {
-        public override string Name => "VariSpeed";
-
         private ResampleSpeedProvider resampleProvider;
         private readonly object lockObject = new object();
 

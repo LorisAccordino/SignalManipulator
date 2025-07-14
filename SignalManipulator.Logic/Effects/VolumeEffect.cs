@@ -1,12 +1,12 @@
 ﻿using NAudio.Wave.SampleProviders;
 using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 
 namespace SignalManipulator.Logic.Effects
 {
+    [Effect("Volume")]
     public class VolumeEffect : AudioEffect
     {
-        public override string Name => "Volume";
-
         private double volume = 1.0; // Default: full volume
         private VolumeSampleProvider volumeAdjustedProvider;
 

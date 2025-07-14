@@ -62,7 +62,7 @@ namespace SignalManipulator.UI.Plottables.Radars
             if (cardioidCount <= 0)
                 throw new ArgumentException("The cardiod count must be greater than zero.");
 
-            // Create cardioids with equal angles and magniuted set to 0 as default
+            // CreateInstance cardioids with equal angles and magniuted set to 0 as default
             for (int i = 0; i < cardioidCount; i++)
             {
                 double baseAngle = -2 * Math.PI * i / cardioidCount;

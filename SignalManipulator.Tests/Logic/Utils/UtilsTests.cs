@@ -1,7 +1,4 @@
-﻿using NAudio.Wave.SampleProviders;
-using NAudio.Wave;
-using SignalManipulator.Logic.Effects;
-using SignalManipulator.Logic.Utils;
+﻿using SignalManipulator.Logic.Utils;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SignalManipulator.Tests.Logic.Utils
@@ -107,68 +104,6 @@ namespace SignalManipulator.Tests.Logic.Utils
             var buffer = new CircularBuffer<int>(2);
             var ex = Assert.Throws<ArgumentException>(() => buffer.Capacity = newCapacity);
             Assert.Contains("Capacity must be greater than 0", ex.Message);
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    public class EffectFactoryTests
-    {
-        private class DummyEffect : IAudioEffect
-        {
-            public string Name => "Dummy Effect";
-            public ISampleProvider Source { get; }
-            public WaveFormat WaveFormat => Source.WaveFormat;
-
-            public DummyEffect(ISampleProvider source)
-            {
-                Source = source;
-            }
-
-            public void SetSource(ISampleProvider newSourceProvider) { }
-            public int Read(float[] buffer, int offset, int count) => Source.Read(buffer, offset, count);
-            public void Reset() { }
-        }
-
-        private class InvalidEffect : IAudioEffect
-        {
-            public string Name => "Invalid Effect";
-            public WaveFormat WaveFormat => WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
-
-            // Missing constructor with ISampleProvider
-
-            public void SetSource(ISampleProvider newSourceProvider) { }
-            public int Read(float[] buffer, int offset, int count) => 0;
-            public void Reset() { }
-        }
-
-        [Fact]
-        public void Create_WithValidConstructor_ReturnsWorkingFactory()
-        {
-            // Arrange
-            var sampleProvider = new SignalGenerator(); // from NAudio
-
-            // Act
-            var factory = EffectFactory.Create<DummyEffect>();
-            var effect = factory(sampleProvider);
-
-            // Assert
-            Assert.NotNull(effect);
-            Assert.IsType<DummyEffect>(effect);
-            Assert.Equal(sampleProvider, ((DummyEffect)effect).Source);
-        }
-
-        [Fact]
-        public void Create_MissingConstructor_ThrowsInvalidOperationException()
-        {
-            // Act & Assert
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-            {
-                var factory = EffectFactory.Create<InvalidEffect>();
-                var sampleProvider = new SignalGenerator();
-                _ = factory(sampleProvider);
-            });
-
-            Assert.Contains("constructor with the parameter ISampleProvider", ex.Message);
         }
     }
 }

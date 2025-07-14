@@ -1,9 +1,9 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Core.Effects;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Providers;
-using SignalManipulator.Logic.Utils;
 
 namespace SignalManipulator.Logic.Core
 {
