@@ -1,5 +1,5 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Core.Effects;
+using SignalManipulator.Logic.Attributes;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.Logic.Effects.RubberBand;
 using SignalManipulator.Logic.Providers;

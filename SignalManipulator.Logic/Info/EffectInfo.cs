@@ -1,8 +1,9 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Attributes;
 using SignalManipulator.Logic.Effects;
 using System.Reflection;
 
-namespace SignalManipulator.Logic.Core.Effects
+namespace SignalManipulator.Logic.Info
 {
     public class EffectInfo
     {

@@ -2,7 +2,6 @@
 using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Data;
-using SignalManipulator.Logic.Utils;
 
 namespace SignalManipulator.Logic.Providers
 {

@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.Logic.Core.Effects
+﻿namespace SignalManipulator.Logic.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EffectAttribute : Attribute

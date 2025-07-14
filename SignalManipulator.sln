@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalManipulator.UI", "Sig
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalManipulator.Tests", "SignalManipulator.Tests\SignalManipulator.Tests.csproj", "{46DBE14A-2388-436C-916F-E18371EB090E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManipulator.Benchmarks", "SignalManipulator.Benchmarks\SignalManipulator.Benchmarks.csproj", "{CBDEA088-25A8-46BE-B42E-F8F25C860972}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalManipulator.Benchmarks", "SignalManipulator.Benchmarks\SignalManipulator.Benchmarks.csproj", "{CBDEA088-25A8-46BE-B42E-F8F25C860972}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AC4F227-038E-4AA2-8084-AB1EB0545613}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0903673C-D47A-44C7-94F0-00FE5685C30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0903673C-D47A-44C7-94F0-00FE5685C30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0903673C-D47A-44C7-94F0-00FE5685C30B}.Release|Any CPU.ActiveCfg = Release|Any CPU

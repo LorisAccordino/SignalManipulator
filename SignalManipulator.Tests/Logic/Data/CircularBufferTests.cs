@@ -1,7 +1,7 @@
-﻿using SignalManipulator.Logic.Utils;
+﻿using SignalManipulator.Logic.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SignalManipulator.Tests.Logic.Utils
+namespace SignalManipulator.Tests.Logic.Data
 {
     [ExcludeFromCodeCoverage]
     public class CircularBufferTests

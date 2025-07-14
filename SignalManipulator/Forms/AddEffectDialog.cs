@@ -1,5 +1,6 @@
-﻿using SignalManipulator.Logic.Core.Effects;
+﻿using SignalManipulator.Logic.Core.Effects.Loaders;
 using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Info;
 
 namespace SignalManipulator.Forms
 {
@@ -17,7 +18,7 @@ namespace SignalManipulator.Forms
 
         private void LoadEffects()
         {
-            var effects = EffectPluginLoader.GetAvailableEffects();
+            var effects = EffectLoader.GetAvailableEffects();
 
             foreach (var group in effects.GroupBy(e => e.Category))
             {

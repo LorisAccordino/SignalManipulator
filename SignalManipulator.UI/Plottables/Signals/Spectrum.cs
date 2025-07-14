@@ -27,7 +27,7 @@ namespace SignalManipulator.UI.Plottables.Signals
             lock (lockObject)
             {
                 this.fftSize = fftSize;
-                buffer = new Logic.Utils.CircularBuffer<double>(fftSize);
+                buffer = new CircularBuffer<double>(fftSize);
                 magnitudes = new double[fftSize];
                 data = magnitudes; // Alias for base compatibility
                 Signal.Data = new SignalSourceDouble(magnitudes, 1.0);

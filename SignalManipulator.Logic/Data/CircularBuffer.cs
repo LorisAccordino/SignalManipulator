@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.Logic.Utils
+﻿namespace SignalManipulator.Logic.Data
 {
     public class CircularBuffer<T>
     {

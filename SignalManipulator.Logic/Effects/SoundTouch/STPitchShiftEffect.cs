@@ -1,5 +1,5 @@
 ﻿using NAudio.Wave;
-using SignalManipulator.Logic.Core.Effects;
+using SignalManipulator.Logic.Attributes;
 
 namespace SignalManipulator.Logic.Effects.SoundTouch
 {

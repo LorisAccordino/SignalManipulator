@@ -2,7 +2,7 @@
 using ScottPlot;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
-using SignalManipulator.Logic.Utils;
+using SignalManipulator.Logic.Data;
 
 namespace SignalManipulator.UI.Plottables.Signals
 {

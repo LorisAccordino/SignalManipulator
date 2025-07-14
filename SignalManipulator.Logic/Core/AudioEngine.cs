@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Effects;
+using SignalManipulator.Logic.Core.Effects.Loaders;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
@@ -53,7 +54,7 @@ namespace SignalManipulator.Logic.Core
             InitializeEvents();
 
             // Load built-in effects
-            EffectPluginLoader.LoadBuiltinEffects();
+            EffectLoader.LoadBuiltinEffects();
         }
 
         private void InitializeEvents()

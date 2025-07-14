@@ -1,5 +1,8 @@
 ﻿using NAudio.Wave;
+using SignalManipulator.Logic.Attributes;
+using SignalManipulator.Logic.Core.Effects.Loaders;
 using SignalManipulator.Logic.Effects;
+using SignalManipulator.Logic.Info;
 using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Effects
@@ -23,9 +26,8 @@ namespace SignalManipulator.Logic.Core.Effects
 
         public void AddEffect<T>() where T : IAudioEffect
         {
-            var input = effectList.Count == 0 ? sourceProvider : GetLastEffect();
-            var effect = EffectPluginLoader.CreateInstance(typeof(T), input);
-            if (effect != null) effectList.Add(effect);
+            var effectInfo = EffectLoader.GetEffectInfoByType<T>();
+            if (effectInfo != null) AddEffect(effectInfo);
         }
 
         public void RemoveEffect(IAudioEffect effect)

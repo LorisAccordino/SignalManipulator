@@ -1,6 +1,7 @@
 ﻿using SignalManipulator.Forms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Effects;
+using SignalManipulator.Logic.Core.Effects.Loaders;
 using SignalManipulator.Logic.Effects;
 using SignalManipulator.UI.Helpers;
 
@@ -8,6 +9,7 @@ namespace SignalManipulator.Controls
 {
     public partial class EffectChainControl: UserControl
     {
+        private readonly Dictionary<IAudioEffect, Form> openEffectUIs = new();
         private bool suppressCheckToggle = false;
         private EffectChain effectChain;
 
@@ -32,6 +34,7 @@ namespace SignalManipulator.Controls
             if (dialog.ShowDialog() == DialogResult.OK && dialog.SelectedEffect != null)
             {
                 effectChain.AddEffect(dialog.SelectedEffect);
+                suppressCheckToggle = false;
                 effectList.Items.Add(effectChain.GetLastEffect(), true);
             }
 
@@ -91,11 +94,27 @@ namespace SignalManipulator.Controls
         {
             if (!suppressCheckToggle) return;
 
-            int index = effectList.IndexFromPoint(e.Location);
-            if (index >= 0 && effectList.Items[index] is IAudioEffect effect)
+            int index = effectList.SelectedIndex;
+            if (index >= 0 && effectList.Items[index] is IAudioEffect audioEffect)
             {
-                // TODO: open the window config
-                MessageBox.Show($"UI not implemented for: {effect.GetType().Name}", "Effect", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (openEffectUIs.TryGetValue(audioEffect, out var existingForm))
+                {
+                    // Bring to front the existing form
+                    if (existingForm.WindowState == FormWindowState.Minimized)
+                        existingForm.WindowState = FormWindowState.Normal;
+
+                    existingForm.BringToFront();
+                    return;
+                }
+
+                // Otherwise, create a new one
+                var uiForm = EffectUILoader.CreateUIForEffect(audioEffect);
+                if (uiForm != null)
+                {
+                    openEffectUIs[audioEffect] = uiForm;
+                    uiForm.FormClosed += (s, args) => openEffectUIs.Remove(audioEffect);
+                    uiForm.Show();
+                }
             }
         }
     }
