@@ -26,7 +26,7 @@ namespace SignalManipulator.Logic.Effects
             volumeAdjustedProvider = new VolumeSampleProvider(sourceProvider);
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             return volumeAdjustedProvider.Read(samples, offset, count);
         }

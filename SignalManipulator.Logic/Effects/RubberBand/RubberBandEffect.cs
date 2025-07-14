@@ -19,7 +19,7 @@ namespace SignalManipulator.Logic.Effects.RubberBand
             lock (lockObject) rubberBandProvider = new RubberBandProvider(sourceProvider);
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             lock (lockObject) return rubberBandProvider.Read(samples, offset, count);
         }

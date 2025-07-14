@@ -28,7 +28,7 @@ namespace SignalManipulator.Logic.Effects
             lock (lockObject) resampleProvider = new ResampleSpeedProvider(sourceProvider);
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             lock (lockObject) return resampleProvider.Read(samples, offset, count);
         }

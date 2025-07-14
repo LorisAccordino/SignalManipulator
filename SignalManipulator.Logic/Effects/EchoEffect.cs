@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using System;
 
 namespace SignalManipulator.Logic.Effects
 {
@@ -18,8 +17,15 @@ namespace SignalManipulator.Logic.Effects
 
         public EchoEffect(ISampleProvider sourceProvider) : base(sourceProvider) { }
 
-        public void Process(float[] buffer, int sampleRate)
+        public override int Process(float[] samples, int offset, int count)
         {
+            // Read the original data
+            int samplesRead = sourceProvider.Read(samples, offset, count);
+            if (samplesRead == 0)
+                return 0;
+
+            // Apply effect
+            int sampleRate = WaveFormat.SampleRate;
             int delaySamples = (DelayMs * sampleRate) / 1000;
 
             if (echoBuffer.Length != delaySamples)
@@ -28,13 +34,13 @@ namespace SignalManipulator.Logic.Effects
                 echoIndex = 0;
             }
 
-            for (int i = 0; i < buffer.Length; i++)
+            for (int i = 0; i < samples.Length; i++)
             {
-                float dry = buffer[i];
+                float dry = samples[i];
                 float delayedSample = echoBuffer[echoIndex];
 
                 float wet = delayedSample * WetMix;
-                buffer[i] = dry * DryMix + wet;
+                samples[i] = dry * DryMix + wet;
 
                 // Write in the echo fftBuffer
                 echoBuffer[echoIndex] = dry + delayedSample * Feedback;
@@ -42,17 +48,6 @@ namespace SignalManipulator.Logic.Effects
                 // Increment and loop
                 echoIndex = (echoIndex + 1) % echoBuffer.Length;
             }
-        }
-
-        public override int Read(float[] samples, int offset, int count)
-        {
-            // Read the original data
-            int samplesRead = sourceProvider.Read(samples, offset, count);
-            if (samplesRead == 0)
-                return 0;
-
-            // Apply effect
-            Process(samples, WaveFormat.SampleRate);
 
             return samplesRead;
         }

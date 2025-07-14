@@ -44,7 +44,7 @@ namespace SignalManipulator.Logic.Effects.RubberBand
             base.SetSource(variSpeed = new VariSpeedEffect(newSourceProvider));
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             return rubberBandProvider.Read(samples, offset, count);
         }

@@ -45,15 +45,15 @@ namespace SignalManipulator.Logic.Core.Playback
             VolumeEffect.SetSource(source); // FIRST
         }
 
+        public override int Process(float[] buffer, int offset, int count)
+        {
+            return TimeStretchEffect.Read(buffer, offset, count);
+        }
+
         public override void Reset()
         {
             base.Reset();
             TimeStretchEffect?.Reset(); // LAST
-        }
-
-        public override int Read(float[] buffer, int offset, int count)
-        {
-            return TimeStretchEffect.Read(buffer, offset, count);
         }
     }
 }

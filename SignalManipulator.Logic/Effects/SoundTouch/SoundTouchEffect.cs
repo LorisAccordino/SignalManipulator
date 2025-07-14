@@ -30,7 +30,7 @@ namespace SignalManipulator.Logic.Effects.SoundTouch
             processedProvider = soundTouchWaveProvider.ToSampleProvider();
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             return processedProvider.Read(samples, offset, count);
         }

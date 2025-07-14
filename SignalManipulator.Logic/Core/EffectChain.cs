@@ -57,7 +57,7 @@ namespace SignalManipulator.Logic.Core
             if (effectList.Count > 0) effectList[0].SetSource(newSource);
         }
 
-        public override int Read(float[] samples, int offset, int count)
+        public override int Process(float[] samples, int offset, int count)
         {
             return effectList.Count == 0 ? sourceProvider.Read(samples, offset, count) :
                 effectList.Last().Read(samples, offset, count);

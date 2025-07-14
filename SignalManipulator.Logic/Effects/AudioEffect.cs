@@ -19,7 +19,16 @@ namespace SignalManipulator.Logic.Effects
         {
             sourceProvider = newSourceProvider;
         }
-        public abstract int Read(float[] samples, int offset, int count);
+
+        public int Read(float[] samples, int offset, int count)
+        {
+            if (Bypass)
+                return sourceProvider.Read(samples, offset, count);
+            else
+                return Process(samples, offset, count);
+        }
+
+        public abstract int Process(float[] samples, int offset, int count);
 
         public virtual void Reset()
         {
