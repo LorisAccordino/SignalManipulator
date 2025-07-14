@@ -1,5 +1,3 @@
-using SignalManipulator.Logic.Core;
-
 namespace SignalManipulator
 {
     public partial class MainForm : Form

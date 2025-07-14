@@ -9,7 +9,7 @@ namespace SignalManipulator.Logic.Core
     public class EffectChain : AudioEffect
     {
         public override string Name => "Effect Chain";
-        public IReadOnlyList<IAudioEffect> EffectList => effectList;
+        public IReadOnlyList<IAudioEffect> EffectList => effectList.AsReadOnly();
         private List<IAudioEffect> effectList = new List<IAudioEffect>();
 
         public EffectChain() : this(DefaultAudioProvider.Empty) { }
@@ -17,24 +17,33 @@ namespace SignalManipulator.Logic.Core
 
         public void AddEffect<T>() where T : IAudioEffect
         {
-            ISampleProvider input = effectList.Count == 0 ? sourceProvider : effectList.Last();
-            var factory = EffectFactory.Create<T>();
-            effectList.Add(factory(input));
-        }
-
-        public IAudioEffect GetEffect(int index)
-        {
-            return GetEffect<IAudioEffect>(index);
-        }
-
-        public T GetEffect<T>(int index) where T : IAudioEffect
-        {
-            return (T)effectList[index];
+            var input = effectList.Count == 0 ? sourceProvider : effectList.Last();
+            var effect = EffectPluginLoader.CreateInstance(typeof(T), input);
+            if (effect != null) effectList.Add(effect);
         }
 
         public void RemoveEffect(IAudioEffect effect)
         {
-            effectList.Remove(effect);
+            if (effectList.Remove(effect))
+                RebuildChain();
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index >= 0 && index < effectList.Count)
+            {
+                effectList.RemoveAt(index);
+                RebuildChain();
+            }
+        }
+
+        public IAudioEffect GetEffect(int index) => effectList[index];
+
+        public T GetEffect<T>(int index) where T : IAudioEffect => (T)effectList[index];
+
+        public void Clear()
+        {
+            effectList.Clear();
         }
 
         public void RebuildChain()

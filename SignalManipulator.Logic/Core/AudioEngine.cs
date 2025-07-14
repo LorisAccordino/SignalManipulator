@@ -3,6 +3,7 @@ using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Providers;
+using SignalManipulator.Logic.Utils;
 
 namespace SignalManipulator.Logic.Core
 {
@@ -50,6 +51,9 @@ namespace SignalManipulator.Logic.Core
 
             // Init events
             InitializeEvents();
+
+            // Load built-in effects
+            EffectPluginLoader.LoadBuiltinEffects();
         }
 
         private void InitializeEvents()
