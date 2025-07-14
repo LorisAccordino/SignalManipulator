@@ -1,4 +1,5 @@
-﻿using ScottPlot;
+﻿using OpenTK.Graphics.ES30;
+using ScottPlot;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using SignalManipulator.Logic.Utils;
@@ -27,9 +28,11 @@ namespace SignalManipulator.UI.Plottables.Signals
         {
             lock (lockObject)
             {
+                if (buffer.Capacity == newCapacity) return;
                 buffer = new CircularBuffer<double>(newCapacity);
                 data = new double[newCapacity];
                 Signal.Data = new SignalSourceDouble(data, 1.0);
+                Clear();
             }
         }
 

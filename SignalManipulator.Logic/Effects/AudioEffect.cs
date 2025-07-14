@@ -4,9 +4,11 @@ namespace SignalManipulator.Logic.Effects
 {
     public abstract class AudioEffect : IAudioEffect
     {
+        protected ISampleProvider sourceProvider;
+
         public abstract string Name { get; }
         public WaveFormat WaveFormat => sourceProvider.WaveFormat;
-        protected ISampleProvider sourceProvider;
+        public bool Bypass { get; set; } = false;
 
         public AudioEffect(ISampleProvider sourceProvider)
         {

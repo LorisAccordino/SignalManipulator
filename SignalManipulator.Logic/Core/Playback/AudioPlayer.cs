@@ -50,9 +50,9 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Seek(TimeSpan pos) => playback.Seek(pos);
 
         // --- State ---
-        public bool IsPlaying => router.CurrentDevice.PlaybackState == PlaybackState.Playing;
-        public bool IsPaused => router.CurrentDevice.PlaybackState == PlaybackState.Paused;
-        public bool IsStopped => router.CurrentDevice.PlaybackState == PlaybackState.Stopped;
+        public bool IsPlaying => router.PlaybackState == PlaybackState.Playing;
+        public bool IsPaused => router.PlaybackState == PlaybackState.Paused;
+        public bool IsStopped => router.PlaybackState == PlaybackState.Stopped;
 
         // --- Audio info ---
         public AudioInfo Info => playback.Info;

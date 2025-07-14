@@ -1,4 +1,5 @@
 ﻿using ScottPlot.WinForms;
+using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Data.Channels;
 using SignalManipulator.UI.Helpers;

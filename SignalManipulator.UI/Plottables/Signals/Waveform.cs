@@ -1,4 +1,5 @@
-﻿using SignalManipulator.Logic.Data;
+﻿using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Data.Channels;
 
 namespace SignalManipulator.UI.Plottables.Signals
@@ -14,7 +15,9 @@ namespace SignalManipulator.UI.Plottables.Signals
         {
             lock (lockObject)
             {
-                buffer.AddRange(waveform.DoubleSamples[Channel]);
+                var samples = waveform.DoubleSamples[Channel];
+                for (int i = 0; i < samples.Length; i += (int)Signal.Data.Period)
+                    buffer.Add(samples[i]);
                 buffer.CopyTo(data, 0);
             }
         }

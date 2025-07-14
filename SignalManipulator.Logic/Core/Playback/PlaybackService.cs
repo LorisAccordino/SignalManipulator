@@ -52,26 +52,26 @@ namespace SignalManipulator.Logic.Core.Playback
         {
             audioSource.Load(path);
             modifiers.SetSource(audioSource.Info.SourceProvider);
-            Stop();
+            Stop(); // Ensure stopped state
             LoadCompleted?.Invoke(this, Info);
         }
 
         public void Play()
         {
-            if (router.CurrentDevice.PlaybackState == PlaybackState.Stopped) 
+            if (router.PlaybackState == PlaybackState.Stopped) 
                 OnStarted?.Invoke(this, EventArgs.Empty);
 
-            router.CurrentDevice.Play();
+            router.Play();
             OnResume?.Invoke(this, EventArgs.Empty);;
         }
 
         public void Pause()
         {
-            router.CurrentDevice.Pause();
+            router.Pause();
             OnPaused?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Stop() => router.CurrentDevice.Stop();
+        public void Stop() => router.Stop();
 
         private void _Stop() // Always called after Stop()
         {

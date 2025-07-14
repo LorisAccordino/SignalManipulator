@@ -4,12 +4,14 @@ namespace SignalManipulator.Logic.Core.Routing
 {
     public class AudioRouter
     {
-        public event EventHandler PlaybackStopped;
+        public event EventHandler? PlaybackStopped;
 
         private Dictionary<int, WaveOutEvent> devices = new Dictionary<int, WaveOutEvent>();
         private int currentDeviceIndex = -1;
+        private bool wasPlaying = false;
+        private bool playbackAlreadyStopped = false;
 
-        public WaveOutEvent CurrentDevice
+        private WaveOutEvent CurrentDevice
         {
             get
             {
@@ -19,19 +21,24 @@ namespace SignalManipulator.Logic.Core.Routing
             }
         }
 
+        public PlaybackState PlaybackState => CurrentDevice.PlaybackState;
+
         // Init the output based on the provider, overwriting the previous ones
-        public void InitOutputs(ISampleProvider outputProvider) => InitOutputs(outputProvider.ToWaveProvider());
+        public void InitOutputs(ISampleProvider outputProvider) 
+            => InitOutputs(outputProvider.ToWaveProvider());
         public void InitOutputs(IWaveProvider outputProvider)
         {
             if (outputProvider == null) return;
 
-            // Dispose the older WaveOutEvent
+            // Dispose old devices
             foreach (var w in devices.Values)
             {
                 w.PlaybackStopped -= OnPlaybackStopped;
                 w.Dispose();
             }
             devices.Clear();
+            playbackAlreadyStopped = false;
+            wasPlaying = false;
 
             // Output
             for (int i = 0; i < WaveOut.DeviceCount; i++)
@@ -41,19 +48,46 @@ namespace SignalManipulator.Logic.Core.Routing
                 devices[i].PlaybackStopped += OnPlaybackStopped;
             }
 
-            // Select as default the first one
-            if (devices.Count > 0) ChangeDevice(0);
+            // Select the first one as default
+            ChangeDevice(0);
         }
 
         public void ChangeDevice(int newDevice)
         {
-            if (devices.Count <= 0) return;
+            if (devices.Count <= 0 || !devices.ContainsKey(newDevice))
+                return;
 
+            // Save previous state
             if (currentDeviceIndex >= 0)
-                devices[currentDeviceIndex].Pause();
+            {
+                var oldDevice = CurrentDevice;
+                wasPlaying = oldDevice.PlaybackState == PlaybackState.Playing;
+                oldDevice.Pause();
+            }
 
-            devices[newDevice].Play();
             currentDeviceIndex = newDevice;
+
+            // Resume only if it was playing
+            if (wasPlaying)
+                CurrentDevice.Play();
+        }
+
+        public void Play() => CurrentDevice.Play();
+
+        public void Pause() => CurrentDevice.Pause();
+
+        public void Stop()
+        {
+            wasPlaying = false;
+            playbackAlreadyStopped = false;
+            CurrentDevice.Stop();
+        }
+
+        private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
+        {
+            if (playbackAlreadyStopped) return;
+            playbackAlreadyStopped = true;
+            PlaybackStopped?.Invoke(sender, e);
         }
 
         public string[] GetOutputDevices()
@@ -63,15 +97,13 @@ namespace SignalManipulator.Logic.Core.Routing
                              .ToArray();
         }
 
-        private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
-        {
-            PlaybackStopped?.Invoke(sender, e);
-        }
-
-
         public void Dispose()
         {
-            foreach (var w in devices.Values) w.Dispose();
+            foreach (var w in devices.Values)
+            {
+                w.PlaybackStopped -= OnPlaybackStopped;
+                w.Dispose();
+            }
             devices.Clear();
         }
     }
