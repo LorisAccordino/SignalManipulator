@@ -3,7 +3,9 @@ using SignalManipulator.Logic.Attributes;
 
 namespace SignalManipulator.Logic.Effects.RubberBand
 {
-    [Effect("[RubberBand] Time Strech")]
+    [Effect("[RubberBand] Time Strech", "Time & Pitch", 
+        "Change the duration of the signal without altering the pitch.\n" +
+        "Ideal for adapting loops or vocals to a different tempo.")]
     public class RBTimeStretchEffect : RubberBandEffect
     {
         private VariSpeedEffect variSpeed;

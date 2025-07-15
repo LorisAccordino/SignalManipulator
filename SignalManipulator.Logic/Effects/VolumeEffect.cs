@@ -4,7 +4,9 @@ using SignalManipulator.Logic.Attributes;
 
 namespace SignalManipulator.Logic.Effects
 {
-    [Effect("Volume")]
+    [Effect("Volume", description: 
+        "Allows to adjust the volume of the input audio signal.\n" +
+        "Useful for balancing the mix or normalizing the effects chain.")]
     public class VolumeEffect : AudioEffect
     {
         private double volume = 1.0; // Default: full volume

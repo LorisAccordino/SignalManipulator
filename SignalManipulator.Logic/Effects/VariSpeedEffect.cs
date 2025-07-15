@@ -4,7 +4,9 @@ using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Effects
 {
-    [Effect("VariSpeed")]
+    [Effect("VariSpeed", description: 
+        "It simultaneously changes the speed and pitch of the signal, just like an analog recorder.\n" +
+        "Useful for creative effects or slow motion simulations.")]
     public class VariSpeedEffect : AudioEffect
     {
         private ResampleSpeedProvider resampleProvider;

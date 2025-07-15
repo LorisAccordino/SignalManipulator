@@ -3,7 +3,9 @@ using SignalManipulator.Logic.Attributes;
 
 namespace SignalManipulator.Logic.Effects
 {
-    [Effect("Echo")]
+    [Effect("Echo", "Delay & Reverb", 
+        "Adds an adjustable echo to the signal.\n" +
+        "Ideal for creating spatiality and depth.")]
     public class EchoEffect : AudioEffect
     {
         // Customizable parameters
