@@ -62,6 +62,7 @@ namespace SignalManipulator
             playbackToolStripMenuItem = new ToolStripMenuItem();
             routingToolStripMenuItem = new ToolStripMenuItem();
             audioOFD = new OpenFileDialog();
+            audioSFD = new SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)mainSplitContainer).BeginInit();
             mainSplitContainer.Panel1.SuspendLayout();
             mainSplitContainer.Panel2.SuspendLayout();
@@ -233,7 +234,7 @@ namespace SignalManipulator
             // waveformViewer
             // 
             waveformViewer.Dock = DockStyle.Fill;
-            waveformViewer.IsFloating = false;
+            waveformViewer.IsSquaredControl = false;
             waveformViewer.Location = new Point(4, 3);
             waveformViewer.Margin = new Padding(2);
             waveformViewer.Name = "waveformViewer";
@@ -256,11 +257,11 @@ namespace SignalManipulator
             // spectrumViewer
             // 
             spectrumViewer.Dock = DockStyle.Fill;
-            spectrumViewer.IsFloating = false;
+            spectrumViewer.IsSquaredControl = false;
             spectrumViewer.Location = new Point(4, 3);
             spectrumViewer.Margin = new Padding(5);
             spectrumViewer.Name = "spectrumViewer";
-            spectrumViewer.Size = new Size(184, 66);
+            spectrumViewer.Size = new Size(680, 370);
             spectrumViewer.TabIndex = 0;
             spectrumViewer.Text = "FFT Spectrum";
             // 
@@ -279,11 +280,11 @@ namespace SignalManipulator
             // lissajousViewer
             // 
             lissajousViewer.Dock = DockStyle.Fill;
-            lissajousViewer.IsFloating = false;
+            lissajousViewer.IsSquaredControl = true;
             lissajousViewer.Location = new Point(4, 3);
             lissajousViewer.Margin = new Padding(5);
             lissajousViewer.Name = "lissajousViewer";
-            lissajousViewer.Size = new Size(380, 380);
+            lissajousViewer.Size = new Size(370, 370);
             lissajousViewer.TabIndex = 0;
             lissajousViewer.Text = "XY Stereo Oscilloscope";
             // 
@@ -301,11 +302,11 @@ namespace SignalManipulator
             // surroundAnalyzer
             // 
             surroundAnalyzer.Dock = DockStyle.Fill;
-            surroundAnalyzer.IsFloating = false;
+            surroundAnalyzer.IsSquaredControl = true;
             surroundAnalyzer.Location = new Point(3, 3);
             surroundAnalyzer.Margin = new Padding(4, 3, 4, 3);
             surroundAnalyzer.Name = "surroundAnalyzer";
-            surroundAnalyzer.Size = new Size(380, 380);
+            surroundAnalyzer.Size = new Size(370, 370);
             surroundAnalyzer.TabIndex = 2;
             surroundAnalyzer.Text = "Surround Analyzer";
             // 
@@ -347,6 +348,7 @@ namespace SignalManipulator
             // audioPlayerControl
             // 
             audioPlayerControl.Dock = DockStyle.Fill;
+            audioPlayerControl.Enabled = false;
             audioPlayerControl.Location = new Point(2, 18);
             audioPlayerControl.Margin = new Padding(2);
             audioPlayerControl.MinimumSize = new Size(306, 170);
@@ -399,13 +401,14 @@ namespace SignalManipulator
             openAudioToolStripMenuItem.Name = "openAudioToolStripMenuItem";
             openAudioToolStripMenuItem.Size = new Size(136, 22);
             openAudioToolStripMenuItem.Text = "Open audio";
-            openAudioToolStripMenuItem.Click += openAudioToolStripMenuItem_Click;
+            openAudioToolStripMenuItem.Click += OnOpenAudio_Click;
             // 
             // saveAudioToolStripMenuItem
             // 
             saveAudioToolStripMenuItem.Name = "saveAudioToolStripMenuItem";
             saveAudioToolStripMenuItem.Size = new Size(136, 22);
             saveAudioToolStripMenuItem.Text = "Save audio";
+            saveAudioToolStripMenuItem.Click += OnSaveAudio_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -447,6 +450,11 @@ namespace SignalManipulator
             // audioOFD
             // 
             audioOFD.Filter = "Audio files|*.mp3;*.wav;*.aiff;*.flac";
+            // 
+            // audioSFD
+            // 
+            audioSFD.FileName = "output.wav";
+            audioSFD.Filter = "WAV file (*.wav)|*.wav|MP3 file (*.mp3)|*.mp3";
             // 
             // MainForm
             // 
@@ -523,5 +531,6 @@ namespace SignalManipulator
         private WaveformViewModel waveformViewer;
         private TabPage surroundAnalyzerPage;
         private SurroundAnalyzerViewModel surroundAnalyzer;
+        private SaveFileDialog audioSFD;
     }
 }

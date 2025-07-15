@@ -1,7 +1,11 @@
+using SignalManipulator.Logic.Core;
+using SignalManipulator.Logic.Core.Export;
+
 namespace SignalManipulator
 {
     public partial class MainForm : Form
     {
+        private AudioEngine audioEngine = AudioEngine.Instance;
         public MainForm()
         {
             InitializeComponent();
@@ -10,14 +14,22 @@ namespace SignalManipulator
 
         public void InitializeEvents()
         {
-            
+
         }
 
-        private void openAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnOpenAudio_Click(object sender, EventArgs e)
         {
             if (audioOFD.ShowDialog() == DialogResult.OK)
             {
                 audioPlayerControl.LoadAudio(audioOFD.FileName);
+            }
+        }
+
+        private void OnSaveAudio_Click(object sender, EventArgs e)
+        {
+            if (audioSFD.ShowDialog() == DialogResult.OK)
+            {
+                AudioExporter.ExportToWav(audioEngine.AudioDataProvider, audioSFD.FileName, audioEngine.FileAudioSource.Info.TotalTime);
             }
         }
 

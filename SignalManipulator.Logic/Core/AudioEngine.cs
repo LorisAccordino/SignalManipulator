@@ -28,7 +28,7 @@ namespace SignalManipulator.Logic.Core
         public static AudioEngine Instance => instance;
 
         // --- Core modules (private) ---
-        private readonly FileAudioSource audioFileLoader = new FileAudioSource();
+        private readonly FileAudioSource fileAudioSource = new FileAudioSource();
         private readonly AudioRouter audioRouter = new AudioRouter();
         private readonly EffectChain effectChain;
         private readonly AudioDataProvider audioDataProvider;
@@ -36,16 +36,17 @@ namespace SignalManipulator.Logic.Core
         private readonly AudioPlayer audioPlayer;
 
         // --- Public modules (exposed) ---
+        public FileAudioSource FileAudioSource => fileAudioSource;
         public AudioRouter AudioRouter => audioRouter;
         public EffectChain EffectChain => effectChain;
-        public AudioPlayer AudioPlayer => audioPlayer;
         public AudioDataProvider AudioDataProvider => audioDataProvider;
+        public AudioPlayer AudioPlayer => audioPlayer;
 
         // --- Instance constructor ---
         private AudioEngine()
         {
             // Instantiate references
-            playbackService = new PlaybackService(audioFileLoader, audioRouter);
+            playbackService = new PlaybackService(fileAudioSource, audioRouter);
             effectChain = new EffectChain(playbackService);
             audioDataProvider = new AudioDataProvider(effectChain);
             audioPlayer = new AudioPlayer(playbackService, audioRouter);
