@@ -5,8 +5,10 @@ namespace SignalManipulator.Logic.Core.Export
 
     public static class AudioExporter
     {
-        public static void ExportToWav(ISampleProvider provider, string outputPath, TimeSpan maxDuration)
+        public static void ExportToWav(ISampleProvider provider, WaveStream ws, string outputPath, TimeSpan maxDuration)
         {
+            ws.Position = 0;
+
             int sampleRate = provider.WaveFormat.SampleRate;
             int channels = provider.WaveFormat.Channels;
             int seconds = (int)maxDuration.TotalSeconds;
@@ -21,11 +23,13 @@ namespace SignalManipulator.Logic.Core.Export
             while (writtenSamples < totalSamples)
             {
                 int samplesRead = provider.Read(buffer, 0, buffer.Length);
-                //if (samplesRead <= 0) break;
+                if (samplesRead <= 0) break;
 
                 waveFileWriter.WriteSamples(buffer, 0, samplesRead);
                 writtenSamples += samplesRead;
             }
+
+            ws.Position = 0;
         }
     }
 }

@@ -29,7 +29,8 @@ namespace SignalManipulator
         {
             if (audioSFD.ShowDialog() == DialogResult.OK)
             {
-                AudioExporter.ExportToWav(audioEngine.AudioDataProvider, audioSFD.FileName, audioEngine.FileAudioSource.Info.TotalTime);
+                var audioSource = audioEngine.FileAudioSource;
+                AudioExporter.ExportToWav(audioEngine.AudioDataProvider, audioSource.Info.WaveStream, audioSFD.FileName, audioSource.Info.TotalTime);
             }
         }
 
