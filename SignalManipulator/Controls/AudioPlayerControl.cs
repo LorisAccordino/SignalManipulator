@@ -52,44 +52,60 @@ namespace SignalManipulator.Controls
 
         private void OnStarted(object? sender, EventArgs e)
         {
-            settingsPanel.Enabled = true;
+            this.SafeInvoke(() =>
+            {
+                settingsPanel.Enabled = true;
+            });
         }
 
         private void OnStopped(object? sender, EventArgs e)
         {
-            volumeSlider.Value = 1.0;
-            playbackSpeedSlider.Value = 1.0;
-            pitchCheckBox.CheckState = CheckState.Unchecked;
+            this.SafeInvoke(() =>
+            {
+                volumeSlider.Value = 1.0;
+                playbackSpeedSlider.Value = 1.0;
+                pitchCheckBox.CheckState = CheckState.Unchecked;
 
-            settingsPanel.Enabled = false;
+                settingsPanel.Enabled = false;
+            });
         }
 
         private void OnPlaybackStateChanged(object? sender, bool playing)
         {
-            playBtn.Visible = !playing;
-            pauseBtn.Visible = playing;
+            this.SafeInvoke(() =>
+            {
+                playBtn.Visible = !playing;
+                pauseBtn.Visible = playing;
+            });
         }
+
 
         private void OnUpdate()
         {
-            timeSlider.SyncWith(AudioPlayer.Info.CurrentTime);
+            this.SafeInvoke(() =>
+            {
+                timeSlider.SyncWith(AudioPlayer.Info.CurrentTime);
+            });
         }
 
 
         public void LoadAudio(string? path)
         {
-            if (!string.IsNullOrEmpty(path))
+            this.SafeInvoke(() =>
             {
-                AudioPlayer.Load(path);
-                audioInfoDialog.SetInfo(AudioPlayer.Info);
-                moreInfoLbl.Visible = true;
-                Enabled = true; // Ensure to enable UI after loading audio
-            }
+                if (!string.IsNullOrEmpty(path))
+                {
+                    AudioPlayer.Load(path);
+                    audioInfoDialog.SetInfo(AudioPlayer.Info);
+                    moreInfoLbl.Visible = true;
+                    Enabled = true; // Ensure to enable UI after loading audio
+                }
 
-            // Update UI
-            playingAudioLbl.Value = AudioPlayer.Info.FileName;
-            waveFmtLbl.Text = AudioPlayer.Info.WaveFormatDescription;
-            timeSlider.TotalTime = AudioPlayer.Info.TotalTime;
+                // Update UI
+                playingAudioLbl.Value = AudioPlayer.Info.FilePath;
+                waveFmtLbl.Text = AudioPlayer.Info.WaveFormatDescription;
+                timeSlider.TotalTime = AudioPlayer.Info.TotalTime;
+            });
         }
 
         private void OnPlay(object sender, EventArgs e)
@@ -108,7 +124,10 @@ namespace SignalManipulator.Controls
 
         private void OnShowMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            audioInfoDialog.ShowDialog();
+            this.SafeInvoke(() =>
+            {
+                audioInfoDialog.ShowDialog();
+            });
         }
     }
 }

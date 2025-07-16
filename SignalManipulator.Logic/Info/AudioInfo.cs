@@ -15,7 +15,7 @@ namespace SignalManipulator.Logic.Info
         public ISampleProvider SourceProvider { get; } = new DefaultAudioProvider();
         public WaveStream? WaveStream { get; } = null;
 
-        public string FileName { get; } = DEFAULT_MESSAGE;
+        public string FilePath { get; } = DEFAULT_MESSAGE;
         public TimeSpan CurrentTime => WaveStream?.CurrentTime ?? TimeSpan.Zero;
         public TimeSpan TotalTime => WaveStream?.TotalTime ?? TimeSpan.Zero;
         public long Length => WaveStream?.Length ?? 0;
@@ -42,8 +42,8 @@ namespace SignalManipulator.Logic.Info
         {
             get
             {
-                if (File.Exists(FileName))
-                    return TagLib.File.Create(FileName);
+                if (File.Exists(FilePath))
+                    return TagLib.File.Create(FilePath);
                 return null;
             }
         }
@@ -94,14 +94,15 @@ namespace SignalManipulator.Logic.Info
         public static AudioInfo Default => new AudioInfo();
 
         public AudioInfo() { }
-        public AudioInfo(AudioFileReader? reader)
+        //public AudioInfo(AudioFileReader? reader)
+        public AudioInfo(WaveFileReader? reader, string path)
         {
             if (reader == null) return;
 
             // General info
-            SourceProvider = reader;
+            SourceProvider = reader.ToSampleProvider();
             WaveStream = reader;
-            FileName = reader.FileName;
+            FilePath = path;
         }
 
         public AudioInfo(ISampleProvider? provider) => SourceProvider = provider ?? new DefaultAudioProvider();

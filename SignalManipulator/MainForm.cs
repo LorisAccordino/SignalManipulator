@@ -1,5 +1,6 @@
+using SignalManipulator.Controls;
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.Export;
+using SignalManipulator.Logic.Core.ImportExport;
 
 namespace SignalManipulator
 {
@@ -29,6 +30,8 @@ namespace SignalManipulator
         {
             if (audioSFD.ShowDialog() == DialogResult.OK)
             {
+                // Reload the file, then export it
+                audioPlayerControl.LoadAudio(audioOFD.FileName);
                 var audioSource = audioEngine.FileAudioSource;
                 AudioExporter.ExportToWav(audioEngine.AudioDataProvider, audioSource.Info.WaveStream, audioSFD.FileName, audioSource.Info.TotalTime);
             }

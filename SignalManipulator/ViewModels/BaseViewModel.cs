@@ -102,10 +102,14 @@ namespace SignalManipulator.ViewModels
         private void OnStopped(object? s, EventArgs e)
         {
             AudioDataProvider.AudioDataReady -= ProcessDataDispatch;
-            ClearBuffers();
-            ResetUI();
-            EnableUI(false);
-            UIUpdate.Enqueue(RenderPlot);
+
+            this.SafeInvoke(() =>
+            {
+                ClearBuffers();
+                ResetUI();
+                EnableUI(false);
+                UIUpdate.Enqueue(RenderPlot);
+            });
         }
 
         private void ProcessDataDispatch(object? s, AnalyzedAudioSlice data)

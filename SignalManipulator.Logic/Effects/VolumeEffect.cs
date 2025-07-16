@@ -1,5 +1,4 @@
-﻿using NAudio.Wave.SampleProviders;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using SignalManipulator.Logic.Attributes;
 
 namespace SignalManipulator.Logic.Effects
