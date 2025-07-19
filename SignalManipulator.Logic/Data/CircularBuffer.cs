@@ -2,7 +2,8 @@
 {
     public class CircularBuffer<T>
     {
-        public bool IsFull => queue.Count >= Capacity;
+        public bool IsFull => Count >= Capacity;
+        public int Count => queue.Count;
 
         private readonly Queue<T> queue = new();
         private int capacity;
@@ -18,7 +19,7 @@
                 capacity = value;
 
                 // If the new capacity is smaller than the current items, remove the oldest
-                while (queue.Count > capacity) queue.Dequeue();
+                while (Count > capacity) queue.Dequeue();
             }
         }
 
@@ -49,5 +50,4 @@
             queue.CopyTo(array, arrayIndex);
         }
     }
-
 }

@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using System.Windows.Forms;
 
 namespace SignalManipulator.Logic.Core.ImportExport
 {
@@ -16,11 +15,34 @@ namespace SignalManipulator.Logic.Core.ImportExport
 
                 return tempPath;
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show($"Cannot open the audio file:\n{ex.Message}", "Loading error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+        }
+
+        public static async Task<string?> TryConvertToWavAsync(string inputPath)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".wav");
+
+                    using var reader = new MediaFoundationReader(inputPath);
+                    WaveFileWriter.CreateWaveFile16(tempPath, reader.ToSampleProvider());
+
+                    //return tempPath;
+                    //return (string)null;
+                    //int a = new Random().Next(0, 3);
+                    //if (a == 1) return (string)null;
+                    return tempPath;
+                }
+                catch
+                {
+                    return null;
+                }
+            });
         }
     }
 }

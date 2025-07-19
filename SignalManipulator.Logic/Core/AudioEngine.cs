@@ -49,19 +49,18 @@ namespace SignalManipulator.Logic.Core
             playbackService = new PlaybackService(fileAudioSource, audioRouter);
             effectChain = new EffectChain(playbackService);
             audioDataProvider = new AudioDataProvider(effectChain);
-            audioPlayer = new AudioPlayer(playbackService, audioRouter);
 
-            // Init events
-            InitializeEvents();
+            // Initialize audio router
+            //audioRouter = new AudioRouter();
+            audioRouter.Init(audioDataProvider);
+            audioRouter.SetDriverWithFallback(AudioDriverHelper.PreferredOrder);
+
+            // Init audio player
+            audioPlayer = new AudioPlayer(playbackService, audioRouter);
+            audioPlayer.OnStopped += OnStopped;
 
             // Load built-in effects
             EffectLoader.LoadBuiltinEffects();
-        }
-
-        private void InitializeEvents()
-        {
-            audioRouter.InitOutputs(audioDataProvider as IWaveProvider);
-            audioPlayer.OnStopped += OnStopped;
         }
 
         private void OnStopped(object? sender,  EventArgs e)

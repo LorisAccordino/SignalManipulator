@@ -1,6 +1,7 @@
 ﻿using SignalManipulator.Forms;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Playback;
+using SignalManipulator.Logic.Info;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 
@@ -33,6 +34,7 @@ namespace SignalManipulator.Controls
         private void InitializeEvents()
         {
             // Main events
+            AudioPlayer.OnLoad += OnLoadComplete;
             AudioPlayer.OnStarted += OnStarted;
             AudioPlayer.OnStopped += OnStopped;
             AudioPlayer.OnPlaybackStateChanged += OnPlaybackStateChanged;
@@ -89,22 +91,23 @@ namespace SignalManipulator.Controls
         }
 
 
-        public void LoadAudio(string? path)
+        public void LoadAudio(string path)
+        {
+            AudioPlayer.Load(path);
+        }
+
+        private void OnLoadComplete(object? sender, AudioInfo info)
         {
             this.SafeInvoke(() =>
             {
-                if (!string.IsNullOrEmpty(path))
-                {
-                    AudioPlayer.Load(path);
-                    audioInfoDialog.SetInfo(AudioPlayer.Info);
-                    moreInfoLbl.Visible = true;
-                    Enabled = true; // Ensure to enable UI after loading audio
-                }
+                // if (!string.IsNullOrEmpty(path))
+                audioInfoDialog.SetInfo(AudioPlayer.Info);
+                moreInfoLbl.Visible = true;
+                Enabled = true; // Ensure to enable UI after loading audio
 
-                // Update UI
-                playingAudioLbl.Value = AudioPlayer.Info.FilePath;
-                waveFmtLbl.Text = AudioPlayer.Info.WaveFormatDescription;
-                timeSlider.TotalTime = AudioPlayer.Info.TotalTime;
+                playingAudioLbl.Value = info.FilePath;
+                waveFmtLbl.Text = info.WaveFormatDescription;
+                timeSlider.TotalTime = info.TotalTime;
             });
         }
 

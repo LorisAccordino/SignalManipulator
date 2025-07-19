@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Providers;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 
 namespace SignalManipulator.Logic.Info
 {
@@ -101,8 +102,10 @@ namespace SignalManipulator.Logic.Info
 
             // General info
             SourceProvider = reader.ToSampleProvider();
+            //SourceProvider = reader;
             WaveStream = reader;
             FilePath = path;
+            //FilePath = reader.FileName;
         }
 
         public AudioInfo(ISampleProvider? provider) => SourceProvider = provider ?? new DefaultAudioProvider();

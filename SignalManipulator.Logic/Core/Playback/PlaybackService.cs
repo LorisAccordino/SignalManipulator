@@ -3,6 +3,7 @@ using SignalManipulator.Logic.Core.Routing;
 using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Info;
+using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
@@ -48,9 +49,9 @@ namespace SignalManipulator.Logic.Core.Playback
             OnStopped += (s, e) => OnPlaybackStateChanged?.Invoke(s, false);
         }
 
-        public void Load(string path)
+        public async void Load(string path)
         {
-            audioSource.Load(path);
+            await audioSource.Load(path);
             modifiers.SetSource(audioSource.Info.SourceProvider);
             Stop(); // Ensure stopped state
             LoadCompleted?.Invoke(this, Info);

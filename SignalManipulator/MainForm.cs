@@ -1,4 +1,3 @@
-using SignalManipulator.Controls;
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.ImportExport;
 
@@ -15,7 +14,7 @@ namespace SignalManipulator
 
         public void InitializeEvents()
         {
-
+            audioEngine.AudioPlayer.OnPlaybackStateChanged += (s, b) => saveAudioToolStripMenuItem.Enabled = !b;
         }
 
         private void OnOpenAudio_Click(object sender, EventArgs e)
@@ -33,7 +32,7 @@ namespace SignalManipulator
                 // Reload the file, then export it
                 audioPlayerControl.LoadAudio(audioOFD.FileName);
                 var audioSource = audioEngine.FileAudioSource;
-                AudioExporter.ExportToWav(audioEngine.AudioDataProvider, audioSource.Info.WaveStream, audioSFD.FileName, audioSource.Info.TotalTime);
+                AudioExporter.ExportToWav(audioEngine.EffectChain, audioSource.Info.WaveStream, audioSFD.FileName, audioSource.Info.TotalTime);
             }
         }
 

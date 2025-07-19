@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.AudioMath;
 using SignalManipulator.Logic.Core.ImportExport;
 using SignalManipulator.Logic.Info;
+using System.Windows.Forms;
 
 namespace SignalManipulator.Logic.Core.Source
 {
@@ -14,15 +15,21 @@ namespace SignalManipulator.Logic.Core.Source
         // Audio info
         public AudioInfo Info => new AudioInfo(reader, path);
 
-        public void Load(string path)
+        public async Task Load(string path)
+        //public void Load(string path)
         {
+            if (string.IsNullOrEmpty(path)) return;
+
             reader?.Dispose();
             //reader = new AudioFileReader(path);
 
             this.path = path;
-            var wavPath = AudioImporter.TryConvertToWav(path);
+            var wavPath = await AudioImporter.TryConvertToWavAsync(path);
             if (wavPath == null)
-                return; // Errore già gestito
+            {
+                MessageBox.Show("Error during audio loading!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Error handled
+            }
 
             reader = new WaveFileReader(wavPath);
         }

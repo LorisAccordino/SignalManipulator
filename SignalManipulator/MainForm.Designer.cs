@@ -399,14 +399,15 @@ namespace SignalManipulator
             // openAudioToolStripMenuItem
             // 
             openAudioToolStripMenuItem.Name = "openAudioToolStripMenuItem";
-            openAudioToolStripMenuItem.Size = new Size(136, 22);
+            openAudioToolStripMenuItem.Size = new Size(180, 22);
             openAudioToolStripMenuItem.Text = "Open audio";
             openAudioToolStripMenuItem.Click += OnOpenAudio_Click;
             // 
             // saveAudioToolStripMenuItem
             // 
+            saveAudioToolStripMenuItem.Enabled = false;
             saveAudioToolStripMenuItem.Name = "saveAudioToolStripMenuItem";
-            saveAudioToolStripMenuItem.Size = new Size(136, 22);
+            saveAudioToolStripMenuItem.Size = new Size(180, 22);
             saveAudioToolStripMenuItem.Text = "Save audio";
             saveAudioToolStripMenuItem.Click += OnSaveAudio_Click;
             // 

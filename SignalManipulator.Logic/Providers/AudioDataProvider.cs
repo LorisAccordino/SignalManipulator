@@ -38,7 +38,7 @@ namespace SignalManipulator.Logic.Providers
             int read = source.Read(buffer, offset, count);
             OnBytes?.Invoke(this, buffer[..read]);
 
-            float[] samples = buffer.AsFloats();
+            float[] samples = buffer[..read].AsFloats();
             OnSamples?.Invoke(this, samples);
 
             fftBuffer.AddRange(samples);
