@@ -1,4 +1,4 @@
-﻿namespace SignalManipulator.Logic.Core.Routing
+﻿namespace SignalManipulator.Logic.Core.Routing.Drivers
 {
     public enum AudioDriverType
     {

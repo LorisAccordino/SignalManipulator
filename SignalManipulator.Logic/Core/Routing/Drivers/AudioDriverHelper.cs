@@ -1,7 +1,7 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
-namespace SignalManipulator.Logic.Core.Routing
+namespace SignalManipulator.Logic.Core.Routing.Drivers
 {
     public static class AudioDriverHelper
     {

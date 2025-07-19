@@ -23,12 +23,21 @@ namespace SignalManipulator.Logic.Core.Playback
             // File loading
             playback.LoadCompleted += (s, info) => OnLoad?.Invoke(s, info);
 
+            /*
             // Playback state
             playback.OnStarted += (s, e) => OnStarted?.Invoke(s, e);
             playback.OnResume += (s, e) => OnResume?.Invoke(s, e);
             playback.OnPaused += (s, e) => OnPaused?.Invoke(s, e);
             playback.OnStopped += (s, e) => OnStopped?.Invoke(s, e);
             playback.OnPlaybackStateChanged += (s, playing) => OnPlaybackStateChanged?.Invoke(s, playing);
+            */
+
+            // Playback state
+            router.OnStarted += (s, e) => OnStarted?.Invoke(s, e);
+            router.OnResume += (s, e) => OnResume?.Invoke(s, e);
+            router.OnPaused += (s, e) => OnPaused?.Invoke(s, e);
+            router.OnStopped += (s, e) => OnStopped?.Invoke(s, e);
+            router.OnPlaybackStateChanged += (s, playing) => OnPlaybackStateChanged?.Invoke(s, playing);
         }
 
         // --- Events ---
@@ -50,8 +59,8 @@ namespace SignalManipulator.Logic.Core.Playback
         public void Seek(TimeSpan pos) => playback.Seek(pos);
 
         // --- State ---
-        public bool IsPlaying => router.PlaybackState == PlaybackState.Playing;
-        public bool IsPaused => router.PlaybackState == PlaybackState.Paused;
+        public bool IsPlaying => router.IsPlaying;
+        public bool IsPaused => router.IsPaused;
         public bool IsStopped => router.PlaybackState == PlaybackState.Stopped;
 
         // --- Audio info ---

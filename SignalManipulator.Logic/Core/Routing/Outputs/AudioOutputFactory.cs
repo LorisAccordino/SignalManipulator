@@ -1,4 +1,6 @@
-﻿namespace SignalManipulator.Logic.Core.Routing.Outputs
+﻿using SignalManipulator.Logic.Core.Routing.Drivers;
+
+namespace SignalManipulator.Logic.Core.Routing.Outputs
 {
     public static class AudioOutputFactory
     {

@@ -68,7 +68,7 @@ namespace SignalManipulator.Logic.Providers
                 }
 
                 // Now, there should be at least one sample per channel
-                if (leftBuffer.Count == 0 || rightBuffer.Count == 0) break; // End of audioSource (EOF)
+                if (leftBuffer.Count == 0 || rightBuffer.Count == 0) break; // End of audioInput (EOF)
 
                 buffer[offset + samplesWritten++] = leftBuffer.Dequeue();
                 buffer[offset + samplesWritten++] = rightBuffer.Dequeue();

@@ -14,24 +14,26 @@ namespace SignalManipulator.Forms
         public void SetInfo(AudioInfo info)
         {
             // Tech data
-            sampleRateLbl.Value = info.SampleRate.ToString("N0");
-            bitDepthLbl.Value = info.BitsPerSample.ToString();
-            channelsLbl.Value = info.Channels.ToString();
-            encodingLbl.Value = info.Encoding.ToString();
-            bitRateLbl.Value = info.KyloBitRate.ToString("N0");
-            blockAlignLbl.Value = info.BlockAlign.ToString();
-            samplesLbl.Value = info.TotalSamples.ToString("N0");
-            framesLbl.Value = info.TotalFrames.ToString("N0");
+            var tech = info.Technical;
+            sampleRateLbl.Value = tech.SampleRate.ToString("N0");
+            bitDepthLbl.Value = tech.BitsPerSample.ToString();
+            channelsLbl.Value = tech.Channels.ToString();
+            encodingLbl.Value = tech.Encoding.ToString();
+            bitRateLbl.Value = tech.KyloBitRate.ToString("N0");
+            blockAlignLbl.Value = tech.BlockAlign.ToString();
+            samplesLbl.Value = tech.TotalSamples.ToString("N0");
+            framesLbl.Value = tech.TotalFrames.ToString("N0");
 
             // Metadata
-            titleLbl.Value = info.Title;
-            artistLbl.Value = info.Artist;
-            albumLbl.Value = info.Album;
-            genreLbl.Value = info.Genre;
-            yearLbl.Value = info.Year.ToString();
-            trackNumberLbl.Value = info.TrackNumber.ToString();
+            var meta = info.Metadata;
+            titleLbl.Value = meta.Title;
+            artistLbl.Value = meta.Artist;
+            albumLbl.Value = meta.Album;
+            genreLbl.Value = meta.Genre;
+            yearLbl.Value = meta.Year.ToString();
+            trackNumberLbl.Value = meta.TrackNumber.ToString();
             durationLbl.Value = info.TotalTime.ToString("hh\\:mm\\:ss\\.fff");
-            if (info.CoverImage != null) coverImageBox.Image = info.CoverImage;
+            if (meta.CoverImage != null) coverImageBox.Image = meta.CoverImage;
         }
     }
 }

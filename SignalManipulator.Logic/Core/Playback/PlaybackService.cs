@@ -1,87 +1,80 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.Core.Routing;
-using SignalManipulator.Logic.Core.Source;
+using SignalManipulator.Logic.Core.Routing.Inputs;
 using SignalManipulator.Logic.Data;
 using SignalManipulator.Logic.Info;
-using SignalManipulator.Logic.Providers;
 
 namespace SignalManipulator.Logic.Core.Playback
 {
     public class PlaybackService : ISampleProvider
     {
         // References
-        private readonly FileAudioSource audioSource = new FileAudioSource();
+        private readonly IAudioInput input;
         private readonly AudioRouter router;
+        private readonly PlaybackModifiers modifiers = new PlaybackModifiers();
 
         // Properties
-        private readonly PlaybackModifiers modifiers = new PlaybackModifiers();
-        public WaveFormat WaveFormat => Info.WaveFormat;
-        public AudioInfo Info => audioSource.Info;
+        public WaveFormat WaveFormat => Info.Technical.WaveFormat;
+        public ISampleProvider SampleProvider => modifiers;
+        public AudioInfo Info
+        {
+            get
+            {
+                if (input is IInfoProviderAudioInput infoProvider)
+                    return infoProvider.Info;
+                throw new NotSupportedException("This input does not expose AudioInfo.");
+            }
+        }
         public double Speed { get => modifiers.Speed; set => modifiers.Speed = value; }
         public bool PreservePitch { get => modifiers.PreservePitch; set => modifiers.PreservePitch = value; }
         public double Volume { get => modifiers.Volume; set => modifiers.Volume = value; }
 
+
         // Events
         public event EventHandler<AudioInfo>? LoadCompleted;
-        public event EventHandler? OnStarted;
-        public event EventHandler? OnResume;
-        public event EventHandler? OnPaused;
-        public event EventHandler? OnStopped;
-        public event EventHandler<bool>? OnPlaybackStateChanged; // bool: playing?
-
         public event EventHandler<AnalyzedAudioSlice>? AudioDataReady;
 
-        public PlaybackService(FileAudioSource audioSource, AudioRouter router)
+        public PlaybackService(IAudioInput input, AudioRouter router)
         {
-            this.audioSource = audioSource;
+            this.input = input;
             this.router = router;
 
-            InitializeEvents();
+            input.Ready += OnInputReady;
+            router.PlaybackStopped += (s, e) => OnStopped();
         }
 
-        private void InitializeEvents()
+        private void OnInputReady(object? sender, EventArgs e)
         {
-            router.PlaybackStopped += (s, e) => _Stop();
-
-            OnStarted += (s, e) => OnPlaybackStateChanged?.Invoke(s, true);
-            OnResume += (s, e) => OnPlaybackStateChanged?.Invoke(s, true);
-            OnPaused += (s, e) => OnPlaybackStateChanged?.Invoke(s, false);
-            OnStopped += (s, e) => OnPlaybackStateChanged?.Invoke(s, false);
-        }
-
-        public async void Load(string path)
-        {
-            await audioSource.Load(path);
-            modifiers.SetSource(audioSource.Info.SourceProvider);
-            Stop(); // Ensure stopped state
+            modifiers.SetSource(input);
+            //Stop(); // Ensure stopped state
             LoadCompleted?.Invoke(this, Info);
         }
 
-        public void Play()
+        public void Load(string path)
         {
-            if (router.PlaybackState == PlaybackState.Stopped) 
-                OnStarted?.Invoke(this, EventArgs.Empty);
-
-            router.Play();
-            OnResume?.Invoke(this, EventArgs.Empty);;
+            if (input is ILoadableAudioInput loadable)
+                loadable.Load(path);
+            else
+                throw new NotSupportedException("This input cannot be loaded from a file.");
         }
 
-        public void Pause()
-        {
-            router.Pause();
-            OnPaused?.Invoke(this, EventArgs.Empty);
-        }
-
+        public void Play() => router.Play();
+        public void Pause() => router.Pause();
         public void Stop() => router.Stop();
 
-        private void _Stop() // Always called after Stop()
+        private void OnStopped()
         {
-            audioSource.Seek(TimeSpan.Zero);
-            OnStopped?.Invoke(this, EventArgs.Empty);
+            Seek(TimeSpan.Zero);
             modifiers.Reset();
         }
 
-        public void Seek(TimeSpan pos) => audioSource.Seek(pos);
+        public void Seek(TimeSpan position)
+        {
+            if (input is ISeekableAudioInput seekable)
+                seekable.Seek(position);
+            else
+                throw new NotSupportedException("This input cannot be seeked.");
+        }
 
         public int Read(float[] samples, int offset, int count) => modifiers.Read(samples, offset, count);
     }

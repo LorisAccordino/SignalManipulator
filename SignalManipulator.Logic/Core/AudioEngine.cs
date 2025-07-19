@@ -3,6 +3,8 @@ using SignalManipulator.Logic.Core.Effects;
 using SignalManipulator.Logic.Core.Effects.Loaders;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Core.Routing;
+using SignalManipulator.Logic.Core.Routing.Drivers;
+using SignalManipulator.Logic.Core.Routing.Inputs;
 using SignalManipulator.Logic.Core.Source;
 using SignalManipulator.Logic.Providers;
 
@@ -28,7 +30,7 @@ namespace SignalManipulator.Logic.Core
         public static AudioEngine Instance => instance;
 
         // --- Core modules (private) ---
-        private readonly FileAudioSource fileAudioSource = new FileAudioSource();
+        private readonly FileAudioInput fileAudioInput = new FileAudioInput();
         private readonly AudioRouter audioRouter = new AudioRouter();
         private readonly EffectChain effectChain;
         private readonly AudioDataProvider audioDataProvider;
@@ -36,7 +38,7 @@ namespace SignalManipulator.Logic.Core
         private readonly AudioPlayer audioPlayer;
 
         // --- Public modules (exposed) ---
-        public FileAudioSource FileAudioSource => fileAudioSource;
+        public FileAudioInput FileAudioInput => fileAudioInput;
         public AudioRouter AudioRouter => audioRouter;
         public EffectChain EffectChain => effectChain;
         public AudioDataProvider AudioDataProvider => audioDataProvider;
@@ -46,7 +48,7 @@ namespace SignalManipulator.Logic.Core
         private AudioEngine()
         {
             // Instantiate references
-            playbackService = new PlaybackService(fileAudioSource, audioRouter);
+            playbackService = new PlaybackService(fileAudioInput, audioRouter);
             effectChain = new EffectChain(playbackService);
             audioDataProvider = new AudioDataProvider(effectChain);
 

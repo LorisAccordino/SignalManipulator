@@ -2,6 +2,7 @@
 using SignalManipulator.Logic.Core;
 using SignalManipulator.Logic.Core.Playback;
 using SignalManipulator.Logic.Info;
+using SignalManipulator.Logic.Providers;
 using SignalManipulator.UI.Helpers;
 using SignalManipulator.UI.Misc;
 
@@ -26,8 +27,8 @@ namespace SignalManipulator.Controls
                 // Ensure to disable UI initially
                 Enabled = false;
 
-                // Initialize stuff
-                LoadAudio(null);
+                // Initialize stuff as default
+                OnLoadComplete(this, AudioInfo.Default);
             }
         }
 
@@ -76,8 +77,21 @@ namespace SignalManipulator.Controls
         {
             this.SafeInvoke(() =>
             {
+                /*
                 playBtn.Visible = !playing;
                 pauseBtn.Visible = playing;
+                */
+
+                if (playing)
+                {
+                    pauseBtn.Visible = true;
+                    playBtn.Visible = false;
+                }
+                else
+                {
+                    playBtn.Visible = true;
+                    pauseBtn.Visible = false;
+                }
             });
         }
 
@@ -93,6 +107,8 @@ namespace SignalManipulator.Controls
 
         public void LoadAudio(string path)
         {
+            //var dialog = new ProgressDialog("Loading audio...");
+            //dialog.Show();
             AudioPlayer.Load(path);
         }
 
@@ -100,13 +116,19 @@ namespace SignalManipulator.Controls
         {
             this.SafeInvoke(() =>
             {
-                // if (!string.IsNullOrEmpty(path))
-                audioInfoDialog.SetInfo(AudioPlayer.Info);
-                moreInfoLbl.Visible = true;
-                Enabled = true; // Ensure to enable UI after loading audio
+                if (info.Technical.SourceProvider is not DefaultAudioProvider)
+                {
+                    audioInfoDialog.SetInfo(AudioPlayer.Info);
+                    moreInfoLbl.Visible = true;
+                    Enabled = true; // Ensure to enable UI after loading audio
+                }
+                else
+                {
+                    Enabled = false;
+                }
 
                 playingAudioLbl.Value = info.FilePath;
-                waveFmtLbl.Text = info.WaveFormatDescription;
+                waveFmtLbl.Text = info.Technical.WaveFormatDescription;
                 timeSlider.TotalTime = info.TotalTime;
             });
         }

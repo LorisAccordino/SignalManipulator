@@ -300,7 +300,7 @@
             MinimumSize = new Size(375, 230);
             Name = "AudioInfoDialog";
             ShowIcon = false;
-            Text = "Audio Info";
+            Text = "Audio TechInfo";
             tabControl.ResumeLayout(false);
             techPage.ResumeLayout(false);
             techPage.PerformLayout();

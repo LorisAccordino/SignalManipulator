@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 
-namespace SignalManipulator.Logic.Core.ImportExport
+namespace SignalManipulator.Logic.Core.Routing.Import
 {
     public static class AudioImporter
     {
@@ -9,10 +9,8 @@ namespace SignalManipulator.Logic.Core.ImportExport
             try
             {
                 var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".wav");
-
                 using var reader = new MediaFoundationReader(inputPath);
                 WaveFileWriter.CreateWaveFile16(tempPath, reader.ToSampleProvider());
-
                 return tempPath;
             }
             catch
@@ -28,14 +26,8 @@ namespace SignalManipulator.Logic.Core.ImportExport
                 try
                 {
                     var tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".wav");
-
                     using var reader = new MediaFoundationReader(inputPath);
                     WaveFileWriter.CreateWaveFile16(tempPath, reader.ToSampleProvider());
-
-                    //return tempPath;
-                    //return (string)null;
-                    //int a = new Random().Next(0, 3);
-                    //if (a == 1) return (string)null;
                     return tempPath;
                 }
                 catch

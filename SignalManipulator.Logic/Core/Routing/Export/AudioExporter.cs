@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 
-namespace SignalManipulator.Logic.Core.ImportExport
+namespace SignalManipulator.Logic.Core.Routing.Export
 {
 
     public static class AudioExporter

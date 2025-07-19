@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 using SignalManipulator.Logic.AudioMath;
-using SignalManipulator.Logic.Core.ImportExport;
+using SignalManipulator.Logic.Core.Routing.Import;
 using SignalManipulator.Logic.Info;
 using System.Windows.Forms;
 
@@ -8,6 +8,7 @@ namespace SignalManipulator.Logic.Core.Source
 {
     public class FileAudioSource
     {
+        /*
         //private AudioFileReader? reader;
         private WaveFileReader? reader;
         private string path = "";
@@ -44,5 +45,6 @@ namespace SignalManipulator.Logic.Core.Source
         }
 
         public void Dispose() => reader?.Dispose();
+        */
     }
 }

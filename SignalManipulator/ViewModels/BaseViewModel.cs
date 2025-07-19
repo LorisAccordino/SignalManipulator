@@ -88,7 +88,7 @@ namespace SignalManipulator.ViewModels
 
         private void OnLoad(object? s, AudioInfo info)
         {
-            SampleRate = info.SampleRate;
+            SampleRate = info.Technical.SampleRate;
             ResizeBuffers();
             UpdateDataPeriod();
         }

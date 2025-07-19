@@ -1,5 +1,5 @@
 using SignalManipulator.Logic.Core;
-using SignalManipulator.Logic.Core.ImportExport;
+using SignalManipulator.Logic.Core.Routing.Export;
 
 namespace SignalManipulator
 {
@@ -31,8 +31,8 @@ namespace SignalManipulator
             {
                 // Reload the file, then export it
                 audioPlayerControl.LoadAudio(audioOFD.FileName);
-                var audioSource = audioEngine.FileAudioSource;
-                AudioExporter.ExportToWav(audioEngine.EffectChain, audioSource.Info.WaveStream, audioSFD.FileName, audioSource.Info.TotalTime);
+                var audioInput = audioEngine.FileAudioInput;
+                AudioExporter.ExportToWav(audioEngine.EffectChain, audioInput.Info.Technical.WaveStream, audioSFD.FileName, audioInput.Info.TotalTime);
             }
         }
 
